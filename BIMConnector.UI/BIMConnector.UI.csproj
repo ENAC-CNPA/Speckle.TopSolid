@@ -1,0 +1,299 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A08D75AA-5DF2-4B57-918E-D2F4B2AB7FB8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BIMConnector.AddIn.UI</RootNamespace>
+    <AssemblyName>BIMConnector.UI</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Topsolid 7.14\Debug x64\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\..\..\..\Sources\Topsolid 7.14\Debug x64\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>1607</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="SpeckleCore">
+      <HintPath>..\..\SpeckleCore\SpeckleCore\bin\Debug\net45\SpeckleCore.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="TopSolid.Kernel.DB">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.DB.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.DB.D2.Modeling">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.DB.D2.Modeling.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.DB.D2.Sketches">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.DB.D2.Sketches.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.DB.D3">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.DB.D3.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.DB.D3.Meshes">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.DB.D3.Meshes.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.DB.D3.Modeling">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.DB.D3.Modeling.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.DB.D3.Shapes">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.DB.D3.Shapes.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.DB.D3.Sketches">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.DB.D3.Sketches.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.G.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.ConstraintSolver">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.G.ConstraintSolver.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D2.Curves">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.G.D2.Curves.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D2.Sketches">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.G.D2.Sketches.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D3.CollisionDetection">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.G.D3.CollisionDetection.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D3.Curves">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.G.D3.Curves.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D3.Mechanisms">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.G.D3.Mechanisms.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D3.Meshes">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.G.D3.Meshes.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D3.Rendering">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.G.D3.Rendering.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D3.Shapes">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.G.D3.Shapes.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D3.Sketches">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.G.D3.Sketches.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D3.Surfaces">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.G.D3.Surfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D3.Tolerancing">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.G.D3.Tolerancing.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.GR">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.GR.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.GR.Imaging">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.GR.Imaging.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.GR.RenderingServer">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.GR.RenderingServer.exe</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.GR.Validation">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.GR.Validation.exe</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.MX">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.MX.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.SX">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.SX.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.SX.XmlSerializers">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.SX.XmlSerializers.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.TX">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.TX.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.TX.Formulas">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.TX.Formulas.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.TX.OpenPackageCreator">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.TX.OpenPackageCreator.exe</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.TX.OpenPackages">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.TX.OpenPackages.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.TX.OpenPackages.XmlSerializers">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.TX.OpenPackages.XmlSerializers.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.TX.Packages">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.TX.Packages.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.TX.Reports">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.TX.Reports.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.UI">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.UI.D2">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.UI.D2.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.UI.D2.Modeling">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.UI.D2.Modeling.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.UI.D2.Sketches">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.UI.D2.Sketches.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.UI.D3">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.UI.D3.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.UI.D3.Modeling">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.UI.D3.Modeling.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.UI.D3.Shapes">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.UI.D3.Shapes.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.UI.D3.Sketches">
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.UI.D3.Sketches.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.WG">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.WG.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.WX">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath>..\..\Topsolid 7.13\Debug x64\TopSolid.Kernel.WX.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ContextMenu.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources.cs" />
+    <Compile Include="Session.cs" />
+    <Compile Include="Test\TestCommand.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ContextMenu.fr.resx">
+      <DependentUpon>ContextMenu.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ContextMenu.resx">
+      <DependentUpon>ContextMenu.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources.fr.resx">
+      <DependentUpon>Resources.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx">
+      <DependentUpon>Resources.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Test\TestCommand.fr.resx">
+      <DependentUpon>TestCommand.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Test\TestCommand.resx">
+      <DependentUpon>TestCommand.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ContextMenu.Item.ico" />
+    <EmbeddedResource Include="ContextMenu.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Test\TestCommand.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

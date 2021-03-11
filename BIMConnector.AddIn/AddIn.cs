@@ -56,9 +56,7 @@ namespace BIMConnector.Addin
 			get { return new Guid[0]; }
 		}
 
-		static readonly string SystemDir = (string)Microsoft.Win32.Registry.GetValue
-		(
-		);
+	
 
 		static AddIn()
 		{

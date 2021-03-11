@@ -1,5 +1,8 @@
 ﻿using System;
 using TK = TopSolid.Kernel;
+using Speckle;
+using TopSolid.Kernel.SX.UI;
+using Speckle.DesktopUI;
 
 namespace BIMConnector.UI.Test
 {
@@ -37,6 +40,8 @@ namespace BIMConnector.UI.Test
 
         // Methods:
 
+
+
         /// <summary>
         /// Method call when the command button is pressed
         /// </summary>
@@ -45,8 +50,8 @@ namespace BIMConnector.UI.Test
             //Invoke the base command...
             base.Invoke();
 
-        }
+            Bootstrapper BootstrapperTOpSolid = new Bootstrapper();
 
-      
+        }
     }
 }

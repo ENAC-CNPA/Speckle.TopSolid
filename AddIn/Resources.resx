@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -118,12 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="$Description" xml:space="preserve">
-    <value>Interaction between Speckle and TopSolid</value>
+    <value>AddIn dedicated to training sessions</value>
   </data>
   <data name="$Manufacturer" xml:space="preserve">
-    <value>BIMConnector</value>
+    <value>Missler Software ADS</value>
   </data>
   <data name="$Name" xml:space="preserve">
-    <value>BIMConnector</value>
+    <value>Speckle</value>
   </data>
 </root>

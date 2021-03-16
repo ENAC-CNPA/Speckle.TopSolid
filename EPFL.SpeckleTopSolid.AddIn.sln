@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPFL.SpeckleTopSolid.AddIn", "AddIn\EPFL.SpeckleTopSolid.AddIn.csproj", "{197B998A-2851-48B0-99C1-F584156F74C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPFL.SpeckleTopSolid.UI", "UI\EPFL.SpeckleTopSolid.UI.csproj", "{155758C6-E385-4284-8700-3C3F5A52090C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopUI", "..\speckle-sharp\DesktopUI\DesktopUI\DesktopUI.csproj", "{A97C3046-2D55-4C49-AB40-A3C2194B82FA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{197B998A-2851-48B0-99C1-F584156F74C9}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{197B998A-2851-48B0-99C1-F584156F74C9}.Debug|Any CPU.Build.0 = Debug|x64
+		{197B998A-2851-48B0-99C1-F584156F74C9}.Debug|x64.ActiveCfg = Debug|x64
+		{197B998A-2851-48B0-99C1-F584156F74C9}.Debug|x64.Build.0 = Debug|x64
+		{197B998A-2851-48B0-99C1-F584156F74C9}.Release|Any CPU.ActiveCfg = Release|x64
+		{197B998A-2851-48B0-99C1-F584156F74C9}.Release|Any CPU.Build.0 = Release|x64
+		{197B998A-2851-48B0-99C1-F584156F74C9}.Release|x64.ActiveCfg = Release|x64
+		{197B998A-2851-48B0-99C1-F584156F74C9}.Release|x64.Build.0 = Release|x64
+		{155758C6-E385-4284-8700-3C3F5A52090C}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{155758C6-E385-4284-8700-3C3F5A52090C}.Debug|Any CPU.Build.0 = Debug|x64
+		{155758C6-E385-4284-8700-3C3F5A52090C}.Debug|x64.ActiveCfg = Debug|x64
+		{155758C6-E385-4284-8700-3C3F5A52090C}.Debug|x64.Build.0 = Debug|x64
+		{155758C6-E385-4284-8700-3C3F5A52090C}.Release|Any CPU.ActiveCfg = Release|x64
+		{155758C6-E385-4284-8700-3C3F5A52090C}.Release|Any CPU.Build.0 = Release|x64
+		{155758C6-E385-4284-8700-3C3F5A52090C}.Release|x64.ActiveCfg = Release|x64
+		{155758C6-E385-4284-8700-3C3F5A52090C}.Release|x64.Build.0 = Release|x64
+		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Debug|x64.ActiveCfg = Debug|x64
+		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Debug|x64.Build.0 = Debug|x64
+		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Release|x64.ActiveCfg = Release|x64
+		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E297DE31-DBCD-4314-909D-BD2C7499071D}
+	EndGlobalSection
+EndGlobal

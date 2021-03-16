@@ -1,0 +1,191 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{155758C6-E385-4284-8700-3C3F5A52090C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EPFL.SpeckleTopSolid.UI</RootNamespace>
+    <AssemblyName>EPFL.SpeckleTopSolid.UI</AssemblyName>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <OutputPath>..\..\..\..\..\..\..\Sources\TopSolid 7.14 SP8 pour Speckle\Debug x64\</OutputPath>
+    <PlatformTarget>x64</PlatformTarget>
+    <NoWarn>1607</NoWarn>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Optimize>false</Optimize>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <DebugSymbols>true</DebugSymbols>
+    <WarningLevel>2</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>..\..\..\..\..\bin\Release x64\</OutputPath>
+    <DocumentationFile>..\..\..\..\..\bin\Release x64\EPFL.SpeckleTopSolid.UI.xml</DocumentationFile>
+    <PlatformTarget>x64</PlatformTarget>
+    <NoWarn>1607</NoWarn>
+    <DefineConstants>TRACE</DefineConstants>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Win32Resource>
+    </Win32Resource>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="TopSolid.Kernel.DB.D3.Modeling" />
+    <Reference Include="TopSolid.Cad.Design.DB" />
+    <Reference Include="TopSolid.Kernel.DB">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.Automating">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.DB.D2">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.DB.D3">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.DB.D3.Shapes">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D3.Surfaces, Version=7.13.300.120, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\ServicePack8\bin\Debug x64\TopSolid.Kernel.G.D3.Surfaces.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.UI.D3.Shapes">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D3.Shapes">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.GR">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.SX">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.TX">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.UI">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.UI.D3">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.WG">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.WX">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.DB.D3.Sketches">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D3.Curves">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.DB.D2.Sketches">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D3.Sketches">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D2.Curves">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D3.Shapes">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D2.Sketches">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="LaunchCommand\LaunchSpeckleCommand.cs" />
+    <Compile Include="ContextMenu.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Session.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="LaunchCommand\LaunchSpeckleCommand.fr.resx">
+      <DependentUpon>LaunchSpeckleCommand.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LaunchCommand\LaunchSpeckleCommand.resx">
+      <DependentUpon>LaunchSpeckleCommand.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ContextMenu.fr.resx">
+      <DependentUpon>ContextMenu.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ContextMenu.resx">
+      <DependentUpon>ContextMenu.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources.fr.resx">
+      <DependentUpon>Resources.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx">
+      <DependentUpon>Resources.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ContextMenu.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ContextMenu.Item.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="LaunchCommand\LaunchSpeckleCommand.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\speckle-sharp\DesktopUI\DesktopUI\DesktopUI.csproj">
+      <Project>{a97c3046-2d55-4c49-ab40-a3c2194b82fa}</Project>
+      <Name>DesktopUI</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

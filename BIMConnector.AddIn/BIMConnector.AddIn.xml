@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<TopSolidAddInCertificate version="1">
-	<AddInAssemblyName>BIMConnector.AddIn</AddInAssemblyName>
-	<AddInClassName>BIMConnector.AddIn.AddIn</AddInClassName>
-	<AddInGuid>be577080-52bd-4d2e-8f1d-30d229977732</AddInGuid>
-	<TopSolidVersion>7.14</TopSolidVersion>
-	<Certificate>RSdm7tB8Kw+xH++taSagoGY8twZy30UmpSKPTxrpBGf3SivIcwXKmf0ilm6d8PJBMwAYfWTMAaTQPdvier+mlk/rfSkREH0PJoh+FJPwYe9137J4wgtMOv1o9UbN5tm1On6DtjHxwg3dRuXIugmd7FAJtWgRhodYiEYRAw8BAJ4LFNVZp+1w7d1vW3rz32zdWb77Yqy49WwpNE+xM88F5ChxHtsat0Y9BE1MvDdcqvNCMdUn8Vz0RY0GMjoPEKZwp4eGnkx94dhDHnQmn6OMQksXG6tLmYT9kH2bYP/tGICsaJoH3ejUImnqi8OJxiOF7D1sgtYLwfC1Zt73vvW+QQ==</Certificate>
-</TopSolidAddInCertificate>

@@ -16,51 +16,42 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
         {
             //Show a message box to make sure the component is working
             MessageBox.Show("BOOM");
+            SpeckleCommand();
+        }
+        // copied from autocad connector
+        public static Bootstrapper Bootstrapper { get; set; }
+        public static ConnectorBindingsTopSolid Bindings { get; set; }
 
-            //Command as in other Speckle connectors, for the moement it does nothing
-            Bootstrapper BootstrapperTopSolid = new Bootstrapper();
-
-            //Copied from the Revit Connector, replaces Revit by TopSolid
-             public class SpeckleTopSolidCommand : IExternalCommand
+        /// <summary>
+        /// Main command to initialize Speckle Connector
+        /// </summary>
+        public static void SpeckleCommand()
         {
-
-            public static Bootstrapper Bootstrapper { get; set; }
-            public static ConnectorBindingsTopSolid Bindings { get; set; }
-
-            public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+            try
             {
-                OpenOrFocusSpeckle(commandData.Application);
-                return Result.Succeeded;
+                if (Bootstrapper != null)
+                {
+                    Bootstrapper.Application.MainWindow.Show();
+                    return;
+                }
+
+                Bootstrapper = new Bootstrapper()
+                {
+                    Bindings = new ConnectorBindingsTopSolid()
+                };
+
+                Bootstrapper.Setup(System.Windows.Application.Current != null ? System.Windows.Application.Current : new System.Windows.Application());
+
+                Bootstrapper.Application.Startup += (o, e) =>
+                {
+                    var helper = new System.Windows.Interop.WindowInteropHelper(Bootstrapper.Application.MainWindow);
+                    helper.Owner = Application.Window.Handle;
+                    //helper.Owner = Application.MainWindow.Handle;
+                };
             }
-
-            public static void OpenOrFocusSpeckle(UIApplication app)
+            catch (System.Exception e)
             {
-                try
-                {
-                    if (Bootstrapper != null)
-                    {
-                        Bootstrapper.Application.MainWindow.Show();
-                        return;
-                    }
 
-                    Bootstrapper = new Bootstrapper()
-                    {
-                        Bindings = Bindings
-                    };
-
-                    Bootstrapper.Setup(Application.Current != null ? Application.Current : new Application());
-
-                    Bootstrapper.Application.Startup += (o, e) =>
-                    {
-                        var helper = new System.Windows.Interop.WindowInteropHelper(Bootstrapper.Application.MainWindow);
-                        helper.Owner = app.MainWindowHandle;
-                    };
-
-                }
-                catch (Exception e)
-                {
-
-                }
             }
         }
     }

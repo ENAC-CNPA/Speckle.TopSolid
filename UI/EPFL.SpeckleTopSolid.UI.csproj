@@ -149,6 +149,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Session.cs" />
+    <Compile Include="SpeckleEntities.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="LaunchCommand\LaunchSpeckleCommand.fr.resx">

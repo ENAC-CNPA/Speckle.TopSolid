@@ -9,6 +9,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using TopSolid.Kernel.DB.D3.Documents;
+using TopSolid.Kernel.DB.Documents;
+using TopSolid.Kernel.DB.Entities;
+using TopSolid.Kernel.DB.Parameters;
+using TopSolid.Kernel.DB.SmartObjects;
+using TopSolid.Kernel.UI.Selections;
 
 namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 {
@@ -16,7 +21,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
     {
         [Inject]
         private IEventAggregator _events;
-
+        private static string SpeckleKey = "speckle";
         public ConnectorBindingsTopSolid()
         {
 
@@ -101,9 +106,16 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             return new List<StreamState>();
         }
 
+        GeometricDocument document = TopSolid.Kernel.UI.Application.CurrentDocument as GeometricDocument;
         public override void AddNewStream(StreamState state)
         {
+            TextParameterEntity texte = new TextParameterEntity(document, 0);
+            texte.Value = (JsonConvert.SerializeObject(state));
+            texte.Name = "Test param Speckle";
+            document.ParametersFolderEntity.AddEntity(texte);
 
+
+            //Doc.Strings.SetString(SpeckleKey, state.Stream.id, JsonConvert.SerializeObject(state));
         }
 
         public override void PersistAndUpdateStreamInFile(StreamState state)
@@ -123,7 +135,12 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
         public override List<string> GetSelectedObjects()
         {
-            throw new NotImplementedException();
+            List<string> Objs = new List<string>();
+            Objs.Add(document.AbsoluteOriginPointEntity.Id.ToString());
+            return Objs;
+            //var objs = Doc?.Objects.GetSelectedObjects(true, false).Select(obj => obj.Id.ToString()).ToList();
+            //return objs;
+
         }
 
         public override List<string> GetObjectsInView()
@@ -143,7 +160,23 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
         public override List<ISelectionFilter> GetSelectionFilters()
         {
-            throw new NotImplementedException();
+            //Copied from Revit 
+            return new List<ISelectionFilter>()
+            {
+                new ListSelectionFilter {
+                Name = "Category", Icon = "Category", Description = "Hello world. This is a something something filter.", Values = new List<string>() { "Boats", "Rafts", "Barges" }
+            }
+            };
+
+            //copied from Rhino
+            /*var layers = Doc.Layers.ToList().Select(layer => layer.Name).ToList();
+
+             return new List<ISelectionFilter>()
+             {
+                 new ListSelectionFilter { Name = "Layers", Icon = "Filter", Description = "Selects objects based on their layers.", Values = layers }
+             };
+            */
+
         }
 
         /// <summary>

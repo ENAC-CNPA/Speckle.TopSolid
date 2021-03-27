@@ -1,6 +1,8 @@
 ﻿using Speckle.DesktopUI;
 using TopSolid.Cad.Design.DB.Documents;
+using TopSolid.Kernel.DB.D3.Documents;
 using TopSolid.Kernel.DB.D3.Planes;
+using TopSolid.Kernel.DB.Documents;
 using TopSolid.Kernel.DB.Parameters;
 using TopSolid.Kernel.G.D3;
 using TopSolid.Kernel.GR.Displays;
@@ -22,11 +24,20 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
         public static Bootstrapper Bootstrapper { get; set; }
         public static ConnectorBindingsTopSolid Bindings { get; set; }
 
+
         /// <summary>
         /// Main command to initialize Speckle Connector
         /// </summary>
         public static void SpeckleCommand()
+
         {
+            /*GeometricDocument document = TopSolid.Kernel.UI.Application.CurrentDocument as GeometricDocument;
+            TextParameterEntity texte = new TextParameterEntity(document, 0);
+            //string convertedJson = (JsonConvert.SerializeObject(state));
+            texte.Value = "";
+            texte.Name = "TestparamSpeckle";
+            document.ParametersFolderEntity.AddEntity(texte);*/
+
             try
             {
                 if (Bootstrapper != null)

@@ -107,12 +107,24 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
         }
 
         GeometricDocument document = TopSolid.Kernel.UI.Application.CurrentDocument as GeometricDocument;
+
         public override void AddNewStream(StreamState state)
         {
+            //TextParameterEntity texte = new TextParameterEntity(document, 0);           
+            //texte.Value = (JsonConvert.SerializeObject(state));
+            //string convertedJson = (JsonConvert.SerializeObject(state));
+            //texte.Value = convertedJson;
+            TopSolid.Kernel.TX.Undo.UndoSequence.UndoCurrent();
+            TopSolid.Kernel.TX.Undo.UndoSequence.Start("Test", true);
+
+            //TextParameterEntity texte = document.ParametersFolderEntity.FindEntity("TestparamSpeckle") as TextParameterEntity;
             TextParameterEntity texte = new TextParameterEntity(document, 0);
             texte.Value = (JsonConvert.SerializeObject(state));
-            texte.Name = "Test param Speckle";
+            //texte.Value = "convertedJson";
+            texte.Name = "TestparamSpeckle";
             document.ParametersFolderEntity.AddEntity(texte);
+
+            TopSolid.Kernel.TX.Undo.UndoSequence.End();
 
 
             //Doc.Strings.SetString(SpeckleKey, state.Stream.id, JsonConvert.SerializeObject(state));

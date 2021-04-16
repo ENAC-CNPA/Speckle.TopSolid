@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EPFL.SpeckleTopSolid.UI</RootNamespace>
     <AssemblyName>EPFL.SpeckleTopSolid.UI</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -18,7 +18,7 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <OutputPath>..\..\..\..\..\..\..\Sources\TopSolid 7.14 SP8 pour Speckle\Debug x64\</OutputPath>
+    <OutputPath>..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\</OutputPath>
     <PlatformTarget>x64</PlatformTarget>
     <NoWarn>1607</NoWarn>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -58,7 +58,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\speckle-sharp\Core\Core\bin\Debug\netstandard2.0\SpeckleCore2.dll</HintPath>
     </Reference>
-    <Reference Include="Stylet, Version=1.3.5.0, Culture=neutral, PublicKeyToken=null" />
+    <Reference Include="Stylet">
+      <HintPath>..\..\speckle-sharp\DesktopUI\DesktopUI\bin\x64\Debug\Stylet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -149,7 +152,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Session.cs" />
-    <Compile Include="SpeckleEntities.cs" />
+    <Compile Include="SpeckleStream.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="LaunchCommand\LaunchSpeckleCommand.fr.resx">

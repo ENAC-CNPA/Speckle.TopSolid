@@ -30,7 +30,15 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
         internal void GetFileContextAndNotifyUI()
         {
-            throw new NotImplementedException();
+            var streamStates = GetStreamsInFile();
+
+            var appEvent = new ApplicationEvent()
+            {
+                Type = ApplicationEvent.EventType.DocumentOpened,
+                DynamicInfo = streamStates
+            };
+
+            NotifyUi(appEvent);
         }
 
         /// <summary>

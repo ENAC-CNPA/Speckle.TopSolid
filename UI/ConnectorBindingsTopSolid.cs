@@ -1,4 +1,5 @@
-﻿using Speckle.DesktopUI;
+﻿using Speckle.Core.Api;
+using Speckle.DesktopUI;
 using Speckle.DesktopUI.Utils;
 using Speckle.Newtonsoft.Json;
 using Stylet;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using TopSolid.Kernel.DB.D3.Documents;
 using TopSolid.Kernel.DB.Documents;
@@ -24,7 +26,13 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
         private static string SpeckleKey = "speckle";
         public ConnectorBindingsTopSolid()
         {
+            /*
+            RhinoDoc.EndOpenDocument += RhinoDoc_EndOpenDocument;
 
+            SelectionTimer = new Timer(2000) { AutoReset = true, Enabled = true };
+            SelectionTimer.Elapsed += SelectionTimer_Elapsed;
+            SelectionTimer.Start();
+             */
 
         }
 
@@ -116,22 +124,17 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
         GeometricDocument document = TopSolid.Kernel.UI.Application.CurrentDocument as GeometricDocument;
 
+
+
         public override void AddNewStream(StreamState state)
         {
-            //TextParameterEntity texte = new TextParameterEntity(document, 0);           
-            //texte.Value = (JsonConvert.SerializeObject(state));
-            //string convertedJson = (JsonConvert.SerializeObject(state));
-            //texte.Value = convertedJson;
+            //Create a text parameter to hold the Json string
             TopSolid.Kernel.TX.Undo.UndoSequence.UndoCurrent();
             TopSolid.Kernel.TX.Undo.UndoSequence.Start("Test", true);
-
-            //TextParameterEntity texte = document.ParametersFolderEntity.FindEntity("TestparamSpeckle") as TextParameterEntity;
             TextParameterEntity texte = new TextParameterEntity(document, 0);
             texte.Value = (JsonConvert.SerializeObject(state));
-            //texte.Value = "convertedJson";
             texte.Name = "TestparamSpeckle";
             document.ParametersFolderEntity.AddEntity(texte);
-
             TopSolid.Kernel.TX.Undo.UndoSequence.End();
 
 
@@ -140,12 +143,38 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
         public override void PersistAndUpdateStreamInFile(StreamState state)
         {
-            throw new NotImplementedException();
+            //Update value of the text parameter in TS
+            TopSolid.Kernel.TX.Undo.UndoSequence.UndoCurrent();
+            TopSolid.Kernel.TX.Undo.UndoSequence.Start("Test", true);
+            var a = document.ParametersFolderEntity.SearchEntity("TestparamSpeckle") as TextParameterEntity;
+            a.Value = (JsonConvert.SerializeObject(state));
+            TopSolid.Kernel.TX.Undo.UndoSequence.End();
         }
 
-        public override Task<StreamState> SendStream(StreamState state)
+        public override async Task<StreamState> SendStream(StreamState state)
         {
-            throw new NotImplementedException();
+            if (state.Filter != null)
+            {
+                state.SelectedObjectIds = GetSelectedObjects();
+            }
+
+            try
+            {
+                //var commitId = await Client.CommitCreate(actualCommit);
+
+                await state.RefreshStream();
+                //state.PreviousCommitId = commitId;
+
+                PersistAndUpdateStreamInFile(state);
+                //RaiseNotification($"{objCount} objects sent to {state.Stream.name}.");
+            }
+            catch (Exception e)
+            {
+                Globals.Notify($"Failed to create commit.\n{e.Message}");
+                state.Errors.Add(e);
+            }
+
+            return state;
         }
 
         public override Task<StreamState> ReceiveStream(StreamState state)

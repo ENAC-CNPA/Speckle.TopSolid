@@ -1,9 +1,9 @@
 
 ## Speckle connector for TopSolid
 
-Speckle is the open source data platform for aec [Speckle](https://speckle.systems/).
+Speckle is an open source data platform for interoperability in AEC [Speckle](https://speckle.systems/).
 
-TopSolid from Design to Manufacturing, the key to success! [TopSolid](https://www.topsolid.fr/) must be installed.
+TopSolid is a CAD-CAM software that allows a continuous workflow from Design to Manufacturing [TopSolid](https://www.topsolid.fr/) it should be installed with a valid license.
 
 ### Development Setup
 

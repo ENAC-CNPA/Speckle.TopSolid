@@ -3,7 +3,8 @@
 
 Speckle is an open source data platform for interoperability in AEC [Speckle](https://speckle.systems/).
 
-TopSolid is a CAD-CAM software that allows a continuous workflow from Design to Manufacturing [TopSolid](https://www.topsolid.fr/) it should be installed with a valid license.
+TopSolid is a CAD-CAM software that allows a continuous workflow from Design to Manufacturing [TopSolid](https://www.topsolid.fr/)
+It should be installed with a valid license.
 
 ### Development Setup
 

@@ -1,4 +1,5 @@
 ﻿using Speckle.DesktopUI;
+using System;
 using TopSolid.Cad.Design.DB.Documents;
 using TopSolid.Kernel.DB.D3.Documents;
 using TopSolid.Kernel.DB.D3.Planes;
@@ -31,34 +32,55 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
         public static void SpeckleCommand()
 
         {
-            /*GeometricDocument document = TopSolid.Kernel.UI.Application.CurrentDocument as GeometricDocument;
-            TextParameterEntity texte = new TextParameterEntity(document, 0);
-            //string convertedJson = (JsonConvert.SerializeObject(state));
-            texte.Value = "";
-            texte.Name = "TestparamSpeckle";
-            document.ParametersFolderEntity.AddEntity(texte);*/
+            /* try
+             {
+                 if (Bootstrapper != null)
+                 {
+                     Bootstrapper.Application.MainWindow.Show();
+                     return;
+                 }
+
+                 Bootstrapper = new Bootstrapper()
+                 {
+                     Bindings = new ConnectorBindingsTopSolid()
+                 };
+
+                 Bootstrapper.Setup(System.Windows.Application.Current != null ? System.Windows.Application.Current : new System.Windows.Application());
+
+                 Bootstrapper.Application.Startup += (o, e) =>
+                 {
+                     var helper = new System.Windows.Interop.WindowInteropHelper(Bootstrapper.Application.MainWindow);
+                     helper.Owner = Application.Window.Handle;
+                     //helper.Owner = Application.MainWindow.Handle;
+                 };
+             }
+             catch (System.Exception e)
+             {
+
+             }
+            */
+
 
             try
             {
+                //copied from Matteo's Guide
                 if (Bootstrapper != null)
                 {
-                    Bootstrapper.Application.MainWindow.Show();
+                    Bootstrapper.ShowRootView();
                     return;
                 }
 
-                Bootstrapper = new Bootstrapper()
-                {
-                    Bindings = new ConnectorBindingsTopSolid()
-                };
+                Bootstrapper = new Bootstrapper();
+                //{
+                  //  Bindings = new ConnectorBindingsTopSolid()
+                //};
 
-                Bootstrapper.Setup(System.Windows.Application.Current != null ? System.Windows.Application.Current : new System.Windows.Application());
+                if (System.Windows.Application.Current != null)
+                    new StyletAppLoader() { Bootstrapper = Bootstrapper };
+                else
+                    new Speckle.DesktopUI.App(Bootstrapper);
 
-                Bootstrapper.Application.Startup += (o, e) =>
-                {
-                    var helper = new System.Windows.Interop.WindowInteropHelper(Bootstrapper.Application.MainWindow);
-                    helper.Owner = Application.Window.Handle;
-                    //helper.Owner = Application.MainWindow.Handle;
-                };
+                Bootstrapper.Start(System.Windows.Application.Current);
             }
             catch (System.Exception e)
             {

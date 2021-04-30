@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPFL.SpeckleTopSolid.AddIn"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPFL.SpeckleTopSolid.UI", "UI\EPFL.SpeckleTopSolid.UI.csproj", "{155758C6-E385-4284-8700-3C3F5A52090C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopUI", "..\speckle-sharp\DesktopUI\DesktopUI\DesktopUI.csproj", "{A97C3046-2D55-4C49-AB40-A3C2194B82FA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,14 +31,6 @@ Global
 		{155758C6-E385-4284-8700-3C3F5A52090C}.Release|Any CPU.Build.0 = Release|x64
 		{155758C6-E385-4284-8700-3C3F5A52090C}.Release|x64.ActiveCfg = Release|x64
 		{155758C6-E385-4284-8700-3C3F5A52090C}.Release|x64.Build.0 = Release|x64
-		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Debug|x64.ActiveCfg = Debug|x64
-		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Debug|x64.Build.0 = Debug|x64
-		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Release|x64.ActiveCfg = Release|x64
-		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

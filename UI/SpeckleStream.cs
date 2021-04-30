@@ -10,7 +10,7 @@ using TopSolid.Kernel.DB.Parameters;
 
 namespace EPFL.SpeckleTopSolid.UI
 {
-    public class SpeckleStream : Entity
+    public class SpeckleStream : Entity 
     {
         /* class StreamsFolderEntity : FolderEntity
          {

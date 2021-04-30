@@ -160,7 +160,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
             try
             {
-                //var commitId = await Client.CommitCreate(actualCommit);
+                // var commitId = await Client.CommitCreate(actualCommit);
 
                 await state.RefreshStream();
                 //state.PreviousCommitId = commitId;

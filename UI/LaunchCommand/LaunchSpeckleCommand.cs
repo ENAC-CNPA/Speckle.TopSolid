@@ -71,9 +71,8 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
                 }
 
                 Bootstrapper = new Bootstrapper();
-                //{
-                  //  Bindings = new ConnectorBindingsTopSolid()
-                //};
+                {
+                };
 
                 if (System.Windows.Application.Current != null)
                     new StyletAppLoader() { Bootstrapper = Bootstrapper };

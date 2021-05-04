@@ -23,7 +23,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
         }
         // copied from autocad connector
         public static Bootstrapper Bootstrapper { get; set; }
-        public static ConnectorBindingsTopSolid Bindings { get; set; }
+
 
 
         /// <summary>
@@ -70,8 +70,9 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
                     return;
                 }
 
-                Bootstrapper = new Bootstrapper();
+                Bootstrapper = new Bootstrapper()
                 {
+                    Bindings = new ConnectorBindingsTopSolid()
                 };
 
                 if (System.Windows.Application.Current != null)

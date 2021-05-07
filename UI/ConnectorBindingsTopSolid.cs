@@ -1,4 +1,6 @@
 ﻿using Speckle.Core.Api;
+using Speckle.Core.Models;
+using Speckle.Core.Transports;
 using Speckle.DesktopUI;
 using Speckle.DesktopUI.Utils;
 using Speckle.Newtonsoft.Json;
@@ -150,7 +152,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             a.Value = (JsonConvert.SerializeObject(state));
             TopSolid.Kernel.TX.Undo.UndoSequence.End();
         }
-
+        public List<Exception> OperationErrors { get; set; } = new List<Exception>();
         public override async Task<StreamState> SendStream(StreamState state)
         {
             if (state.Filter != null)
@@ -158,23 +160,85 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
                 state.SelectedObjectIds = GetSelectedObjects();
             }
 
+
+            var commitObject = new Base();
+            //    var commitId = await Client.CommitCreate(actualCommit);
+
+            //    await state.RefreshStream();
+            //    //state.PreviousCommitId = commitId;
+
+            //    PersistAndUpdateStreamInFile(state);
+            //    //RaiseNotification($"{objCount} objects sent to {state.Stream.name}.");
+
+
+            //}
+            //catch (Exception e)
+            //{
+            //    Globals.Notify($"Failed to create commit.\n{e.Message}");
+            //    state.Errors.Add(e);
+            //}
+
+            //return state;
+
+            var streamId = state.Stream.id;
+            var client = state.Client;
+
+            var transports = new List<ITransport>() { new ServerTransport(client.Account, streamId) };
+
+            var objectId = await Operations.Send(
+              @object: commitObject,
+              cancellationToken: state.CancellationTokenSource.Token,
+              transports: transports,
+              //onProgressAction: dict => UpdateProgress(dict, state.Progress),
+              onErrorAction: (s, e) =>
+              {
+                      //OperationErrors.Add(e); // TODO!
+                      state.Errors.Add(e);
+                  state.CancellationTokenSource.Cancel();
+              }
+              );
+
+            if (OperationErrors.Count != 0)
+            {
+                Globals.Notify("Failed to send.");
+                state.Errors.AddRange(OperationErrors);
+                return state;
+            }
+
+            if (state.CancellationTokenSource.Token.IsCancellationRequested)
+            {
+                return null;
+            }
+
+            var actualCommit = new CommitCreateInput()
+            {
+                streamId = streamId,
+                objectId = objectId,
+                branchName = state.Branch.name,
+                message = state.CommitMessage != null ? state.CommitMessage : "Hello from TopSolid",//$"Sent {convertedCount} objects from {ConnectorRevitUtils.RevitAppName}.",
+                sourceApplication = TopSolid.Kernel.UI.Application.Name,
+            };
+
+            if (state.PreviousCommitId != null) { actualCommit.parents = new List<string>() { state.PreviousCommitId }; }
+
             try
             {
-                // var commitId = await Client.CommitCreate(actualCommit);
+                var commitId = await client.CommitCreate(actualCommit);
 
                 await state.RefreshStream();
-                //state.PreviousCommitId = commitId;
+                state.PreviousCommitId = commitId;
 
-                PersistAndUpdateStreamInFile(state);
-                //RaiseNotification($"{objCount} objects sent to {state.Stream.name}.");
+                //WriteStateToFile();
+                RaiseNotification($" *insert count* objects sent to Speckle 🚀");
             }
             catch (Exception e)
             {
-                Globals.Notify($"Failed to create commit.\n{e.Message}");
                 state.Errors.Add(e);
+                Globals.Notify($"Failed to create commit.\n{e.Message}");
             }
 
             return state;
+
         }
 
         public override Task<StreamState> ReceiveStream(StreamState state)

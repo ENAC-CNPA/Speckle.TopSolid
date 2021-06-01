@@ -7,17 +7,11 @@ using Speckle.Newtonsoft.Json;
 using Stylet;
 using StyletIoC;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using TopSolid.Kernel.DB.D3.Documents;
-using TopSolid.Kernel.DB.Documents;
 using TopSolid.Kernel.DB.Entities;
 using TopSolid.Kernel.DB.Parameters;
-using TopSolid.Kernel.DB.SmartObjects;
-using TopSolid.Kernel.UI.Selections;
 
 namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 {
@@ -130,6 +124,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
         public override void AddNewStream(StreamState state)
         {
+            //TODO change the way it's done, eventually using the SpeckleStream Class
             //Create a text parameter to hold the Json string
             TopSolid.Kernel.TX.Undo.UndoSequence.UndoCurrent();
             TopSolid.Kernel.TX.Undo.UndoSequence.Start("Test", true);
@@ -162,28 +157,35 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
 
             var commitObject = new Base();
-            //    var commitId = await Client.CommitCreate(actualCommit);
-
-            //    await state.RefreshStream();
-            //    //state.PreviousCommitId = commitId;
-
-            //    PersistAndUpdateStreamInFile(state);
-            //    //RaiseNotification($"{objCount} objects sent to {state.Stream.name}.");
-
-
-            //}
-            //catch (Exception e)
-            //{
-            //    Globals.Notify($"Failed to create commit.\n{e.Message}");
-            //    state.Errors.Add(e);
-            //}
-
-            //return state;
 
             var streamId = state.Stream.id;
             var client = state.Client;
 
+            //      
+            var selectedObjects = new List<Entity>();
+
+            //if (state.Filter != null)
+            //{
+            //  selectedObjects = GetSelectionFilterObjects(state.Filter);
+            //  state.SelectedObjectIds = selectedObjects.Select(x => x.UniqueId).ToList();
+            //}
+            //else //selection was by cursor
+            //{
+            //  // TODO: update state by removing any deleted or null object ids
+
+            //selectedObjects = state.SelectedObjectIds.Select(x => CurrentDoc.Document.GetElement(x)).Where(x => x != null).ToList();
+            //selectedObjects = state.SelectedObjectIds.Select(TopSolid.Kernel.UI.Selections.CurrentSelections.GetSelectedEntities()).ToString().ToList();
+            //}
+            //       
+
             var transports = new List<ITransport>() { new ServerTransport(client.Account, streamId) };
+            /* successful test for sending a topSolid line created by code ==> TODO same with line drawn graphically
+            TopSolid.Kernel.G.D3.Point point1 = new TopSolid.Kernel.G.D3.Point(0, 0, 0);
+            TopSolid.Kernel.G.D3.Point point2 = new TopSolid.Kernel.G.D3.Point(1, 1, 0);
+            commitObject = ConvertersSpeckleTopSolid.LineToSpeckle(new TopSolid.Kernel.G.D3.Curves.LineCurve(point1, point2));
+            */
+
+
 
             var objectId = await Operations.Send(
               @object: commitObject,
@@ -192,8 +194,8 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
               //onProgressAction: dict => UpdateProgress(dict, state.Progress),
               onErrorAction: (s, e) =>
               {
-                      //OperationErrors.Add(e); // TODO!
-                      state.Errors.Add(e);
+                  //OperationErrors.Add(e); // TODO!
+                  state.Errors.Add(e);
                   state.CancellationTokenSource.Cancel();
               }
               );
@@ -228,6 +230,9 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
                 await state.RefreshStream();
                 state.PreviousCommitId = commitId;
 
+
+
+                //TO DO : Add the Objects Count
                 //WriteStateToFile();
                 RaiseNotification($" *insert count* objects sent to Speckle 🚀");
             }

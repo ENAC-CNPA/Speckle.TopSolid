@@ -228,6 +228,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConnectorBindingsTopSolid.cs" />
+    <Compile Include="ConvertersSpeckleTopSolid.cs" />
     <Compile Include="LaunchCommand\LaunchSpeckleCommand.cs" />
     <Compile Include="ContextMenu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -235,7 +236,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Session.cs" />
-    <Compile Include="SpeckleStream.cs" />
+    <Compile Include="SpeckleStreamTS.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="LaunchCommand\LaunchSpeckleCommand.fr.resx">

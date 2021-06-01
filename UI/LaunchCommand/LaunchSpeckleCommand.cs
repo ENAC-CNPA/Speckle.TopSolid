@@ -18,7 +18,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
         protected override void Invoke()
         {
             //Show a message box to make sure the component is working
-            MessageBox.Show("BOOM");
+            
             SpeckleCommand();
         }
         // copied from autocad connector
@@ -82,10 +82,15 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
                 Bootstrapper.Start(System.Windows.Application.Current);
             }
-            catch (System.Exception e)
+            catch
             {
-
+                //MessageBox.Show("BOOM");
+                Console.WriteLine("Erreur Boostrapper");
             }
+            //catch (System.Exception e)
+            //{
+
+            //}
         }
     }
 }

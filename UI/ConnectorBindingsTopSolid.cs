@@ -9,6 +9,8 @@ using StyletIoC;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Forms;
 using TopSolid.Kernel.DB.D3.Documents;
 using TopSolid.Kernel.DB.Entities;
 using TopSolid.Kernel.DB.Parameters;
@@ -131,7 +133,14 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             TextParameterEntity texte = new TextParameterEntity(document, 0);
             texte.Value = (JsonConvert.SerializeObject(state));
             texte.Name = "TestparamSpeckle";
+            try
+            {
             document.ParametersFolderEntity.AddEntity(texte);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message, "Add Stream Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
             TopSolid.Kernel.TX.Undo.UndoSequence.End();
 
 
@@ -248,7 +257,11 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
         public override Task<StreamState> ReceiveStream(StreamState state)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            System.Windows.Forms.MessageBox.Show("In progress" + state.Errors.ToString() , "ReceiveStream Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            Task<StreamState> tss = null;
+            return tss;
+
         }
 
         public override List<string> GetSelectedObjects()

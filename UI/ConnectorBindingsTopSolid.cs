@@ -1,4 +1,6 @@
-﻿using Speckle.Core.Api;
+﻿using Objects.Geometry;
+using Speckle.Core.Api;
+using Speckle.Core.Kits;
 using Speckle.Core.Models;
 using Speckle.Core.Transports;
 using Speckle.DesktopUI;
@@ -7,11 +9,16 @@ using Speckle.Newtonsoft.Json;
 using Stylet;
 using StyletIoC;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using TopSolid.Kernel.DB.D3.Curves;
 using TopSolid.Kernel.DB.D3.Documents;
+using TopSolid.Kernel.DB.D3.Modeling.Documents;
 using TopSolid.Kernel.DB.Entities;
 using TopSolid.Kernel.DB.Parameters;
+
 
 namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 {
@@ -20,6 +27,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
         [Inject]
         private IEventAggregator _events;
         private static string SpeckleKey = "speckle";
+        public List<Exception> Exceptions { get; set; } = new List<Exception>();
         public ConnectorBindingsTopSolid()
         {
             /*
@@ -118,7 +126,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             return new List<StreamState>();
         }
 
-        GeometricDocument document = TopSolid.Kernel.UI.Application.CurrentDocument as GeometricDocument;
+        GeometricDocument document = TopSolid.Kernel.UI.Application.CurrentDocument as ModelingDocument;
 
 
 
@@ -246,9 +254,244 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
         }
 
-        public override Task<StreamState> ReceiveStream(StreamState state)
+        //Copied Method from the Autocad Connector, was needed for the Sendstream
+        private void UpdateProgress(ConcurrentDictionary<string, int> dict, ProgressReport progress)
         {
-            throw new NotImplementedException();
+            if (progress == null)
+            {
+                return;
+            }
+
+            Execute.PostToUIThread(() =>
+            {
+                progress.ProgressDict = dict;
+                progress.Value = dict.Values.Last();
+            });
+        }
+        //Copied Method from the Autocad Connector, was needed for the Sendstream
+        private List<Tuple<Base, string>> FlattenCommitObject(object obj, ISpeckleConverter converter, string layer, StreamState state, ref int count, bool foundConvertibleMember = false)
+        {
+            var objects = new List<Tuple<Base, string>>();
+
+            if (obj is Base @base)
+            {
+                //if (converter.CanConvertToNative(@base))
+                {
+                    objects.Add(new Tuple<Base, string>(@base, layer));
+                    return objects;
+                }
+                //else
+                //{
+                //    int totalMembers = @base.GetDynamicMembers().Count();
+                //    foreach (var prop in @base.GetDynamicMembers())
+                //    {
+                //        count++;
+
+                //        // get bake layer name
+                //        string objLayerName = prop.StartsWith("@") ? prop.Remove(0, 1) : prop;
+                //        string acLayerName = $"{layer}${objLayerName}";
+
+                //        var nestedObjects = FlattenCommitObject(@base[prop], converter, acLayerName, state, ref count, foundConvertibleMember);
+                //        if (nestedObjects.Count > 0)
+                //        {
+                //            objects.AddRange(nestedObjects);
+                //            foundConvertibleMember = true;
+                //        }
+                //    }
+                //    if (!foundConvertibleMember && count == totalMembers) // this was an unsupported geo
+                //        state.Errors.Add(new Exception($"Receiving {@base.speckle_type} objects is not supported. Object {@base.id} not baked."));
+                //    return objects;
+                //}
+            }
+
+            return objects;
+        }
+        public override async Task<StreamState> ReceiveStream(StreamState state)
+        {
+            Exceptions.Clear();
+
+            //var kit = KitManager.GetDefaultKit();
+            //var converter = kit.LoadConverter(Utils.AutocadAppName);
+            var transport = new ServerTransport(state.Client.Account, state.Stream.id);
+
+            var stream = await state.Client.StreamGet(state.Stream.id);
+
+            if (state.CancellationTokenSource.Token.IsCancellationRequested)
+            {
+                return null;
+            }
+
+            string referencedObject = state.Commit.referencedObject;
+            string id = state.Commit.id;
+
+            //if "latest", always make sure we get the latest commit when the user clicks "receive"
+            if (id == "latest")
+            {
+                var res = await state.Client.BranchGet(state.CancellationTokenSource.Token, state.Stream.id, state.Branch.name, 1);
+                referencedObject = res.commits.items.FirstOrDefault().referencedObject;
+                id = res.id;
+            }
+
+            //var commit = state.Commit;
+
+            var commitObject = await Operations.Receive(
+              referencedObject,
+              state.CancellationTokenSource.Token,
+              transport,
+              onProgressAction: d => UpdateProgress(d, state.Progress),
+              onTotalChildrenCountKnown: num => Execute.PostToUIThread(() => state.Progress.Maximum = num),
+              onErrorAction: (message, exception) => { Exceptions.Add(exception); }
+              );
+
+            if (Exceptions.Count != 0)
+            {
+                RaiseNotification($"Encountered error: {Exceptions.Last().Message}");
+            }
+
+            int count = 0;
+            string layerPrefix = " ";
+            ISpeckleConverter converter = null;
+            var commitObjs = FlattenCommitObject(commitObject, converter, layerPrefix, state, ref count);
+            foreach (var commitObj in commitObjs)
+            {
+                // create the object's bake layer if it doesn't already exist
+                (Base obj, string layerName) = commitObj;
+
+
+
+                TopSolid.Kernel.TX.Undo.UndoSequence.UndoCurrent();
+                TopSolid.Kernel.TX.Undo.UndoSequence.Start("Test", true);
+                //TextParameterEntity texte = new TextParameterEntity(document, 0);
+                //texte.Value = (JsonConvert.SerializeObject(state));
+                //texte.Name = "TestparamSpeckle";
+                //document.ParametersFolderEntity.AddEntity(texte);
+
+                var converted = ConvertersSpeckleTopSolid.PolyLinetoTS(obj as Polyline);
+
+
+
+                CurveEntity convertedEntity = new CurveEntity(document, 0);
+                convertedEntity.Geometry = converted;
+                int c = 0;
+                string name = "SpeckleProfile";
+                if ((TopSolid.Kernel.UI.Application.CurrentDocument as ModelingDocument).ShapesFolderEntity.SearchEntity(name) != null)
+                {
+                    convertedEntity.Name = name + c.ToString();
+                    c++;
+                }
+                else convertedEntity.Name = name;
+
+
+
+                TopSolid.Kernel.TX.Undo.UndoSequence.End();
+
+
+                //if (convertedEntity != null)
+                //{
+                //    if (GetOrMakeLayer(layerName, tr, out string cleanName))
+                //    {
+                //        // record if layer name has been modified
+                //        if (!cleanName.Equals(layerName))
+                //            changedLayerNames = true;
+
+                //        if (!convertedEntity.Append(cleanName, tr, btr))
+                //            state.Errors.Add(new Exception($"Failed to bake object {obj.id} of type {obj.speckle_type}."));
+                //    }
+                //    else
+                //        state.Errors.Add(new Exception($"Could not create layer {layerName} to bake objects into."));
+                //}
+                //else if (converted == null)
+                //{
+                //    state.Errors.Add(new Exception($"Failed to convert object {obj.id} of type {obj.speckle_type}."));
+                //}
+            }
+
+            //using (DocumentLock l = Doc.LockDocument())
+            {/*Autocad Blabla
+                using (AcadDb.Transaction tr = Doc.Database.TransactionManager.StartTransaction())
+                {
+                    // set the context doc for conversion - this is set inside the transaction loop because the converter retrieves this transaction for all db editing when the context doc is set!
+                    converter.SetContextDocument(Doc);
+
+                    // keep track of conversion progress here
+                    var conversionProgressDict = new ConcurrentDictionary<string, int>();
+                    conversionProgressDict["Conversion"] = 0;
+                    Execute.PostToUIThread(() => state.Progress.Maximum = state.SelectedObjectIds.Count());
+                    Action updateProgressAction = () =>
+                    {
+                        conversionProgressDict["Conversion"]++;
+                        UpdateProgress(conversionProgressDict, state.Progress);
+                    };
+
+                    // keep track of any layer name changes for notification here
+                    bool changedLayerNames = false;
+
+                    // create a commit layer prefix: all nested layers will be concatenated with this
+                    var layerPrefix = DesktopUI.Utils.Formatting.CommitInfo(stream.name, state.Branch.name, id);
+
+                    // give converter a way to access the commit info
+                    Doc.UserData.Add("commit", layerPrefix);
+
+                    // delete existing commit layers
+                    try
+                    {
+                        DeleteLayersWithPrefix(layerPrefix, tr);
+                    }
+                    catch
+                    {
+                        RaiseNotification($"could not remove existing layers starting with {layerPrefix} before importing new geometry.");
+                        state.Errors.Add(new Exception($"could not remove existing layers starting with {layerPrefix} before importing new geometry."));
+                    }
+                
+                    // flatten the commit object to retrieve children objs
+                    int count = 0;
+                    var commitObjs = FlattenCommitObject(commitObject, converter, layerPrefix, state, ref count);
+
+                    // open model space block table record for write
+                    BlockTableRecord btr = (BlockTableRecord)tr.GetObject(Doc.Database.CurrentSpaceId, OpenMode.ForWrite);
+
+                    foreach (var commitObj in commitObjs)
+                    {
+                        // create the object's bake layer if it doesn't already exist
+                        (Base obj, string layerName) = commitObj;
+
+                        var converted = converter.ConvertToNative(obj);
+                        var convertedEntity = converted as Entity;
+
+                        if (convertedEntity != null)
+                        {
+                            if (GetOrMakeLayer(layerName, tr, out string cleanName))
+                            {
+                                // record if layer name has been modified
+                                if (!cleanName.Equals(layerName))
+                                    changedLayerNames = true;
+
+                                if (!convertedEntity.Append(cleanName, tr, btr))
+                                    state.Errors.Add(new Exception($"Failed to bake object {obj.id} of type {obj.speckle_type}."));
+                            }
+                            else
+                                state.Errors.Add(new Exception($"Could not create layer {layerName} to bake objects into."));
+                        }
+                        else if (converted == null)
+                        {
+                            state.Errors.Add(new Exception($"Failed to convert object {obj.id} of type {obj.speckle_type}."));
+                        }
+                    }
+
+                    // raise any warnings from layer name modification
+                    if (changedLayerNames)
+                        state.Errors.Add(new Exception($"Layer names were modified: one or more layers contained invalid characters {Utils.invalidChars}"));
+
+                    // remove commit info from doc userdata
+                    Doc.UserData.Remove("commit");
+
+                    tr.Commit();
+                }*/
+
+
+            }
+
+            return state;
         }
 
         public override List<string> GetSelectedObjects()

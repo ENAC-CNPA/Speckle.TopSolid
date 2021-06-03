@@ -13,6 +13,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using TopSolid.Kernel.DB.D3.Curves;
 using TopSolid.Kernel.DB.D3.Documents;
 using TopSolid.Kernel.DB.D3.Modeling.Documents;
@@ -138,8 +139,17 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             TopSolid.Kernel.TX.Undo.UndoSequence.Start("Test", true);
             TextParameterEntity texte = new TextParameterEntity(document, 0);
             texte.Value = (JsonConvert.SerializeObject(state));
-            texte.Name = "TestparamSpeckle";
-            document.ParametersFolderEntity.AddEntity(texte);
+            //texte.Name = "TestparamSpeckle";
+
+            try
+            {
+                document.ParametersFolderEntity.AddEntity(texte);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message, "Add Stream Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
             TopSolid.Kernel.TX.Undo.UndoSequence.End();
 
 
@@ -275,33 +285,33 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
             if (obj is Base @base)
             {
-                //if (converter.CanConvertToNative(@base))
+                if (converter.CanConvertToNative(@base))
                 {
-                    objects.Add(new Tuple<Base, string>(@base, layer));
+                objects.Add(new Tuple<Base, string>(@base, layer));
                     return objects;
                 }
-                //else
-                //{
-                //    int totalMembers = @base.GetDynamicMembers().Count();
-                //    foreach (var prop in @base.GetDynamicMembers())
-                //    {
-                //        count++;
+                else
+                {
+                    int totalMembers = @base.GetDynamicMembers().Count();
+                    foreach (var prop in @base.GetDynamicMembers())
+                    {
+                        count++;
 
-                //        // get bake layer name
-                //        string objLayerName = prop.StartsWith("@") ? prop.Remove(0, 1) : prop;
-                //        string acLayerName = $"{layer}${objLayerName}";
+                        //// get bake layer name
+                        //string objLayerName = prop.StartsWith("@") ? prop.Remove(0, 1) : prop;
+                        //string acLayerName = $"{layer}${objLayerName}";
 
-                //        var nestedObjects = FlattenCommitObject(@base[prop], converter, acLayerName, state, ref count, foundConvertibleMember);
-                //        if (nestedObjects.Count > 0)
-                //        {
-                //            objects.AddRange(nestedObjects);
-                //            foundConvertibleMember = true;
-                //        }
-                //    }
-                //    if (!foundConvertibleMember && count == totalMembers) // this was an unsupported geo
-                //        state.Errors.Add(new Exception($"Receiving {@base.speckle_type} objects is not supported. Object {@base.id} not baked."));
-                //    return objects;
-                //}
+                        var nestedObjects = FlattenCommitObject(@base[prop], converter, "0", state, ref count, foundConvertibleMember);
+                        if (nestedObjects.Count > 0)
+                        {
+                            objects.AddRange(nestedObjects);
+                            foundConvertibleMember = true;
+                        }
+                    }
+                    if (!foundConvertibleMember && count == totalMembers) // this was an unsupported geo
+                        state.Errors.Add(new Exception($"Receiving {@base.speckle_type} objects is not supported. Object {@base.id} not baked."));
+                    return objects;
+                }
             }
 
             return objects;
@@ -350,14 +360,14 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
             int count = 0;
             string layerPrefix = " ";
-            ISpeckleConverter converter = null;
+            var kit = KitManager.GetDefaultKit();
+            ISpeckleConverter converter = kit.LoadConverter(Applications.Autocad2023);
             var commitObjs = FlattenCommitObject(commitObject, converter, layerPrefix, state, ref count);
             foreach (var commitObj in commitObjs)
             {
                 // create the object's bake layer if it doesn't already exist
                 (Base obj, string layerName) = commitObj;
-
-
+          
 
                 TopSolid.Kernel.TX.Undo.UndoSequence.UndoCurrent();
                 TopSolid.Kernel.TX.Undo.UndoSequence.Start("Test", true);
@@ -366,20 +376,21 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
                 //texte.Name = "TestparamSpeckle";
                 //document.ParametersFolderEntity.AddEntity(texte);
 
-                var converted = ConvertersSpeckleTopSolid.PolyLinetoTS(obj as Polyline);
+                //var converted = ConvertersSpeckleTopSolid.PolyLinetoTS(obj as Polyline);
+                var nativeObj = ConvertToNative(obj);
 
 
 
-                CurveEntity convertedEntity = new CurveEntity(document, 0);
-                convertedEntity.Geometry = converted;
-                int c = 0;
-                string name = "SpeckleProfile";
-                if ((TopSolid.Kernel.UI.Application.CurrentDocument as ModelingDocument).ShapesFolderEntity.SearchEntity(name) != null)
-                {
-                    convertedEntity.Name = name + c.ToString();
-                    c++;
-                }
-                else convertedEntity.Name = name;
+                //CurveEntity convertedEntity = new CurveEntity(document, 0);
+                //convertedEntity.Geometry = converted;
+                //int c = 0;
+                //string name = "SpeckleProfile";
+                //if ((TopSolid.Kernel.UI.Application.CurrentDocument as ModelingDocument).ShapesFolderEntity.SearchEntity(name) != null)
+                //{
+                //    convertedEntity.Name = name + c.ToString();
+                //    c++;
+                //}
+                //else convertedEntity.Name = name;
 
 
 
@@ -493,6 +504,20 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
             return state;
         }
+
+
+        public object ConvertToNative(Base @object)
+        {
+            switch (@object)
+            {
+                case Polyline o:
+                    return ConvertersSpeckleTopSolid.PolyLinetoTS(o);
+
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
 
         public override List<string> GetSelectedObjects()
         {

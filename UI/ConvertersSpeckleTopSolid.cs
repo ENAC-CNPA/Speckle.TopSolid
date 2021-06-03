@@ -61,14 +61,20 @@ namespace EPFL.SpeckleTopSolid.UI
 
             PointList tPointsList = new PointList();
 
-            foreach (Objects.Geometry.Point p in sPolyLine.points)
+            if (sPolyLine != null)
             {
-                TopSolid.Kernel.G.D3.Point tPoint = PointToTS(p);
-                tPointsList.Add(tPoint);
+                foreach (Objects.Geometry.Point p in sPolyLine.points)
+                {
+                    TopSolid.Kernel.G.D3.Point tPoint = PointToTS(p);
+                    tPointsList.Add(tPoint);
+                }
+                PolylineCurve tPolyLine = new PolylineCurve(sPolyLine.closed, tPointsList);
+                return tPolyLine;
             }
-
-            PolylineCurve tPolyLine = new PolylineCurve(sPolyLine.closed, tPointsList);
-            return tPolyLine;
+            else
+            {
+                return null;
+            }
 
         }
 

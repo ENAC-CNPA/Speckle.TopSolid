@@ -18,7 +18,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
         protected override void Invoke()
         {
             //Show a message box to make sure the component is working
-            MessageBox.Show("BOOM");
+            //MessageBox.Show("BOOM");
             SpeckleCommand();
         }
         // copied from autocad connector

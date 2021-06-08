@@ -1,5 +1,4 @@
-﻿using Objects.Geometry;
-using Speckle.Core.Api;
+﻿using Speckle.Core.Api;
 using Speckle.Core.Kits;
 using Speckle.Core.Models;
 using Speckle.Core.Transports;
@@ -16,9 +15,10 @@ using System.Threading.Tasks;
 using TopSolid.Kernel.DB.D3.Curves;
 using TopSolid.Kernel.DB.D3.Documents;
 using TopSolid.Kernel.DB.D3.Modeling.Documents;
+using TopSolid.Kernel.DB.D3.Sketches;
 using TopSolid.Kernel.DB.Entities;
 using TopSolid.Kernel.DB.Parameters;
-
+using TopSolid.Kernel.G.D3.Curves;
 
 namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 {
@@ -193,6 +193,11 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             commitObject = ConvertersSpeckleTopSolid.LineToSpeckle(new TopSolid.Kernel.G.D3.Curves.LineCurve(point1, point2));
             */
 
+            //Getting the curve to send
+            PositionedSketchEntity entity = (TopSolid.Kernel.UI.Application.CurrentDocument as ModelingDocument).SketchesFolderEntity.DeepPositionedSketches.First() as PositionedSketchEntity;
+            BSplineCurve curve = new BSplineCurve();
+            curve = entity.Geometry.Profiles.First().Segments.First().Geometry.GetBSplineCurve(false, false, TopSolid.Kernel.G.Precision.LinearPrecision);
+            commitObject = ConvertersSpeckleTopSolid.CurveToSpeckle(curve);
 
 
             var objectId = await Operations.Send(
@@ -276,35 +281,35 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             if (obj is Base @base)
             {
                 //if (converter.CanConvertToNative(@base))
-                {
-                    objects.Add(new Tuple<Base, string>(@base, layer));
-                    return objects;
-                }
-                //else
                 //{
-                //    int totalMembers = @base.GetDynamicMembers().Count();
-                //    foreach (var prop in @base.GetDynamicMembers())
-                //    {
-                //        count++;
-
-                //        // get bake layer name
-                //        string objLayerName = prop.StartsWith("@") ? prop.Remove(0, 1) : prop;
-                //        string acLayerName = $"{layer}${objLayerName}";
-
-                //        var nestedObjects = FlattenCommitObject(@base[prop], converter, acLayerName, state, ref count, foundConvertibleMember);
-                //        if (nestedObjects.Count > 0)
-                //        {
-                //            objects.AddRange(nestedObjects);
-                //            foundConvertibleMember = true;
-                //        }
-                //    }
-                //    if (!foundConvertibleMember && count == totalMembers) // this was an unsupported geo
-                //        state.Errors.Add(new Exception($"Receiving {@base.speckle_type} objects is not supported. Object {@base.id} not baked."));
+                //    objects.Add(new Tuple<Base, string>(@base, layer));
                 //    return objects;
                 //}
+                //else
+                {
+                    int totalMembers = @base.GetDynamicMembers().Count();
+                    foreach (var prop in @base.GetDynamicMembers())
+                    {
+                        count++;
+
+                        // get bake layer name
+                        string objLayerName = prop.StartsWith("@") ? prop.Remove(0, 1) : prop;
+                        string acLayerName = $"{layer}${objLayerName}";
+
+                        var nestedObjects = FlattenCommitObject(@base[prop], converter, acLayerName, state, ref count, foundConvertibleMember);
+                        if (nestedObjects.Count > 0)
+                        {
+                            objects.AddRange(nestedObjects);
+                            foundConvertibleMember = true;
+                        }
+                    }
+                    if (!foundConvertibleMember && count == totalMembers) // this was an unsupported geo
+                        state.Errors.Add(new Exception($"Receiving {@base.speckle_type} objects is not supported. Object {@base.id} not baked."));
+                    return objects;
+                }
             }
 
-            return objects;
+            else return objects;
         }
         public override async Task<StreamState> ReceiveStream(StreamState state)
         {
@@ -366,7 +371,10 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
                 //texte.Name = "TestparamSpeckle";
                 //document.ParametersFolderEntity.AddEntity(texte);
 
-                var converted = ConvertersSpeckleTopSolid.PolyLinetoTS(obj as Polyline);
+
+                //Polyline poly = @obj;
+
+                var converted = ConvertersSpeckleTopSolid.PolyLinetoTS((Objects.Geometry.Polyline)obj);
 
 
 

@@ -1,4 +1,5 @@
 ﻿using Objects.Geometry;
+using Objects.Primitive;
 using System.Collections.Generic;
 using System.Linq;
 using TopSolid.Kernel.G.D3;
@@ -149,19 +150,39 @@ namespace EPFL.SpeckleTopSolid.UI
             }
             catch { }
 
+            //for the knot, the parasolid model uses 2 values more than Rhino, first and last to be removed
+            List<double> knots = new List<double>();
+
+            for (int i = 1; i < (tsCurve.Bs.Count - 1); i++)
+            {
+                knots.Add(tsCurve.Bs.ElementAt(i));
+
+            }
+
+            //Prevent errors when weight list is empty
+            if (tsCurve.CWts.Count == 0)
+            {
+                ptWeights.Clear();
+                for (int i = 0; i < tsCurve.CPts.Count; i++)
+                {
+                    ptWeights.Add(1.0);
+                }
+            }
+
+            Interval interval = new Interval(tsCurve.Ts, tsCurve.Te);
+
             //set speckle curve info
             curve.points = PointsToFlatArray(tsCurve.CPts).ToList();
-            //curve.knots = knots;
-            if (tsCurve.CWts.Count != 0)
-                curve.weights = ptWeights;
+            curve.knots = knots;
+            curve.weights = ptWeights;
             curve.degree = tsCurve.Degree;
             curve.periodic = tsCurve.IsPeriodic;
             curve.rational = tsCurve.IsRational;
             curve.closed = tsCurve.IsClosed();
             curve.length = tsCurve.GetLength();
-            //curve.domain = IntervalToSpeckle(_spline.GetInterval());
+            curve.domain = interval;
             //curve.bbox = BoxToSpeckle(spline.GeometricExtents, true);
-            //curve.units = ModelUnits;
+            curve.units = "Meters";
 
             return curve;
         }

@@ -197,21 +197,31 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             PositionedSketchEntity entity = (TopSolid.Kernel.UI.Application.CurrentDocument as ModelingDocument).SketchesFolderEntity.DeepPositionedSketches.First() as PositionedSketchEntity;
             BSplineCurve curve = new BSplineCurve();
             curve = entity.Geometry.Profiles.First().Segments.First().Geometry.GetBSplineCurve(false, false, TopSolid.Kernel.G.Precision.LinearPrecision);
-            commitObject = ConvertersSpeckleTopSolid.CurveToSpeckle(curve);
+            // commitObject   = ConvertersSpeckleTopSolid.CurveToSpeckle(curve);
+
+            //if (conversionResult != null)
+
+            var category = "default";
+            if (commitObject[category] == null)
+            {
+                commitObject[category] = new List<Base>();
+            }
+            ((List<Base>)commitObject[category]).Add(ConvertersSpeckleTopSolid.CurveToSpeckle(curve));
+
 
 
             var objectId = await Operations.Send(
-              @object: commitObject,
-              cancellationToken: state.CancellationTokenSource.Token,
-              transports: transports,
-              //onProgressAction: dict => UpdateProgress(dict, state.Progress),
-              onErrorAction: (s, e) =>
-              {
+          @object: commitObject,
+          cancellationToken: state.CancellationTokenSource.Token,
+          transports: transports,
+          //onProgressAction: dict => UpdateProgress(dict, state.Progress),
+          onErrorAction: (s, e) =>
+          {
                   //OperationErrors.Add(e); // TODO!
                   state.Errors.Add(e);
-                  state.CancellationTokenSource.Cancel();
-              }
-              );
+              state.CancellationTokenSource.Cancel();
+          }
+          );
 
             if (OperationErrors.Count != 0)
             {

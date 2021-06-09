@@ -1,4 +1,5 @@
-﻿using Speckle.Core.Api;
+﻿using Objects.Geometry;
+using Speckle.Core.Api;
 using Speckle.Core.Kits;
 using Speckle.Core.Models;
 using Speckle.Core.Transports;

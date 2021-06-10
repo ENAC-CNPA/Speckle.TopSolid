@@ -29,35 +29,17 @@ using Vector = Objects.Geometry.Vector;
 using Speckle.Core.Models;
 using Speckle.Core.Kits;
 
-using TsBox = TopSolid.Kernel.G.D3.Box;
-using TsPlane = TopSolid.Kernel.G.D3.Plane;
-using TsPoint = TopSolid.Kernel.G.D3.Point;
-using TsVector = TopSolid.Kernel.G.D3.Vector;
-using TsUVector = TopSolid.Kernel.G.D3.UnitVector;
-using TsEntity = TopSolid.Kernel.DB.Entities.Entity;
-using TsGeometry = TopSolid.Kernel.G.IGeometry;
+using dbBox = TopSolid.Kernel.DB.D3.Boxes.BoxEntity;
+using dbPlane = TopSolid.Kernel.DB.D3.Planes.PlaneEntity;
+using dbPoint = TopSolid.Kernel.DB.D3.Points.PointEntity;
+using dbVector = TopSolid.Kernel.DB.D3.Axes.AxisEntity;
+
 
 namespace Objects.Converter.TopSolid
 {
     public partial class ConverterTopSolid
     {
 
-        
-
-        // Plane
-        public Plane PlaneToSpeckle(TsPlane plane, string units = null)
-        {
-            var u = units ?? ModelUnits;
-            return new Plane(PointToSpeckle(plane.Po), VectorToSpeckle(plane.Vz), VectorToSpeckle(plane.Vx), VectorToSpeckle(plane.Vy), u);
-        }
-
-
-        // Vector
-        private Vector VectorToSpeckle(TsVector vector, string units = null)
-        {
-            var u = units ?? ModelUnits;
-            return new Vector(vector.X, vector.Y, vector.Z, u);
-        }
 
     }
 }

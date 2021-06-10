@@ -28,6 +28,8 @@ using TsPoint = TopSolid.Kernel.G.D3.Point;
 using TsVector = TopSolid.Kernel.G.D3.Vector;
 using TsUVector = TopSolid.Kernel.G.D3.UnitVector;
 using TsEntity = TopSolid.Kernel.DB.Entities.Entity;
+using TsLineCurve = TopSolid.Kernel.G.D3.Curves.LineCurve;
+using TsSplineCurve = TopSolid.Kernel.G.D3.Curves.BSplineCurve;
 using TsGeometry = TopSolid.Kernel.G.IGeometry;
 
 
@@ -84,6 +86,9 @@ namespace Objects.Converter.TopSolid
 
                 case TsVector o:
                     return VectorToSpeckle(o);
+
+                case TsLineCurve o:
+                    return LineToSpeckle(o);
 
                 default:
                     throw new NotSupportedException();
@@ -148,6 +153,9 @@ namespace Objects.Converter.TopSolid
                 case TsPoint o:
                     return PointToSpeckle(o);
 
+                case TsLineCurve o:
+                    return LineToSpeckle(o);
+
                 // TODO: using multi type (TsGeometry isn't compatible)
                 //case TsVector o:
                 //    return VectorToSpeckle(o);
@@ -167,6 +175,7 @@ namespace Objects.Converter.TopSolid
                         case TsBox _:
                         case TsPlane _:
                         case TsPoint _:
+                        case TsLineCurve _:
                             return true;
 
                         default:
@@ -189,6 +198,7 @@ namespace Objects.Converter.TopSolid
                 case Plane _:
                 case Point _:
                 case Vector _:
+                case Line _:
 
                 default:
                     return false;

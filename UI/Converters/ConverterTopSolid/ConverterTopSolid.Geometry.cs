@@ -21,7 +21,8 @@ using Vector = Objects.Geometry.Vector;
 using TsBox = TopSolid.Kernel.G.D3.Box;
 using TsPlane = TopSolid.Kernel.G.D3.Plane;
 using TsPoint = TopSolid.Kernel.G.D3.Point;
-using TsCurve = TopSolid.Kernel.G.D3.Curves.BSplineCurve;
+using TsLineCurve = TopSolid.Kernel.G.D3.Curves.LineCurve;
+using TsSplineCurve = TopSolid.Kernel.G.D3.Curves.BSplineCurve;
 using TsVector = TopSolid.Kernel.G.D3.Vector;
 using TsUVector = TopSolid.Kernel.G.D3.UnitVector;
 using TsEntity = TopSolid.Kernel.DB.Entities.Entity; // TopSolid.Kernel.DB.D3.Entities.GeometricEntity;
@@ -128,34 +129,47 @@ namespace Objects.Converter.TopSolid
             return new TsInterval((double)interval.start, (double)interval.end);
         }
 
-        // Plane 
-        public Plane PlaneToSpeckle(TsPlane plane)
+
+        // Plane
+        public Plane PlaneToSpeckle(TsPlane plane, string units = null)
         {
-            return new Plane(PointToSpeckle(plane.Po), VectorToSpeckle(plane.Vz), VectorToSpeckle(plane.Vx), VectorToSpeckle(plane.Vy));
+            var u = units ?? ModelUnits;
+            return new Plane(PointToSpeckle(plane.Po), VectorToSpeckle(plane.Vz), VectorToSpeckle(plane.Vx), VectorToSpeckle(plane.Vy), u);
         }
         public TsPlane PlaneToNative(Plane plane)
         {
             return new TsPlane(PointToNative(plane.origin), VectorToNative(plane.normal));
         }
 
+        // LineCurve 
+        public Line LineToSpeckle(TsLineCurve line)
+        {
+            return new Line(PointToSpeckle(line.Ps), PointToSpeckle(line.Pe));
+        }
+        public TsLineCurve LineToNative(Line line)
+        {
+            return new TsLineCurve(PointToNative(line.start), PointToNative(line.end));
+        }
 
         // Box
-        public Box BoxToSpeckle(TsBox bound, string units = null)
+        public Box BoxToSpeckle(TsBox box, string units = null)
         {
             try
             {
-                Box box = null;
-                box.volume = bound.Volume;
 
                 var u = units ?? ModelUnits;
-                TsPlane tsPlane = bound.Frame.Pxy;
-                tsPlane.Po = new TsPoint(tsPlane.Po.X + bound.Hx, tsPlane.Po.Y + bound.Hy, tsPlane.Po.Z + bound.Hz);
 
-                box = new Box(PlaneToSpeckle(tsPlane), new Interval(tsPlane.Po.X, tsPlane.Po.X + 2 * bound.Hx), new Interval(tsPlane.Po.Y, tsPlane.Po.Y + 2 * bound.Hy), new Interval(tsPlane.Po.Z, tsPlane.Po.Z + 2 * bound.Hz), u);
-                box.area = (bound.Hx * 2 * bound.Hy * 2 * 2) + (bound.Hx * 2 * bound.Hz * 2 * 2) + (bound.Hz * 2 * bound.Hy * 2 * 2);
-                box.volume = bound.Volume;
+                Box _box = null;
+                _box.volume = box.Volume;
 
-                return box;
+                TsPlane tsPlane = box.Frame.Pxy;
+                tsPlane.Po = new TsPoint(tsPlane.Po.X + box.Hx, tsPlane.Po.Y + box.Hy, tsPlane.Po.Z + box.Hz);
+
+                _box = new Box(PlaneToSpeckle(tsPlane), new Interval(tsPlane.Po.X, tsPlane.Po.X + 2 * box.Hx), new Interval(tsPlane.Po.Y, tsPlane.Po.Y + 2 * box.Hy), new Interval(tsPlane.Po.Z, tsPlane.Po.Z + 2 * box.Hz), u);
+                _box.area = (box.Hx * 2 * box.Hy * 2 * 2) + (box.Hx * 2 * box.Hz * 2 * 2) + (box.Hz * 2 * box.Hy * 2 * 2);
+                _box.volume = box.Volume;
+
+                return _box;
 
             }
             catch

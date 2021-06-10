@@ -337,7 +337,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             Exceptions.Clear();
 
             //var kit = KitManager.GetDefaultKit();
-            //var converter = kit.LoadConverter(Utils.AutocadAppName);
+            //var converter = kit.LoadConverter(Utils.TopSolidAppName);
             var transport = new ServerTransport(state.Client.Account, state.Stream.id);
 
             var stream = await state.Client.StreamGet(state.Stream.id);
@@ -377,7 +377,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             int count = 0;
             string layerPrefix = " ";
             var kit = KitManager.GetDefaultKit();
-            ISpeckleConverter converter = kit.LoadConverter(Applications.Autocad2023);
+            ISpeckleConverter converter = kit.LoadConverter(Applications.Autocad2022);
             var commitObjs = FlattenCommitObject(commitObject, converter, layerPrefix, state, ref count);
             foreach (var commitObj in commitObjs)
             {

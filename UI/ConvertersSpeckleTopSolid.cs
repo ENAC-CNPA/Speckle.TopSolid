@@ -4,10 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using TopSolid.Kernel.G.D3;
 using TopSolid.Kernel.G.D3.Curves;
+using SpBox = Objects.Geometry.Box;
 using SpeckleCurve = Objects.Geometry.Curve;
 using SpeckleLine = Objects.Geometry.Line;
 using SpecklePoint = Objects.Geometry.Point;
+using SpPlane = Objects.Geometry.Plane;
+using SpVector = Objects.Geometry.Vector;
+using TsBox = TopSolid.Kernel.G.D3.Box;
+using TsPlane = TopSolid.Kernel.G.D3.Plane;
 using TSPoint = TopSolid.Kernel.G.D3.Point;
+using TsVector = TopSolid.Kernel.G.D3.Vector;
 
 namespace EPFL.SpeckleTopSolid.UI
 {
@@ -197,6 +203,33 @@ namespace EPFL.SpeckleTopSolid.UI
             return new double[] { pt.X, pt.Y, pt.Z };
         }
 
+        private static SpPlane PlaneToSpeckle(TsPlane tsPlane)
+        {
+            SpPlane spPlane = new SpPlane(PointToSpeckle(tsPlane.Po), VectorToSpeckle(tsPlane.Vz), VectorToSpeckle(tsPlane.Vx), VectorToSpeckle(tsPlane.Vy));
+            return spPlane;
+        }
+
+
+        private static SpVector VectorToSpeckle(TsVector tsVector)
+        {
+            SpVector spVector = new SpVector(tsVector.X, tsVector.Y, tsVector.Z);
+            return spVector;
+        }
+
+
+        private static SpBox BoxToSpeckle(TsBox tsBox)
+        {
+            //var u = units ?? ModelUnits;
+            // TsPlane tsPlane = new TsPlane (tsBox.Po)
+            var speckleBox = new SpBox();
+            //speckleBox.area = tsbox.Area;
+            speckleBox.volume = tsBox.Volume;
+
+            var a = tsBox.Frame.Ax.Vx;
+
+
+            return speckleBox;
+        }
 
         //TODO Create a Speckle brep out of a TS shape : First trial ongoing
         //public static Objects.Geometry.Brep ShapeToSpeckle(Shape shape)
@@ -234,20 +267,14 @@ namespace EPFL.SpeckleTopSolid.UI
 
             PointList tPointsList = new PointList();
 
-            if (sPolyLine != null)
+            foreach (Objects.Geometry.Point p in sPolyLine.points)
             {
-                foreach (Objects.Geometry.Point p in sPolyLine.points)
-                {
-                    TopSolid.Kernel.G.D3.Point tPoint = PointToTS(p);
-                    tPointsList.Add(tPoint);
-                }
-                PolylineCurve tPolyLine = new PolylineCurve(sPolyLine.closed, tPointsList);
-                return tPolyLine;
+                TopSolid.Kernel.G.D3.Point tPoint = PointToTS(p);
+                tPointsList.Add(tPoint);
             }
-            else
-            {
-                return null;
-            }
+
+            PolylineCurve tPolyLine = new PolylineCurve(sPolyLine.closed, tPointsList);
+            return tPolyLine;
 
         }
 

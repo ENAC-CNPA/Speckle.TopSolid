@@ -29,6 +29,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
         [Inject]
         private IEventAggregator _events;
         private static string SpeckleKey = "speckle";
+        public ISpeckleKit topSolidKit;
         public List<Exception> Exceptions { get; set; } = new List<Exception>();
         public ConnectorBindingsTopSolid()
         {
@@ -376,8 +377,10 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
             int count = 0;
             string layerPrefix = " ";
-            var kit = KitManager.GetDefaultKit();
-            ISpeckleConverter converter = kit.LoadConverter(Applications.Autocad2022);
+
+            ISpeckleKit topSolidKit = KitManager.GetDefaultKit();
+            ISpeckleConverter converter = null; // TODO: Load custom kit !!!
+
             var commitObjs = FlattenCommitObject(commitObject, converter, layerPrefix, state, ref count);
             foreach (var commitObj in commitObjs)
             {

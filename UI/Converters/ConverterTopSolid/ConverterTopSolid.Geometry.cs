@@ -201,8 +201,8 @@ namespace Objects.Converter.TopSolid
                 closedV = surface.IsVClosed,
                 domainU = new Interval(surface.Us, surface.Ue),
                 domainV = new Interval(surface.Vs, surface.Ve),
-                knotsU = surface.UBs.ToList(),
-                knotsV = surface.VBs.ToList()
+                knotsU = GetCorrectKnots(surface.UBs.ToList(), surface.UCptsCount, surface.UDegree),
+                knotsV = GetCorrectKnots(surface.VBs.ToList(), surface.VCptsCount, surface.VDegree)
             };
             result.units = u;
 

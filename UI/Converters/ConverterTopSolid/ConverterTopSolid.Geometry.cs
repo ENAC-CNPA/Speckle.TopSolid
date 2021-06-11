@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TopSolid.Kernel.G.D3.Surfaces;
 using Box = Objects.Geometry.Box;
 using ControlPoint = Objects.Geometry.ControlPoint;
 using Interval = Objects.Primitive.Interval;
@@ -12,7 +13,6 @@ using TsInterval = TopSolid.Kernel.G.D1.Generic.Interval<double>;
 using TsLineCurve = TopSolid.Kernel.G.D3.Curves.LineCurve;
 using TsPlane = TopSolid.Kernel.G.D3.Plane;
 using TsPoint = TopSolid.Kernel.G.D3.Point;
-using TsSurface = TopSolid.Kernel.DB.D3.Surfaces.SurfaceEntity;
 using TsUVector = TopSolid.Kernel.G.D3.UnitVector;
 using TsVector = TopSolid.Kernel.G.D3.Vector;
 using Vector = Objects.Geometry.Vector;
@@ -64,30 +64,30 @@ namespace Objects.Converter.TopSolid
             return _point;
         }
 
-        public List<List<ControlPoint>> ControlPointsToSpeckle(TsSurface surface, string units = null)
+        public List<List<ControlPoint>> ControlPointsToSpeckle(BSplineSurface surface, string units = null)
         {
             var u = units ?? ModelUnits;
 
-            // TODO: Update converstion
+            // TODO: Update converstion - Done by AHW
             var points = new List<List<ControlPoint>>();
-            //int count = 0;
-            //for (var i = 0; i < surface.NumControlPointsInU; i++)
-            //{
-            //  var row = new List<ControlPoint>();
-            //  for (var j = 0; j < surface.NumControlPointsInV; j++)
-            //  {
-            //    var point = surface.ControlPoints[count];
-            //    double weight = 1;
-            //    try
-            //    {
-            //      weight = surface.Weights[count];
-            //    }
-            //    catch { }
-            //    row.Add(new ControlPoint(point.X, point.Y, point.Z, weight, u));
-            //    count++;
-            //  }
-            //  points.Add(row);
-            //}
+            int count = 0;
+            for (var i = 0; i < surface.UCptsCount; i++)
+            {
+                var row = new List<ControlPoint>();
+                for (var j = 0; j < surface.VCptsCount; j++)
+                {
+                    var point = surface.CPts[count];
+                    double weight = 1;
+                    try
+                    {
+                        weight = surface.CWts[count];
+                    }
+                    catch { }
+                    row.Add(new ControlPoint(point.X, point.Y, point.Z, weight, u));
+                    count++;
+                }
+                points.Add(row);
+            }
             return points;
         }
 
@@ -189,7 +189,43 @@ namespace Objects.Converter.TopSolid
             }
         }
 
+        public Geometry.Surface SurfaceToSpeckle(BSplineSurface surface, string units = null)
+        {
+            var u = units ?? ModelUnits;
+            var result = new Geometry.Surface
+            {
+                degreeU = surface.UDegree,
+                degreeV = surface.VDegree,
+                rational = surface.IsRational,
+                closedU = surface.IsUClosed,
+                closedV = surface.IsVClosed,
+                domainU = new Interval(surface.Us, surface.Ue),
+                domainV = new Interval(surface.Vs, surface.Ve),
+                knotsU = surface.UBs.ToList(),
+                knotsV = surface.VBs.ToList()
+            };
+            result.units = u;
+
+            result.SetControlPoints(ControlPointsToSpeckle(surface));
+            //result.bbox = BoxToSpeckle(new RH.Box(surface.GetBoundingBox(true)), u);
 
 
+            return result;
+        }
+
+        private List<double> GetCorrectKnots(List<double> knots, int controlPointCount, int degree)
+        {
+            var correctKnots = knots;
+            if (knots.Count == controlPointCount + degree + 1)
+            {
+                correctKnots.RemoveAt(0);
+                correctKnots.RemoveAt(correctKnots.Count - 1);
+            }
+
+            return correctKnots;
+
+
+
+        }
     }
 }

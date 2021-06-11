@@ -1,15 +1,9 @@
 ﻿using Speckle.Core.Kits;
 using Speckle.Core.Models;
-
-using System.Drawing;
-using System.Text.RegularExpressions;
-using TsUnits = TopSolid.Kernel.TX.Units.UnitFormat;
 using TopSolid.Kernel.DB.D3.Documents;
 using TopSolid.Kernel.DB.D3.Modeling.Documents;
-using TopSolid.Kernel.UI;
-using TopSolid.Kernel.DB.OptionSets;
 using TopSolid.Kernel.TX.Units;
-using TopSolid.Kernel.GR.Transforms;
+using TopSolid.Kernel.UI;
 
 namespace Objects.Converter.TopSolid
 {
@@ -43,9 +37,11 @@ namespace Objects.Converter.TopSolid
         private string UnitToSpeckle(Unit units)
         {
 
-            switch (units.Name) // TODO: Check Name conversion
+            switch (units.Name) // TODO: Check Name conversion + Add All French Names too
             {
                 case "Millimeter":
+                    return Units.Millimeters;
+                case "Millimètre":
                     return Units.Millimeters;
                 case "Centimeter":
                     return Units.Centimeters;

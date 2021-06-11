@@ -1,4 +1,5 @@
-﻿using Objects.Geometry;
+﻿using Objects.Converter.TopSolid;
+using Objects.Geometry;
 using Speckle.Core.Api;
 using Speckle.Core.Kits;
 using Speckle.Core.Models;
@@ -14,13 +15,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using TopSolid.Kernel.DB.D3.Curves;
 using TopSolid.Kernel.DB.D3.Documents;
 using TopSolid.Kernel.DB.D3.Modeling.Documents;
-using TopSolid.Kernel.DB.D3.Sketches;
+using TopSolid.Kernel.DB.D3.Shapes;
 using TopSolid.Kernel.DB.Entities;
 using TopSolid.Kernel.DB.Parameters;
-using TopSolid.Kernel.G.D3.Curves;
+using TopSolid.Kernel.G.D3.Surfaces;
 
 namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 {
@@ -141,7 +141,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             TopSolid.Kernel.TX.Undo.UndoSequence.Start("Test", true);
             TextParameterEntity texte = new TextParameterEntity(document, 0);
             texte.Value = (JsonConvert.SerializeObject(state));
-            //texte.Name = "TestparamSpeckle";
+            texte.Name = "TestparamSpeckle";
 
             try
             {
@@ -199,26 +199,31 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             //       
 
             var transports = new List<ITransport>() { new ServerTransport(client.Account, streamId) };
-            /* successful test for sending a topSolid line created by code ==> TODO same with line drawn graphically
+            /* //successful test for sending a topSolid line created by code ==> TODO same with line drawn graphically
             TopSolid.Kernel.G.D3.Point point1 = new TopSolid.Kernel.G.D3.Point(0, 0, 0);
             TopSolid.Kernel.G.D3.Point point2 = new TopSolid.Kernel.G.D3.Point(1, 1, 0);
             commitObject = ConvertersSpeckleTopSolid.LineToSpeckle(new TopSolid.Kernel.G.D3.Curves.LineCurve(point1, point2));
             */
 
+            /* // Successful test sending a Curve, converted and received in Rhino and Revit
             //Getting the curve to send
             PositionedSketchEntity entity = (TopSolid.Kernel.UI.Application.CurrentDocument as ModelingDocument).SketchesFolderEntity.DeepPositionedSketches.First() as PositionedSketchEntity;
             BSplineCurve curve = new BSplineCurve();
             curve = entity.Geometry.Profiles.First().Segments.First().Geometry.GetBSplineCurve(false, false, TopSolid.Kernel.G.Precision.LinearPrecision);
             // commitObject   = ConvertersSpeckleTopSolid.CurveToSpeckle(curve);
-
+            */
             //if (conversionResult != null)
+
+            ShapeEntity entity = (TopSolid.Kernel.UI.Application.CurrentDocument as ModelingDocument).ShapesFolderEntity.DeepShapes.First() as ShapeEntity;
+            BSplineSurface surface = (BSplineSurface)entity.Geometry.Faces.First().GetGeometry(false);
 
             var category = "default";
             if (commitObject[category] == null)
             {
                 commitObject[category] = new List<Base>();
             }
-            ((List<Base>)commitObject[category]).Add(ConvertersSpeckleTopSolid.CurveToSpeckle(curve));
+            ConverterTopSolid conv = new ConverterTopSolid();
+            ((List<Base>)commitObject[category]).Add(conv.SurfaceToSpeckle(surface));
 
 
 
@@ -229,8 +234,8 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
           //onProgressAction: dict => UpdateProgress(dict, state.Progress),
           onErrorAction: (s, e) =>
           {
-                  //OperationErrors.Add(e); // TODO!
-                  state.Errors.Add(e);
+              //OperationErrors.Add(e); // TODO!
+              state.Errors.Add(e);
               state.CancellationTokenSource.Cancel();
           }
           );
@@ -386,7 +391,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             {
                 // create the object's bake layer if it doesn't already exist
                 (Base obj, string layerName) = commitObj;
-          
+
 
                 TopSolid.Kernel.TX.Undo.UndoSequence.UndoCurrent();
                 TopSolid.Kernel.TX.Undo.UndoSequence.Start("Test", true);

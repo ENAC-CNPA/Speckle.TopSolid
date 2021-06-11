@@ -1,36 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-
-using Arc = Objects.Geometry.Arc;
 using Box = Objects.Geometry.Box;
-using Circle = Objects.Geometry.Circle;
 using ControlPoint = Objects.Geometry.ControlPoint;
-using Curve = Objects.Geometry.Curve;
-using Ellipse = Objects.Geometry.Ellipse;
 using Interval = Objects.Primitive.Interval;
 using Line = Objects.Geometry.Line;
-using Mesh = Objects.Geometry.Mesh;
 using Plane = Objects.Geometry.Plane;
 using Point = Objects.Geometry.Point;
-using Polycurve = Objects.Geometry.Polycurve;
-using Polyline = Objects.Geometry.Polyline;
-using Surface = Objects.Geometry.Surface;
-using Vector = Objects.Geometry.Vector;
-
 using TsBox = TopSolid.Kernel.G.D3.Box;
-using TsPlane = TopSolid.Kernel.G.D3.Plane;
-using TsPoint = TopSolid.Kernel.G.D3.Point;
-using TsLineCurve = TopSolid.Kernel.G.D3.Curves.LineCurve;
-using TsSplineCurve = TopSolid.Kernel.G.D3.Curves.BSplineCurve;
-using TsVector = TopSolid.Kernel.G.D3.Vector;
-using TsUVector = TopSolid.Kernel.G.D3.UnitVector;
-using TsEntity = TopSolid.Kernel.DB.Entities.Entity; // TopSolid.Kernel.DB.D3.Entities.GeometricEntity;
-using TsSurface = TopSolid.Kernel.DB.D3.Surfaces.SurfaceEntity;
 //using TsLine = TopSolid.Kernel.DB.D2.L;
 using TsInterval = TopSolid.Kernel.G.D1.Generic.Interval<double>;
-using TsGeometry = TopSolid.Kernel.G.IGeometry;
-using TsPointList = TopSolid.Kernel.G.D3.PointList;
+using TsLineCurve = TopSolid.Kernel.G.D3.Curves.LineCurve;
+using TsPlane = TopSolid.Kernel.G.D3.Plane;
+using TsPoint = TopSolid.Kernel.G.D3.Point;
+using TsSurface = TopSolid.Kernel.DB.D3.Surfaces.SurfaceEntity;
+using TsUVector = TopSolid.Kernel.G.D3.UnitVector;
+using TsVector = TopSolid.Kernel.G.D3.Vector;
+using Vector = Objects.Geometry.Vector;
 
 namespace Objects.Converter.TopSolid
 {
@@ -134,7 +119,7 @@ namespace Objects.Converter.TopSolid
         public Plane PlaneToSpeckle(TsPlane plane, string units = null)
         {
             var u = units ?? ModelUnits;
-            return new Plane(PointToSpeckle(plane.Po), VectorToSpeckle(plane.Vz), VectorToSpeckle(plane.Vx), VectorToSpeckle(plane.Vy), u);
+            return new Plane(PointToSpeckle(plane.Po), VectorToSpeckle(plane.Vx), VectorToSpeckle(plane.Vy), VectorToSpeckle(plane.Vz), u);
         }
         public TsPlane PlaneToNative(Plane plane)
         {
@@ -170,6 +155,32 @@ namespace Objects.Converter.TopSolid
                 _box.volume = box.Volume;
 
                 return _box;
+
+                /*
+                 {
+            //var u = units ?? ModelUnits;
+            //Get the Center of the box
+            //double X= 0, Y = 0, Z= 0;
+            //foreach (TSPoint p in tsBox.Corners)
+            //{
+            //    X += p.X / tsBox.Corners.Count;
+            //    Y += p.Y / tsBox.Corners.Count;
+            //    Z += p.Z / tsBox.Corners.Count;
+            //}
+
+            //TSPoint Obox = new TSPoint(X, Y, Z);
+
+
+            TsPlane tsPlane = tsBox.Frame.Pxy;
+            tsPlane.Po = new TSPoint(tsPlane.Po.X + tsBox.Hx, tsPlane.Po.Y + tsBox.Hy, tsPlane.Po.Z + tsBox.Hz);
+
+
+            var speckleBox = new SpBox(PlaneToSpeckle(tsPlane), new Interval(tsPlane.Po.X, tsPlane.Po.X + 2 * tsBox.Hx), new Interval(tsPlane.Po.Y, tsPlane.Po.Y + 2 * tsBox.Hy), new Interval(tsPlane.Po.Z, tsPlane.Po.Z + 2 * tsBox.Hz));
+            speckleBox.area = (tsBox.Hx * 2 * tsBox.Hy * 2 * 2) + (tsBox.Hx * 2 * tsBox.Hz * 2 * 2) + (tsBox.Hz * 2 * tsBox.Hy * 2 * 2);
+            speckleBox.volume = tsBox.Volume;
+
+            return speckleBox;
+                 */
 
             }
             catch

@@ -170,6 +170,11 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
         public List<Exception> OperationErrors { get; set; } = new List<Exception>();
         public override async Task<StreamState> SendStream(StreamState state)
         {
+            // check if converter is being picked up
+            var kit = KitManager.GetDefaultKit();
+            var converter = kit.LoadConverter("TopSolid");
+            var apps = converter.GetServicedApplications();
+
             if (state.Filter != null)
             {
                 state.SelectedObjectIds = GetSelectedObjects();

@@ -229,10 +229,6 @@
   <ItemGroup>
     <Compile Include="ConnectorBindingsTopSolid.cs" />
     <Compile Include="ConvertersSpeckleTopSolid.cs" />
-    <Compile Include="Converters\ConverterTopSolid\ConverterTopSolid.cs" />
-    <Compile Include="Converters\ConverterTopSolid\ConverterTopSolid.Entity.cs" />
-    <Compile Include="Converters\ConverterTopSolid\ConverterTopSolid.Geometry.cs" />
-    <Compile Include="Converters\ConverterTopSolid\ConverterTopSolid.Utils.cs" />
     <Compile Include="LaunchCommand\LaunchSpeckleCommand.cs" />
     <Compile Include="ContextMenu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -288,6 +284,12 @@
     <Content Include="Assets\speckle16.png" />
     <Content Include="Assets\speckle32.png" />
     <Content Include="Resources\s2logo.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="ConverterTopSolid\ConverterTopSolid.csproj">
+      <Project>{b806165a-12ef-4e99-9d0e-717cfbe93756}</Project>
+      <Name>ConverterTopSolid</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets')" />

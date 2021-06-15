@@ -40,7 +40,7 @@ using TsGeometry = TopSolid.Kernel.G.IGeometry;
 
 namespace Objects.Converter.TopSolid
 {
-    public partial class ConverterTopSolid // TODO: link to > ": ISpeckleConverter"
+    public partial class ConverterTopSolid : ISpeckleConverter
     {
 #if TOPSOLID15
         public static string TopSolidAppName = "TopSolid15"; // Applications.TopSolid15;
@@ -53,7 +53,7 @@ namespace Objects.Converter.TopSolid
         public string Author => "Speckle";
         public string WebsiteOrEmail => "https://speckle.systems";
 
-        public IEnumerable<string> GetServicedApplications() => new string[] { TopSolidAppName };
+        public IEnumerable<string> GetServicedApplications() => new string[] { "TopSolid" };
 
         public HashSet<Exception> ConversionErrors { get; private set; } = new HashSet<Exception>();
 
@@ -126,6 +126,11 @@ namespace Objects.Converter.TopSolid
         //            throw new NotSupportedException();
         //    }
         //}
+
+        public object ConvertToNative(Base @object)
+        {
+          throw new NotImplementedException();
+        }
 
         public List<object> ConvertToNative(List<Base> objects)
         {

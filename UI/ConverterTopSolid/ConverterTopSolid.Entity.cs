@@ -37,9 +37,9 @@ using dbVector = TopSolid.Kernel.DB.D3.Axes.AxisEntity;
 
 namespace Objects.Converter.TopSolid
 {
-    public partial class ConverterTopSolid
-    {
+  public partial class ConverterTopSolid
+  {
 
 
-    }
+  }
 }

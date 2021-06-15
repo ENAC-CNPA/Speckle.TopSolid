@@ -1,0 +1,89 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <AssemblyName>Objects.Converter.TopSolid</AssemblyName>
+    <RootNamespace>Objects.Converter.TopSolid</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Speckle.Objects" Version="2.1.17" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="TopSolid.Cad.Design.DB, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Cad.Design.DB.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.Automating, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.Automating.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.DB, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.DB.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.DB.D2, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.DB.D2.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.DB.D2.Sketches, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.DB.D2.Sketches.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.DB.D3, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.DB.D3.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.DB.D3.Modeling, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.DB.D3.Modeling.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.DB.D3.Shapes, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.DB.D3.Shapes.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.DB.D3.Sketches, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.DB.D3.Sketches.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.G.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D2.Curves, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.G.D2.Curves.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D2.Sketches, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.G.D2.Sketches.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D3.Curves, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.G.D3.Curves.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D3.Shapes, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.G.D3.Shapes.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D3.Sketches, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.G.D3.Sketches.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.G.D3.Surfaces, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.G.D3.Surfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.GR, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.GR.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.SX, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.SX.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.TX, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.TX.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.UI, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.UI.D3, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.UI.D3.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.WG, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.WG.dll</HintPath>
+    </Reference>
+    <Reference Include="TopSolid.Kernel.WX, Version=7.15.400.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\TopSolid.Kernel.WX.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="if '$(IsDesktopBuild)' == true OR  $(IsDesktopBuild) == '' (&#xA;&#xA;&#xD;&#xA;&#xD;&#xA;xcopy /Y /S &quot;$(TargetDir)$(AssemblyName).dll&quot; &quot;$(AppData)\Speckle\Kits\Objects\&quot;&#xD;&#xA;&#xD;&#xA;)" />
+  </Target>
+
+</Project>

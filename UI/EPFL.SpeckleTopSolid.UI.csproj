@@ -23,7 +23,7 @@
     <OutputPath>..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\</OutputPath>
     <PlatformTarget>x64</PlatformTarget>
     <NoWarn>1607</NoWarn>
-    <DefineConstants>TRACE;DEBUG;TOPSOLID15</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;TOPSOLID715</DefineConstants>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType>full</DebugType>
     <ErrorReport>prompt</ErrorReport>
@@ -75,8 +75,15 @@
     <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.31\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
     </Reference>
-    <Reference Include="Objects, Version=2.1.17.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Speckle.Objects.2.1.17\lib\netstandard2.0\Objects.dll</HintPath>
+    <Reference Include="Objects, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Users\tamu\AppData\Roaming\Speckle\Kits\Objects\Objects.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Objects.Converter.TopSolid715, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Users\tamu\AppData\Roaming\Speckle\Kits\Objects\Objects.Converter.TopSolid715.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Piwik.Tracker, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Piwik.Tracker.3.0.0\lib\net40\Piwik.Tracker.dll</HintPath>
@@ -229,10 +236,6 @@
   <ItemGroup>
     <Compile Include="ConnectorBindingsTopSolid.cs" />
     <Compile Include="ConvertersSpeckleTopSolid.cs" />
-    <Compile Include="Converters\ConverterTopSolid\ConverterTopSolid.cs" />
-    <Compile Include="Converters\ConverterTopSolid\ConverterTopSolid.Entity.cs" />
-    <Compile Include="Converters\ConverterTopSolid\ConverterTopSolid.Geometry.cs" />
-    <Compile Include="Converters\ConverterTopSolid\ConverterTopSolid.Utils.cs" />
     <Compile Include="LaunchCommand\LaunchSpeckleCommand.cs" />
     <Compile Include="ContextMenu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -241,6 +244,7 @@
     </Compile>
     <Compile Include="Session.cs" />
     <Compile Include="SpeckleStreamTS.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="LaunchCommand\LaunchSpeckleCommand.fr.resx">

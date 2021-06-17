@@ -302,12 +302,12 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
             if (obj is Base @base)
             {
-                //if (converter.CanConvertToNative(@base))
-                //{
-                //    objects.Add(new Tuple<Base, string>(@base, layer));
-                //    return objects;
-                //}
-                //else
+                if (converter.CanConvertToNative(@base))
+                {
+                    objects.Add(new Tuple<Base, string>(@base, layer));
+                    return objects;
+                }
+                else
                 {
                     int totalMembers = @base.GetDynamicMembers().Count();
                     foreach (var prop in @base.GetDynamicMembers())
@@ -337,8 +337,10 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
         {
             Exceptions.Clear();
 
-            //var kit = KitManager.GetDefaultKit();
-            //var converter = kit.LoadConverter(Utils.TopSolidAppName);
+
+
+            var kit = KitManager.GetDefaultKit();
+            var converter = kit.LoadConverter("TopSolid");
             var transport = new ServerTransport(state.Client.Account, state.Stream.id);
 
             var stream = await state.Client.StreamGet(state.Stream.id);
@@ -378,27 +380,34 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             int count = 0;
             string layerPrefix = " ";
 
-            ISpeckleKit topSolidKit = KitManager.GetDefaultKit();
-            ISpeckleConverter converter = null; // TODO: Load custom kit !!!
+
+
 
             var commitObjs = FlattenCommitObject(commitObject, converter, layerPrefix, state, ref count);
+
+
+            TopSolid.Kernel.TX.Undo.UndoSequence.UndoCurrent();
+            TopSolid.Kernel.TX.Undo.UndoSequence.Start("Test", true);
+
             foreach (var commitObj in commitObjs)
             {
+
                 // create the object's bake layer if it doesn't already exist
                 (Base obj, string layerName) = commitObj;
           
 
-                TopSolid.Kernel.TX.Undo.UndoSequence.UndoCurrent();
-                TopSolid.Kernel.TX.Undo.UndoSequence.Start("Test", true);
                 //TextParameterEntity texte = new TextParameterEntity(document, 0);
                 //texte.Value = (JsonConvert.SerializeObject(state));
                 //texte.Name = "TestparamSpeckle";
                 //document.ParametersFolderEntity.AddEntity(texte);
 
 
+                var converted = converter.ConvertToNative(obj);
+                var convertedEntity = converted as Entity;
+
                 //Polyline poly = @obj;
 
-                var converted = ConvertersSpeckleTopSolid.PolyLinetoTS((Objects.Geometry.Polyline)obj);
+                //var converted = ConvertersSpeckleTopSolid.PolyLinetoTS((Objects.Geometry.Polyline)obj);
 
 
 
@@ -415,7 +424,6 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
 
 
-                TopSolid.Kernel.TX.Undo.UndoSequence.End();
 
 
                 //if (convertedEntity != null)
@@ -437,6 +445,9 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
                 //    state.Errors.Add(new Exception($"Failed to convert object {obj.id} of type {obj.speckle_type}."));
                 //}
             }
+
+
+            TopSolid.Kernel.TX.Undo.UndoSequence.End();
 
             //using (DocumentLock l = Doc.LockDocument())
             {/*Autocad Blabla

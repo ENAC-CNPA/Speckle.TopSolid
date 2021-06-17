@@ -10,11 +10,21 @@ using TopSolid.Kernel.UI;
 using TopSolid.Kernel.DB.OptionSets;
 using TopSolid.Kernel.TX.Units;
 using TopSolid.Kernel.GR.Transforms;
+using TsApp = TopSolid.Kernel.UI.Application;
 
-namespace Objects.Converter.TopSolid
+
+
+namespace EPFL.SpeckleTopSolid.UI
 {
-    public partial class ConverterTopSolid
+    public partial class Utils
     {
+
+
+#if TOPSOLID715
+        public static string TopSolidAppName = "TopSolid715"; // TODO: Update Speckle.Core.Kits
+        public static string AppName = "TopSolid";
+#endif
+
         #region units
         private string _modelUnits;
         public string ModelUnits
@@ -22,7 +32,7 @@ namespace Objects.Converter.TopSolid
             get
             {
 
-                GeometricDocument Doc = Application.CurrentDocument as ModelingDocument;
+                GeometricDocument Doc = TsApp.CurrentDocument as ModelingDocument;
 
                 if (string.IsNullOrEmpty(_modelUnits))
                     _modelUnits = UnitToSpeckle(Doc.LengthUnit);

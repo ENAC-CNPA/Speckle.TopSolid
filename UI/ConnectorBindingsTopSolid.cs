@@ -22,6 +22,7 @@ using TopSolid.Kernel.DB.Entities;
 using TopSolid.Kernel.DB.Parameters;
 using TopSolid.Kernel.G.D3.Curves;
 
+
 namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 {
     public partial class ConnectorBindingsTopSolid : ConnectorBindings
@@ -315,10 +316,31 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
                         count++;
 
                         // get bake layer name
-                        string objLayerName = prop.StartsWith("@") ? prop.Remove(0, 1) : prop;
-                        string acLayerName = $"{layer}${objLayerName}";
+                        //string objLayerName = prop.StartsWith("@") ? prop.Remove(0, 1) : prop;
+                        //string acLayerName = $"{layer}${objLayerName}";
 
-                        var nestedObjects = FlattenCommitObject(@base[prop], converter, acLayerName, state, ref count, foundConvertibleMember);
+                        var val = @base[prop];
+
+                        if (val is IEnumerable<System.Object> list)
+                        {
+                            foreach (var item in list)
+                            {
+                                var objs = FlattenCommitObject(item, converter, "", state, ref count, foundConvertibleMember);
+                                if (objs.Count > 0)
+                                {
+                                    objects.AddRange(objs);
+                                    foundConvertibleMember = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            string test = (val.GetType().ToString());
+                        }
+
+
+
+                        var nestedObjects = FlattenCommitObject(@base[prop], converter, "" ,state, ref count, foundConvertibleMember);
                         if (nestedObjects.Count > 0)
                         {
                             objects.AddRange(nestedObjects);
@@ -380,9 +402,6 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             int count = 0;
             string layerPrefix = " ";
 
-
-
-
             var commitObjs = FlattenCommitObject(commitObject, converter, layerPrefix, state, ref count);
 
 
@@ -394,7 +413,6 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
                 // create the object's bake layer if it doesn't already exist
                 (Base obj, string layerName) = commitObj;
-          
 
                 //TextParameterEntity texte = new TextParameterEntity(document, 0);
                 //texte.Value = (JsonConvert.SerializeObject(state));
@@ -403,7 +421,9 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
 
                 var converted = converter.ConvertToNative(obj);
-                var convertedEntity = converted as Entity;
+                CurveEntity convertedEntity = new CurveEntity(document, 0);
+                convertedEntity.Geometry = converted as TopSolid.Kernel.G.D3.Curves.Curve;
+                convertedEntity.Create();
 
                 //Polyline poly = @obj;
 

@@ -7,7 +7,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPFL.SpeckleTopSolid.AddIn"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPFL.SpeckleTopSolid.UI", "UI\EPFL.SpeckleTopSolid.UI.csproj", "{155758C6-E385-4284-8700-3C3F5A52090C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Objects", "..\speckle-sharp\Objects\Objects\Objects.csproj", "{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConverterTopSolid715", "..\speckle-sharp\Objects\Converters\ConverterTopSolid\ConverterTopSolid715\ConverterTopSolid715.csproj", "{16F2B222-0545-40F1-B05D-E9B90D078ABF}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\speckle-sharp\Objects\Converters\ConverterTopSolid\ConverterTopSolidShared\ConverterTopSolidShared.projitems*{16f2b222-0545-40f1-b05d-e9b90d078abf}*SharedItemsImports = 5
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
@@ -31,6 +38,22 @@ Global
 		{155758C6-E385-4284-8700-3C3F5A52090C}.Release|Any CPU.Build.0 = Release|x64
 		{155758C6-E385-4284-8700-3C3F5A52090C}.Release|x64.ActiveCfg = Release|x64
 		{155758C6-E385-4284-8700-3C3F5A52090C}.Release|x64.Build.0 = Release|x64
+		{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}.Debug|x64.Build.0 = Debug|Any CPU
+		{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}.Release|x64.ActiveCfg = Release|Any CPU
+		{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}.Release|x64.Build.0 = Release|Any CPU
+		{16F2B222-0545-40F1-B05D-E9B90D078ABF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16F2B222-0545-40F1-B05D-E9B90D078ABF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16F2B222-0545-40F1-B05D-E9B90D078ABF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{16F2B222-0545-40F1-B05D-E9B90D078ABF}.Debug|x64.Build.0 = Debug|Any CPU
+		{16F2B222-0545-40F1-B05D-E9B90D078ABF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16F2B222-0545-40F1-B05D-E9B90D078ABF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16F2B222-0545-40F1-B05D-E9B90D078ABF}.Release|x64.ActiveCfg = Release|Any CPU
+		{16F2B222-0545-40F1-B05D-E9B90D078ABF}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

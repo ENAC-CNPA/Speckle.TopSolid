@@ -75,16 +75,6 @@
     <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.31\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
     </Reference>
-    <Reference Include="Objects, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Users\tamu\AppData\Roaming\Speckle\Kits\Objects\Objects.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Objects.Converter.TopSolid715, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Users\tamu\AppData\Roaming\Speckle\Kits\Objects\Objects.Converter.TopSolid715.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Piwik.Tracker, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Piwik.Tracker.3.0.0\lib\net40\Piwik.Tracker.dll</HintPath>
     </Reference>
@@ -292,6 +282,16 @@
     <Content Include="Assets\speckle16.png" />
     <Content Include="Assets\speckle32.png" />
     <Content Include="Resources\s2logo.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\speckle-sharp\Objects\Converters\ConverterTopSolid\ConverterTopSolid715\ConverterTopSolid715.csproj">
+      <Project>{16f2b222-0545-40f1-b05d-e9b90d078abf}</Project>
+      <Name>ConverterTopSolid715</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\speckle-sharp\Objects\Objects\Objects.csproj">
+      <Project>{260fbe34-1fc0-4a59-874d-3dbb7f3a36c5}</Project>
+      <Name>Objects</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets')" />

@@ -171,6 +171,12 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
         public List<Exception> OperationErrors { get; set; } = new List<Exception>();
         public override async Task<StreamState> SendStream(StreamState state)
         {
+
+            var kit = KitManager.GetDefaultKit();
+            var converter = kit.LoadConverter("TopSolid");
+
+
+
             if (state.Filter != null)
             {
                 state.SelectedObjectIds = GetSelectedObjects();
@@ -207,9 +213,9 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             */
 
             //Getting the curve to send
-            PositionedSketchEntity entity = (TopSolid.Kernel.UI.Application.CurrentDocument as ModelingDocument).SketchesFolderEntity.DeepPositionedSketches.First() as PositionedSketchEntity;
-            BSplineCurve curve = new BSplineCurve();
-            curve = entity.Geometry.Profiles.First().Segments.First().Geometry.GetBSplineCurve(false, false, TopSolid.Kernel.G.Precision.LinearPrecision);
+            //PositionedSketchEntity entity = (TopSolid.Kernel.UI.Application.CurrentDocument as ModelingDocument).SketchesFolderEntity.DeepPositionedSketches.First() as PositionedSketchEntity;
+            //BSplineCurve curve = new BSplineCurve();
+            //curve = entity.Geometry.Profiles.First().Segments.First().Geometry.GetBSplineCurve(false, false, TopSolid.Kernel.G.Precision.LinearPrecision);
             // commitObject   = ConvertersSpeckleTopSolid.CurveToSpeckle(curve);
 
             //if (conversionResult != null)
@@ -219,7 +225,16 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             {
                 commitObject[category] = new List<Base>();
             }
-            ((List<Base>)commitObject[category]).Add(ConvertersSpeckleTopSolid.CurveToSpeckle(curve));
+
+            IEnumerable<TopSolid.Kernel.DB.Elements.Element> elments = TopSolid.Kernel.UI.Selections.CurrentSelections.GetSelectedElements();
+
+            foreach (TopSolid.Kernel.DB.Elements.Element element in elments)
+            {
+                Base converted = null;
+                converted = converter.ConvertToSpeckle(element);
+
+            }
+
 
 
 
@@ -573,11 +588,15 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
         public override List<string> GetSelectedObjects()
         {
-            List<string> Objs = new List<string>();
-            Objs.Add(document.AbsoluteOriginPointEntity.Id.ToString());
-            return Objs;
-            //var objs = Doc?.Objects.GetSelectedObjects(true, false).Select(obj => obj.Id.ToString()).ToList();
-            //return objs;
+            IEnumerable<TopSolid.Kernel.DB.Elements.Element> elments = TopSolid.Kernel.UI.Selections.CurrentSelections.GetSelectedElements();
+            List<string> elementsList = new List<string>();
+
+            foreach (TopSolid.Kernel.DB.Elements.Element element in elments)
+            {
+                elementsList.Add(element.Id.ToString());
+            }
+
+            return elementsList;
 
         }
 

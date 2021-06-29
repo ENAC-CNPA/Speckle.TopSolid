@@ -1,4 +1,4 @@
-﻿using Objects.Geometry;
+﻿
 using Speckle.Core.Api;
 using Speckle.Core.Kits;
 using Speckle.Core.Models;
@@ -377,7 +377,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
 
             var kit = KitManager.GetDefaultKit();
-            var converter = kit.LoadConverter("TopSolid");
+            var converter = kit.LoadConverter("TopSolid715");
             var transport = new ServerTransport(state.Client.Account, state.Stream.id);
 
             var stream = await state.Client.StreamGet(state.Stream.id);
@@ -572,18 +572,6 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             return state;
         }
 
-
-        public object ConvertToNative(Base @object)
-        {
-            switch (@object)
-            {
-                case Polyline o:
-                    return ConvertersSpeckleTopSolid.PolyLinetoTS(o);
-
-                default:
-                    throw new NotSupportedException();
-            }
-        }
 
 
         public override List<string> GetSelectedObjects()

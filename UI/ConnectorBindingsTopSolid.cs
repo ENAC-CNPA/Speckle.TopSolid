@@ -14,14 +14,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using TopSolid.Kernel.DB.D3.Curves;
 using TopSolid.Kernel.DB.D3.Documents;
 using TopSolid.Kernel.DB.D3.Modeling.Documents;
-using TopSolid.Kernel.DB.D3.Sketches;
+using TopSolid.Kernel.DB.D3.Surfaces;
 using TopSolid.Kernel.DB.Entities;
 using TopSolid.Kernel.DB.Parameters;
-using TopSolid.Kernel.G.D3.Curves;
-
+using TopSolid.Kernel.G.D3.Shapes;
+using TopSolid.Kernel.G.D3.Surfaces;
 
 namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 {
@@ -164,8 +163,8 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             //Update value of the text parameter in TS
             TopSolid.Kernel.TX.Undo.UndoSequence.UndoCurrent();
             TopSolid.Kernel.TX.Undo.UndoSequence.Start("Test", true);
-            var a = document.ParametersFolderEntity.SearchEntity("TestparamSpeckle") as TextParameterEntity;
-            a.Value = (JsonConvert.SerializeObject(state));
+            //var a = document.ParametersFolderEntity.SearchEntity("TestparamSpeckle") as TextParameterEntity;
+            //a.Value = (JsonConvert.SerializeObject(state));
             TopSolid.Kernel.TX.Undo.UndoSequence.End();
         }
         public List<Exception> OperationErrors { get; set; } = new List<Exception>();
@@ -173,7 +172,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
         {
 
             var kit = KitManager.GetDefaultKit();
-            var converter = kit.LoadConverter("TopSolid");
+            var converter = kit.LoadConverter("TopSolid715");
 
 
 
@@ -226,12 +225,15 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
                 commitObject[category] = new List<Base>();
             }
 
-            IEnumerable<TopSolid.Kernel.DB.Elements.Element> elments = TopSolid.Kernel.UI.Selections.CurrentSelections.GetSelectedElements();
+            IEnumerable<TopSolid.Kernel.DB.Elements.Element> elements = TopSolid.Kernel.UI.Selections.CurrentSelections.GetSelectedElements();
 
-            foreach (TopSolid.Kernel.DB.Elements.Element element in elments)
+            foreach (TopSolid.Kernel.DB.Elements.Element element in elements)
             {
                 Base converted = null;
-                converted = converter.ConvertToSpeckle(element);
+
+                //TODO this is only for demo with a surf, make it more Generic
+                converted = converter.ConvertToSpeckle((element.Geometry as Shape).Faces.First().GetBsplineGeometry(TopSolid.Kernel.G.Precision.LinearPrecision, false, false, false) as BSplineSurface);
+                ((List<Base>)commitObject[category]).Add(converted);
 
             }
 
@@ -245,8 +247,8 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
           //onProgressAction: dict => UpdateProgress(dict, state.Progress),
           onErrorAction: (s, e) =>
           {
-                  //OperationErrors.Add(e); // TODO!
-                  state.Errors.Add(e);
+              //OperationErrors.Add(e); // TODO!
+              state.Errors.Add(e);
               state.CancellationTokenSource.Cancel();
           }
           );
@@ -355,7 +357,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
 
 
-                        var nestedObjects = FlattenCommitObject(@base[prop], converter, "" ,state, ref count, foundConvertibleMember);
+                        var nestedObjects = FlattenCommitObject(@base[prop], converter, "", state, ref count, foundConvertibleMember);
                         if (nestedObjects.Count > 0)
                         {
                             objects.AddRange(nestedObjects);
@@ -436,8 +438,8 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
 
                 var converted = converter.ConvertToNative(obj);
-                CurveEntity convertedEntity = new CurveEntity(document, 0);
-                convertedEntity.Geometry = converted as TopSolid.Kernel.G.D3.Curves.Curve;
+                SurfaceEntity convertedEntity = new SurfaceEntity(document, 0);
+                convertedEntity.Geometry = converted as BSplineSurface;
                 convertedEntity.Create();
 
                 //Polyline poly = @obj;

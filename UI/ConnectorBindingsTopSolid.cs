@@ -230,10 +230,16 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             foreach (TopSolid.Kernel.DB.Elements.Element element in elements)
             {
                 Base converted = null;
-
+                int j = 0;
                 //TODO this is only for demo with a surf, make it more Generic
-                converted = converter.ConvertToSpeckle((element.Geometry as Shape).Faces.First().GetBsplineGeometry(TopSolid.Kernel.G.Precision.LinearPrecision, false, false, false) as BSplineSurface);
+                Shape x = new Shape(element);
+                x = (Shape)element.Geometry;
+
+                converted = converter.ConvertToSpeckle(x);
                 ((List<Base>)commitObject[category]).Add(converted);
+                //j++;
+
+
 
             }
 
@@ -441,6 +447,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
                 SurfaceEntity convertedEntity = new SurfaceEntity(document, 0);
                 convertedEntity.Geometry = converted as BSplineSurface;
                 convertedEntity.Create();
+
 
                 //Polyline poly = @obj;
 

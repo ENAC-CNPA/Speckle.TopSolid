@@ -41,7 +41,7 @@ namespace EPFL.SpeckleTopSolid.UI
         }
         private void SetUnits(Base geom)
         {
-            geom.units = ModelUnits;
+            geom["units"] = ModelUnits;
         }
 
         private double ScaleToNative(double value, string units)

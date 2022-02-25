@@ -6,12 +6,20 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPFL.SpeckleTopSolid.AddIn", "AddIn\EPFL.SpeckleTopSolid.AddIn.csproj", "{197B998A-2851-48B0-99C1-F584156F74C9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPFL.SpeckleTopSolid.UI", "UI\EPFL.SpeckleTopSolid.UI.csproj", "{155758C6-E385-4284-8700-3C3F5A52090C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A97C3046-2D55-4C49-AB40-A3C2194B82FA} = {A97C3046-2D55-4C49-AB40-A3C2194B82FA}
+		{630988DA-83DF-42E5-A6F6-50025919ACD7} = {630988DA-83DF-42E5-A6F6-50025919ACD7}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Objects", "..\speckle-sharp\Objects\Objects\Objects.csproj", "{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConverterTopSolid715", "..\speckle-sharp\Objects\Converters\ConverterTopSolid\ConverterTopSolid715\ConverterTopSolid715.csproj", "{16F2B222-0545-40F1-B05D-E9B90D078ABF}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ConverterTopSolidShared", "..\speckle-sharp\Objects\Converters\ConverterTopSolid\ConverterTopSolidShared\ConverterTopSolidShared.shproj", "{4D0F9F8A-2E89-4780-978A-CD92D6D7B844}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopUI", "..\speckle-sharp\DesktopUI\DesktopUI\DesktopUI.csproj", "{A97C3046-2D55-4C49-AB40-A3C2194B82FA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "..\speckle-sharp\Core\Core\Core.csproj", "{630988DA-83DF-42E5-A6F6-50025919ACD7}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -57,6 +65,22 @@ Global
 		{16F2B222-0545-40F1-B05D-E9B90D078ABF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{16F2B222-0545-40F1-B05D-E9B90D078ABF}.Release|x64.ActiveCfg = Release|Any CPU
 		{16F2B222-0545-40F1-B05D-E9B90D078ABF}.Release|x64.Build.0 = Release|Any CPU
+		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Debug|x64.ActiveCfg = Debug|x64
+		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Debug|x64.Build.0 = Debug|x64
+		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Release|x64.ActiveCfg = Release|x64
+		{A97C3046-2D55-4C49-AB40-A3C2194B82FA}.Release|x64.Build.0 = Release|x64
+		{630988DA-83DF-42E5-A6F6-50025919ACD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{630988DA-83DF-42E5-A6F6-50025919ACD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{630988DA-83DF-42E5-A6F6-50025919ACD7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{630988DA-83DF-42E5-A6F6-50025919ACD7}.Debug|x64.Build.0 = Debug|Any CPU
+		{630988DA-83DF-42E5-A6F6-50025919ACD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{630988DA-83DF-42E5-A6F6-50025919ACD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{630988DA-83DF-42E5-A6F6-50025919ACD7}.Release|x64.ActiveCfg = Release|Any CPU
+		{630988DA-83DF-42E5-A6F6-50025919ACD7}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

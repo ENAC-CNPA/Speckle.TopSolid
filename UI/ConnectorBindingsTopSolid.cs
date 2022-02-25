@@ -308,7 +308,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
         }
 
         //Copied Method from the Autocad Connector, was needed for the Sendstream
-        private void UpdateProgress(ConcurrentDictionary<string, int> dict, ProgressReport progress)
+        private void UpdateProgress(ConcurrentDictionary<string, int> dict, Speckle.DesktopUI.Utils.ProgressReport progress)
         {
             if (progress == null)
             {

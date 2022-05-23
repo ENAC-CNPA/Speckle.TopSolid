@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopUI", "..\speckle-sha
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "..\speckle-sharp\Core\Core\Core.csproj", "{630988DA-83DF-42E5-A6F6-50025919ACD7}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopUI2", "..\speckle-sharp\DesktopUI2\DesktopUI2\DesktopUI2.csproj", "{8F879D45-E34B-472E-A597-46CA51052258}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopUI2.Launcher", "..\speckle-sharp\DesktopUI2\DesktopUI2.Launcher\DesktopUI2.Launcher.csproj", "{06452B38-044D-4B41-8A31-42A7A2CBFC7E}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\speckle-sharp\Objects\Converters\ConverterTopSolid\ConverterTopSolidShared\ConverterTopSolidShared.projitems*{16f2b222-0545-40f1-b05d-e9b90d078abf}*SharedItemsImports = 5
@@ -81,6 +85,22 @@ Global
 		{630988DA-83DF-42E5-A6F6-50025919ACD7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{630988DA-83DF-42E5-A6F6-50025919ACD7}.Release|x64.ActiveCfg = Release|Any CPU
 		{630988DA-83DF-42E5-A6F6-50025919ACD7}.Release|x64.Build.0 = Release|Any CPU
+		{8F879D45-E34B-472E-A597-46CA51052258}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F879D45-E34B-472E-A597-46CA51052258}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F879D45-E34B-472E-A597-46CA51052258}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8F879D45-E34B-472E-A597-46CA51052258}.Debug|x64.Build.0 = Debug|Any CPU
+		{8F879D45-E34B-472E-A597-46CA51052258}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F879D45-E34B-472E-A597-46CA51052258}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F879D45-E34B-472E-A597-46CA51052258}.Release|x64.ActiveCfg = Release|Any CPU
+		{8F879D45-E34B-472E-A597-46CA51052258}.Release|x64.Build.0 = Release|Any CPU
+		{06452B38-044D-4B41-8A31-42A7A2CBFC7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06452B38-044D-4B41-8A31-42A7A2CBFC7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06452B38-044D-4B41-8A31-42A7A2CBFC7E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{06452B38-044D-4B41-8A31-42A7A2CBFC7E}.Debug|x64.Build.0 = Debug|Any CPU
+		{06452B38-044D-4B41-8A31-42A7A2CBFC7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06452B38-044D-4B41-8A31-42A7A2CBFC7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06452B38-044D-4B41-8A31-42A7A2CBFC7E}.Release|x64.ActiveCfg = Release|Any CPU
+		{06452B38-044D-4B41-8A31-42A7A2CBFC7E}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

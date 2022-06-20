@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{155758C6-E385-4284-8700-3C3F5A52090C}</ProjectGuid>
+    <ProjectGuid>{79C8CDF9-7840-4CBF-8E69-512CEF9F5E6B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EPFL.SpeckleTopSolid.UI</RootNamespace>
@@ -202,15 +202,15 @@
     <Content Include="Assets\speckle32.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\speckle-sharp\Core\Core\Core.csproj">
+    <ProjectReference Include="..\..\..\speckle-sharp\Core\Core\Core.csproj">
       <Project>{630988da-83df-42e5-a6f6-50025919acd7}</Project>
       <Name>Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\speckle-sharp\DesktopUI2\DesktopUI2\DesktopUI2.csproj">
+    <ProjectReference Include="..\..\..\speckle-sharp\DesktopUI2\DesktopUI2\DesktopUI2.csproj">
       <Project>{8f879d45-e34b-472e-a597-46ca51052258}</Project>
       <Name>DesktopUI2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\speckle-sharp\DesktopUI\DesktopUI\DesktopUI.csproj">
+    <ProjectReference Include="..\..\..\speckle-sharp\DesktopUI\DesktopUI\DesktopUI.csproj">
       <Project>{a97c3046-2d55-4c49-ab40-a3c2194b82fa}</Project>
       <Name>DesktopUI</Name>
     </ProjectReference>

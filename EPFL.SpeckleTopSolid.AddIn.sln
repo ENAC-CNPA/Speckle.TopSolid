@@ -3,14 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPFL.SpeckleTopSolid.AddIn", "AddIn\EPFL.SpeckleTopSolid.AddIn.csproj", "{197B998A-2851-48B0-99C1-F584156F74C9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPFL.SpeckleTopSolid.UI", "UI\EPFL.SpeckleTopSolid.UI.csproj", "{155758C6-E385-4284-8700-3C3F5A52090C}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A97C3046-2D55-4C49-AB40-A3C2194B82FA} = {A97C3046-2D55-4C49-AB40-A3C2194B82FA}
-		{630988DA-83DF-42E5-A6F6-50025919ACD7} = {630988DA-83DF-42E5-A6F6-50025919ACD7}
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Objects", "..\speckle-sharp\Objects\Objects\Objects.csproj", "{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConverterTopSolid715", "..\speckle-sharp\Objects\Converters\ConverterTopSolid\ConverterTopSolid715\ConverterTopSolid715.csproj", "{16F2B222-0545-40F1-B05D-E9B90D078ABF}"
@@ -25,10 +17,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopUI2", "..\speckle-sh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopUI2.Launcher", "..\speckle-sharp\DesktopUI2\DesktopUI2.Launcher\DesktopUI2.Launcher.csproj", "{06452B38-044D-4B41-8A31-42A7A2CBFC7E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Local Dependencies", "Local Dependencies", "{EFCD5E77-BC22-4F34-B6A2-1E96E591041F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TopSolidVersionProjects", "TopSolidVersionProjects", "{2CDA356A-3924-4C1F-84CF-8DB8698F20EA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ConverterTopSolid", "ConverterTopSolid", "{4C73266F-0AB9-446A-9903-1D65C07CFDAC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ConnectorTopSolidShared", "ConnectorTopSolidShared", "{2A93BF5E-87A9-49DB-BB53-7FD8A1C28623}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPFL.SpeckleTopSolid.UI", "ConnectorTopSolid\UI\EPFL.SpeckleTopSolid.UI.csproj", "{79C8CDF9-7840-4CBF-8E69-512CEF9F5E6B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPFL.SpeckleTopSolid715.AddIn", "ConnectorTopSolid715\EPFL.SpeckleTopSolid715.AddIn.csproj", "{79DD083E-8302-4A38-B4B2-612B94981B14}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConverterTopSolid716", "..\speckle-sharp\Objects\Converters\ConverterTopSolid\ConverterTopSolid716\ConverterTopSolid716.csproj", "{7CDB42B5-254B-40B5-97AC-87FB7E43B68F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPFL.SpeckleTopSolid716.AddIn", "ConnectorTopSolid716\EPFL.SpeckleTopSolid716.AddIn.csproj", "{D0F41185-63EA-4E5B-965F-754578E182ED}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\speckle-sharp\Objects\Converters\ConverterTopSolid\ConverterTopSolidShared\ConverterTopSolidShared.projitems*{16f2b222-0545-40f1-b05d-e9b90d078abf}*SharedItemsImports = 5
 		..\speckle-sharp\Objects\Converters\ConverterTopSolid\ConverterTopSolidShared\ConverterTopSolidShared.projitems*{4d0f9f8a-2e89-4780-978a-cd92d6d7b844}*SharedItemsImports = 13
+		..\speckle-sharp\Objects\Converters\ConverterTopSolid\ConverterTopSolidShared\ConverterTopSolidShared.projitems*{7cdb42b5-254b-40b5-97ac-87fb7e43b68f}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,22 +46,6 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{197B998A-2851-48B0-99C1-F584156F74C9}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{197B998A-2851-48B0-99C1-F584156F74C9}.Debug|Any CPU.Build.0 = Debug|x64
-		{197B998A-2851-48B0-99C1-F584156F74C9}.Debug|x64.ActiveCfg = Debug|x64
-		{197B998A-2851-48B0-99C1-F584156F74C9}.Debug|x64.Build.0 = Debug|x64
-		{197B998A-2851-48B0-99C1-F584156F74C9}.Release|Any CPU.ActiveCfg = Release|x64
-		{197B998A-2851-48B0-99C1-F584156F74C9}.Release|Any CPU.Build.0 = Release|x64
-		{197B998A-2851-48B0-99C1-F584156F74C9}.Release|x64.ActiveCfg = Release|x64
-		{197B998A-2851-48B0-99C1-F584156F74C9}.Release|x64.Build.0 = Release|x64
-		{155758C6-E385-4284-8700-3C3F5A52090C}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{155758C6-E385-4284-8700-3C3F5A52090C}.Debug|Any CPU.Build.0 = Debug|x64
-		{155758C6-E385-4284-8700-3C3F5A52090C}.Debug|x64.ActiveCfg = Debug|x64
-		{155758C6-E385-4284-8700-3C3F5A52090C}.Debug|x64.Build.0 = Debug|x64
-		{155758C6-E385-4284-8700-3C3F5A52090C}.Release|Any CPU.ActiveCfg = Release|x64
-		{155758C6-E385-4284-8700-3C3F5A52090C}.Release|Any CPU.Build.0 = Release|x64
-		{155758C6-E385-4284-8700-3C3F5A52090C}.Release|x64.ActiveCfg = Release|x64
-		{155758C6-E385-4284-8700-3C3F5A52090C}.Release|x64.Build.0 = Release|x64
 		{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -101,9 +94,49 @@ Global
 		{06452B38-044D-4B41-8A31-42A7A2CBFC7E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{06452B38-044D-4B41-8A31-42A7A2CBFC7E}.Release|x64.ActiveCfg = Release|Any CPU
 		{06452B38-044D-4B41-8A31-42A7A2CBFC7E}.Release|x64.Build.0 = Release|Any CPU
+		{79C8CDF9-7840-4CBF-8E69-512CEF9F5E6B}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{79C8CDF9-7840-4CBF-8E69-512CEF9F5E6B}.Debug|x64.ActiveCfg = Debug|x64
+		{79C8CDF9-7840-4CBF-8E69-512CEF9F5E6B}.Debug|x64.Build.0 = Debug|x64
+		{79C8CDF9-7840-4CBF-8E69-512CEF9F5E6B}.Release|Any CPU.ActiveCfg = Release|x64
+		{79C8CDF9-7840-4CBF-8E69-512CEF9F5E6B}.Release|x64.ActiveCfg = Release|x64
+		{79C8CDF9-7840-4CBF-8E69-512CEF9F5E6B}.Release|x64.Build.0 = Release|x64
+		{79DD083E-8302-4A38-B4B2-612B94981B14}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{79DD083E-8302-4A38-B4B2-612B94981B14}.Debug|x64.ActiveCfg = Debug|x64
+		{79DD083E-8302-4A38-B4B2-612B94981B14}.Debug|x64.Build.0 = Debug|x64
+		{79DD083E-8302-4A38-B4B2-612B94981B14}.Release|Any CPU.ActiveCfg = Release|x64
+		{79DD083E-8302-4A38-B4B2-612B94981B14}.Release|x64.ActiveCfg = Release|x64
+		{79DD083E-8302-4A38-B4B2-612B94981B14}.Release|x64.Build.0 = Release|x64
+		{7CDB42B5-254B-40B5-97AC-87FB7E43B68F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CDB42B5-254B-40B5-97AC-87FB7E43B68F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CDB42B5-254B-40B5-97AC-87FB7E43B68F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7CDB42B5-254B-40B5-97AC-87FB7E43B68F}.Debug|x64.Build.0 = Debug|Any CPU
+		{7CDB42B5-254B-40B5-97AC-87FB7E43B68F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CDB42B5-254B-40B5-97AC-87FB7E43B68F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CDB42B5-254B-40B5-97AC-87FB7E43B68F}.Release|x64.ActiveCfg = Release|Any CPU
+		{7CDB42B5-254B-40B5-97AC-87FB7E43B68F}.Release|x64.Build.0 = Release|Any CPU
+		{D0F41185-63EA-4E5B-965F-754578E182ED}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{D0F41185-63EA-4E5B-965F-754578E182ED}.Debug|x64.ActiveCfg = Debug|x64
+		{D0F41185-63EA-4E5B-965F-754578E182ED}.Debug|x64.Build.0 = Debug|x64
+		{D0F41185-63EA-4E5B-965F-754578E182ED}.Release|Any CPU.ActiveCfg = Release|x64
+		{D0F41185-63EA-4E5B-965F-754578E182ED}.Release|x64.ActiveCfg = Release|x64
+		{D0F41185-63EA-4E5B-965F-754578E182ED}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5} = {EFCD5E77-BC22-4F34-B6A2-1E96E591041F}
+		{16F2B222-0545-40F1-B05D-E9B90D078ABF} = {4C73266F-0AB9-446A-9903-1D65C07CFDAC}
+		{4D0F9F8A-2E89-4780-978A-CD92D6D7B844} = {4C73266F-0AB9-446A-9903-1D65C07CFDAC}
+		{A97C3046-2D55-4C49-AB40-A3C2194B82FA} = {EFCD5E77-BC22-4F34-B6A2-1E96E591041F}
+		{630988DA-83DF-42E5-A6F6-50025919ACD7} = {EFCD5E77-BC22-4F34-B6A2-1E96E591041F}
+		{8F879D45-E34B-472E-A597-46CA51052258} = {EFCD5E77-BC22-4F34-B6A2-1E96E591041F}
+		{06452B38-044D-4B41-8A31-42A7A2CBFC7E} = {EFCD5E77-BC22-4F34-B6A2-1E96E591041F}
+		{4C73266F-0AB9-446A-9903-1D65C07CFDAC} = {EFCD5E77-BC22-4F34-B6A2-1E96E591041F}
+		{79C8CDF9-7840-4CBF-8E69-512CEF9F5E6B} = {2A93BF5E-87A9-49DB-BB53-7FD8A1C28623}
+		{79DD083E-8302-4A38-B4B2-612B94981B14} = {2CDA356A-3924-4C1F-84CF-8DB8698F20EA}
+		{7CDB42B5-254B-40B5-97AC-87FB7E43B68F} = {4C73266F-0AB9-446A-9903-1D65C07CFDAC}
+		{D0F41185-63EA-4E5B-965F-754578E182ED} = {2CDA356A-3924-4C1F-84CF-8DB8698F20EA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E297DE31-DBCD-4314-909D-BD2C7499071D}

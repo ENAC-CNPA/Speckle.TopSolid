@@ -59,7 +59,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
              }
             */
-
+            MessageBox.Show("Génial");
 
             try
             {

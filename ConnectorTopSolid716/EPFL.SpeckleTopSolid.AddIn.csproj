@@ -90,7 +90,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConnectorTopSolid\UI\EPFL.SpeckleTopSolid.UI.csproj">
+    <ProjectReference Include="EPFL.SpeckleTopSolid.UI.csproj">
       <Project>{79c8cdf9-7840-4cbf-8e69-512cef9f5e6b}</Project>
       <Name>EPFL.SpeckleTopSolid.UI</Name>
     </ProjectReference>

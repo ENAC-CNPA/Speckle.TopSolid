@@ -149,7 +149,12 @@ namespace EPFL.SpeckleTopSolid.UI
                     polyPoints.Add(tsCurve.GetPoint((range / 100) * i));
                 }
                 TopSolid.Kernel.G.D3.Curves.PolylineCurve tspoly = new PolylineCurve(false, polyPoints);
-                Polyline displayValue = new Polyline(PointsToFlatArray(polyPoints));
+                Polyline displayValue = new Polyline();
+                //displayValue.value = PointsToFlatArray(polyPoints);
+                //displayValue.units = Utils.ModelUnits;
+                displayValue.closed = false;
+                // TODO : TH migrate
+                // = new Polyline(PointsToFlatArray(polyPoints));
 
 
                 curve.displayValue = displayValue;
@@ -267,7 +272,7 @@ namespace EPFL.SpeckleTopSolid.UI
 
             PointList tPointsList = new PointList();
 
-            foreach (Objects.Geometry.Point p in sPolyLine.points)
+            foreach (Objects.Geometry.Point p in sPolyLine.GetPoints())
             {
                 TopSolid.Kernel.G.D3.Point tPoint = PointToTS(p);
                 tPointsList.Add(tPoint);

@@ -174,8 +174,13 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
         {
 
             var kit = KitManager.GetDefaultKit();
-            var converter = kit.LoadConverter("TopSolid715");
 
+
+#if TOPSOLID715
+            var converter = kit.LoadConverter("TopSolid715");
+#else
+            var converter = kit.LoadConverter("TopSolid716");
+#endif
 
 
             if (state.Filter != null)
@@ -448,7 +453,12 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             Exceptions.Clear();
 
             var kit = KitManager.GetDefaultKit();
+#if TOPSOLID715
             var converter = kit.LoadConverter("TopSolid715");
+#else
+            var converter = kit.LoadConverter("TopSolid716");
+#endif
+
             var transport = new ServerTransport(state.Client.Account, state.Stream.id);
 
             var stream = await state.Client.StreamGet(state.Stream.id);
@@ -678,6 +688,6 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
         /// <returns></returns>
         //public abstract List<ISelectionFilter> GetSelectionFilters();
 
-        #endregion
+#endregion
     }
 }

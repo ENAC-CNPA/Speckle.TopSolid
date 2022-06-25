@@ -19,10 +19,11 @@ namespace EPFL.SpeckleTopSolid.UI
     public partial class Utils
     {
 
-
+        public static string AppName = "TopSolid";
 #if TOPSOLID715
         public static string TopSolidAppName = "TopSolid715"; // TODO: Update Speckle.Core.Kits
-        public static string AppName = "TopSolid";
+#else
+        public static string TopSolidAppName = "TopSolid716"; // TODO: Update Speckle.Core.Kits
 #endif
 
         #region units

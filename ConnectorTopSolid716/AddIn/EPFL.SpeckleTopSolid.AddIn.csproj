@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{79DD083E-8302-4A38-B4B2-612B94981B14}</ProjectGuid>
+    <ProjectGuid>{197B998A-2851-48B0-99C1-F584156F74C9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EPFL.SpeckleTopSolid.AddIn</RootNamespace>
@@ -21,7 +21,7 @@
     <OutputPath>..\..\..\..\..\..\Sources\Topsolid 7.15\Debug x64\</OutputPath>
     <PlatformTarget>x64</PlatformTarget>
     <NoWarn>1607</NoWarn>
-    <DefineConstants>TRACE;DEBUG;TOPSOLID715</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType>full</DebugType>
     <ErrorReport>prompt</ErrorReport>
@@ -58,25 +58,31 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\ConnectorTopSolid\AddIn\AddIn.cs">
+    <Compile Include="..\..\ConnectorTopSolid\AddIn\AddIn.cs">
       <Link>AddIn.cs</Link>
     </Compile>
-    <Compile Include="..\ConnectorTopSolid\AddIn\Properties\AssemblyInfo.cs">
+    <Compile Include="..\..\ConnectorTopSolid\AddIn\Properties\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\ConnectorTopSolid\AddIn\Resources.cs">
+    <Compile Include="..\..\ConnectorTopSolid\AddIn\Resources.cs">
       <Link>Resources.cs</Link>
     </Compile>
-    <Compile Include="..\ConnectorTopSolid\AddIn\Session.cs">
+    <Compile Include="..\..\ConnectorTopSolid\AddIn\Session.cs">
       <Link>Session.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\ConnectorTopSolid\AddIn\Resources.fr.resx">
+    <ProjectReference Include="..\UI\EPFL.SpeckleTopSolid.UI.csproj">
+      <Project>{155758c6-e385-4284-8700-3c3f5a52090c}</Project>
+      <Name>EPFL.SpeckleTopSolid.UI</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\ConnectorTopSolid\AddIn\Resources.fr.resx">
       <Link>Resources.fr.resx</Link>
       <DependentUpon>Resources.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\ConnectorTopSolid\AddIn\Resources.resx">
+    <EmbeddedResource Include="..\..\ConnectorTopSolid\AddIn\Resources.resx">
       <Link>Resources.resx</Link>
       <DependentUpon>Resources.cs</DependentUpon>
     </EmbeddedResource>
@@ -85,15 +91,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\ConnectorTopSolid\AddIn\app.config">
+    <None Include="..\..\ConnectorTopSolid\AddIn\app.config">
       <Link>app.config</Link>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ConnectorTopSolid\UI\EPFL.SpeckleTopSolid.UI.csproj">
-      <Project>{79c8cdf9-7840-4cbf-8e69-512cef9f5e6b}</Project>
-      <Name>EPFL.SpeckleTopSolid.UI</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

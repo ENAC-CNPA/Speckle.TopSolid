@@ -214,9 +214,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\ConnectorTopSolid\UI\LaunchCommand\LaunchSpeckleCommand.ico">
+    <EmbeddedResource Include="..\..\ConnectorTopSolid\UI\LaunchCommand\LaunchSpeckleCommand.ico">
       <Link>LaunchCommand\LaunchSpeckleCommand.ico</Link>
-    </Content>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

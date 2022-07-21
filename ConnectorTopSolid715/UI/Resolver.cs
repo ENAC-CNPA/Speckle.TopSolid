@@ -17,7 +17,8 @@ namespace EPFL.SpeckleTopSolid.UI
         {
             if (System.IntPtr.Size != 8)
                 throw new Exception("Only 64 bit applications can use Speckle");
-            AppDomain.CurrentDomain.AssemblyResolve += ResolveForSpeckleAssemblies;
+            //AppDomain.CurrentDomain.AssemblyResolve += ResolveForSpeckleAssemblies;
+            //AppDomain.CurrentDomain.AssemblyResolve += ResolveForAvaloniaAssemblies;
         }
 
 
@@ -38,6 +39,16 @@ namespace EPFL.SpeckleTopSolid.UI
             return null;
         }
 
+        static Assembly ResolveForAvaloniaAssemblies(object sender, ResolveEventArgs args)
+        {
+            var assemblyName = new AssemblyName(args.Name).Name;
+            string path = System.IO.Path.Combine("C:\\Sources\\Topsolid 7.15\\Debug x64", assemblyName + ".dll");
+            //string path = System.IO.Path.Combine(RhinoSystemDirectory, assemblyName + ".dll");
+            if (System.IO.File.Exists(path))
+                return Assembly.LoadFrom(path);
+
+            return null;
+        }
 
     }
 }

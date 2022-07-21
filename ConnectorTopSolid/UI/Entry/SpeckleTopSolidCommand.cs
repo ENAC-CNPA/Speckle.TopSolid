@@ -52,6 +52,12 @@ namespace EPFL.SpeckleTopSolid.UI.Entry
 
         public static void CreateOrFocusSpeckle(bool showWindow = true)
         {
+
+            if (Bindings == null) {
+                App newApp = new App();
+                newApp.Initialize();
+            }
+
             if (MainWindow == null)
             {
                 var viewModel = new MainWindowViewModel(Bindings);

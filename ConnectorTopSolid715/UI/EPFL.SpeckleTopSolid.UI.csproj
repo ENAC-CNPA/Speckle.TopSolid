@@ -163,17 +163,12 @@
     <Compile Include="..\..\ConnectorTopSolid\UI\SpeckleStreamTS.cs">
       <Link>SpeckleStreamTS.cs</Link>
     </Compile>
-    <Compile Include="..\..\ConnectorTopSolid\UI\Storage\SpeckleStreamManager.cs">
-      <Link>Storage\SpeckleStreamManager.cs</Link>
-    </Compile>
-    <Compile Include="..\..\ConnectorTopSolid\UI\UI\ConnectorBindingsTopSolid.cs">
-      <Link>UI\ConnectorBindingsTopSolid.cs</Link>
-    </Compile>
     <Compile Include="..\..\ConnectorTopSolid\UI\Utils.cs">
       <Link>Utils.cs</Link>
     </Compile>
     <Compile Include="ContextMenu.cs" />
     <Compile Include="Resolver.cs" />
+    <Compile Include="UI\ConnectorBindingsTopSolid.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\ConnectorTopSolid\UI\LaunchCommand\LaunchSpeckleCommand.fr.resx">
@@ -223,17 +218,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="Storage\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia">
-      <Version>0.10.13</Version>
-    </PackageReference>
-    <PackageReference Include="Avalonia.Desktop">
-      <Version>0.10.13</Version>
-    </PackageReference>
-    <PackageReference Include="Avalonia.ReactiveUI">
-      <Version>0.10.13</Version>
-    </PackageReference>
     <PackageReference Include="Speckle.Newtonsoft.Json">
       <Version>12.0.3.1</Version>
     </PackageReference>

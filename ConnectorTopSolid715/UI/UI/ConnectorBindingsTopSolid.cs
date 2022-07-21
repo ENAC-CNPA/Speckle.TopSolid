@@ -51,6 +51,12 @@ namespace EPFL.SpeckleTopSolid.UI
             return states;
         }
 
+
+        public override List<ReceiveMode> GetReceiveModes()
+        {
+            return new List<ReceiveMode> { ReceiveMode.Create };
+        }
+
         public override List<string> GetObjectsInView() // this returns all visible doc objects.
         {
             var objs = new List<string>();
@@ -659,7 +665,7 @@ namespace EPFL.SpeckleTopSolid.UI
                 var streams = GetStreamsInFile();
                 UpdateSavedStreams(streams);
 
-                MainWindowViewModel.GoHome();
+                MainViewModel.GoHome();
             }
             catch { }
         }
@@ -677,7 +683,7 @@ namespace EPFL.SpeckleTopSolid.UI
                 //if (SpeckleAutocadCommand.MainWindow != null)
                 //    SpeckleAutocadCommand.MainWindow.Hide();
 
-                MainWindowViewModel.GoHome();
+                MainViewModel.GoHome();
             }
             catch { }
         }
@@ -698,7 +704,7 @@ namespace EPFL.SpeckleTopSolid.UI
                 if (UpdateSavedStreams != null)
                     UpdateSavedStreams(streams);
 
-                MainWindowViewModel.GoHome();
+                MainViewModel.GoHome();
             }
             catch { }
         }

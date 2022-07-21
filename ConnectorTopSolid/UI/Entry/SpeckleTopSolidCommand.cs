@@ -60,7 +60,7 @@ namespace EPFL.SpeckleTopSolid.UI.Entry
 
             if (MainWindow == null)
             {
-                var viewModel = new MainWindowViewModel(Bindings);
+                var viewModel = new MainViewModel(Bindings);
                 MainWindow = new MainWindow
                 {
                     DataContext = viewModel

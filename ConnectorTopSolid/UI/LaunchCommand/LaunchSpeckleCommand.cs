@@ -1,5 +1,4 @@
-﻿using Speckle.DesktopUI;
-using System;
+﻿using System;
 using TopSolid.Cad.Design.DB.Documents;
 using TopSolid.Kernel.DB.D3.Documents;
 using TopSolid.Kernel.DB.D3.Planes;
@@ -11,39 +10,39 @@ using TopSolid.Kernel.TX.Units;
 using TopSolid.Kernel.UI.Commands;
 using TopSolid.Kernel.WX;
 
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.ReactiveUI;
-
-
-using DesktopUI2;
-using DesktopUI2.ViewModels;
-using DesktopUI2.Views;
-using Speckle.ConnectorTopSolid.UI;
 
 namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 {
     class LaunchSpeckleCommand : MenuCommand
     {
-        public static Window MainWindow { get; private set; }
 
         protected override void Invoke()
         {
             //Show a message box to make sure the component is working
             //MessageBox.Show("BOOM");
             // SpeckleCommand();
-            Speckle.ConnectorTopSolid.Entry.OneClickCommand.SendCommand();
+            SpeckleCommand();
         }
         // copied from autocad connector
-        public static Bootstrapper Bootstrapper { get; set; }
-
-
+        //public static Bootstrapper Bootstrapper { get; set; }
 
 
         /// <summary>
         /// Main command to initialize Speckle Connector
         /// </summary>
-        public static void SpeckleCommandOld()
+        public static void SpeckleCommand()
+
+        {
+
+            // Speckle.ConnectorTopSolid.Entry.OneClickCommand.SendCommand();
+
+        }
+
+
+            /// <summary>
+            /// Main command to initialize Speckle Connector
+            /// </summary>
+            public static void SpeckleCommandOld()
 
         {
 

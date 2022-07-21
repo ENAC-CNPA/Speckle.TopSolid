@@ -3,9 +3,15 @@ using Speckle.Core.Api;
 using Speckle.Core.Kits;
 using Speckle.Core.Models;
 using Speckle.Core.Transports;
-using Speckle.DesktopUI;
-using Speckle.DesktopUI.Utils;
+using DesktopUI2;
+using DesktopUI2.Models;
+using DesktopUI2.Models.Filters;
+using DesktopUI2.Models.Settings;
+using DesktopUI2.ViewModels;
 using Speckle.Newtonsoft.Json;
+using Speckle.ConnectorTopSolid.Entry;
+using Speckle.ConnectorTopSolid.Storage;
+using Speckle.Core.Logging;
 using Stylet;
 using StyletIoC;
 using System;
@@ -14,7 +20,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using TopSolid.Kernel.DB.D3.Documents;
 using TopSolid.Kernel.DB.D3.Modeling.Documents;
 using TopSolid.Kernel.DB.D3.Shapes;
@@ -24,369 +29,313 @@ using TopSolid.Kernel.DB.Parameters;
 using TopSolid.Kernel.G.D3.Shapes;
 using TopSolid.Kernel.G.D3.Surfaces;
 
-namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
+namespace Speckle.ConnectorTopSolid.UI
 {
     public partial class ConnectorBindingsTopSolid : ConnectorBindings
     {
+
+        public static GeometricDocument Doc = TopSolid.Kernel.UI.Application.CurrentDocument as ModelingDocument;
+
         [Inject]
         private IEventAggregator _events;
         private static string SpeckleKey = "speckle";
         public ISpeckleKit topSolidKit;
         public List<Exception> Exceptions { get; set; } = new List<Exception>();
-        public ConnectorBindingsTopSolid()
-        {
-            /*
-            RhinoDoc.EndOpenDocument += RhinoDoc_EndOpenDocument;
 
-            SelectionTimer = new Timer(2000) { AutoReset = true, Enabled = true };
-            SelectionTimer.Elapsed += SelectionTimer_Elapsed;
-            SelectionTimer.Start();
-             */
+        public System.Windows.Forms.Control Control;
+        public ConnectorBindingsTopSolid() : base()
+        {
+            Control = new System.Windows.Forms.Control();
+            Control.CreateControl();
 
         }
 
-        internal void GetFileContextAndNotifyUI()
+        #region local streams 
+        public override void WriteStreamsToFile(List<StreamState> streams)
         {
-            var streamStates = GetStreamsInFile();
-
-            var appEvent = new ApplicationEvent()
-            {
-                Type = ApplicationEvent.EventType.DocumentOpened,
-                DynamicInfo = streamStates
-            };
-
-            NotifyUi(appEvent);
+            SpeckleStreamManager.WriteStreamStateList(Doc, streams);
         }
-
-        /// <summary>
-        /// Sends an event to the UI. The event types are pre-defined and inherit from EventBase.
-        /// </summary>
-        /// <param name="notifyEvent">The event to be published</param>
-
-        //public virtual void NotifyUi(EventBase notifyEvent)
-        //{
-        //  //TODO: checked why it's null sometimes
-        //  if(_events!=null)
-        //    _events.PublishOnUIThread(notifyEvent);
-        //}
-
-        /// <summary>
-        /// Raise a toast notification which is shown in the bottom of the main UI window.
-        /// </summary>
-        /// <param name="message">The body of the notification</param>
-
-        //public virtual void RaiseNotification(string message)
-        //{
-        //    var notif = new ShowNotificationEvent() { Notification = message };
-        //    NotifyUi(notif);
-        //}
-
-        //public virtual bool CanSelectObjects()
-        //{
-        //    return false;
-        //}
-
-        //public virtual bool CanTogglePreview()
-        //{
-        //    return false;
-        //}
-
-        #region abstract methods
-
-        /// <summary>
-        /// Gets the current host application name.
-        /// </summary>
-        /// <returns></returns>
-        public override string GetHostAppName() => TopSolid.Kernel.UI.Application.Name;
-
-        /// <summary>
-        /// Gets the current opened/focused file's name.
-        /// Make sure to check regarding unsaved/temporary files.
-        /// </summary>
-        /// <returns></returns>
-        public override string GetFileName() => TopSolid.Kernel.UI.Application.CurrentDocument.Name.ToString();
-
-        /// <summary>
-        /// Gets the current opened/focused file's id. 
-        /// Generate one in here if the host app does not provide one.
-        /// </summary>
-        /// <returns></returns>
-        public override string GetDocumentId() => TopSolid.Kernel.UI.Application.CurrentDocument.PdmDocumentId;
-
-        /// <summary>
-        /// Gets the current opened/focused file's locations.
-        /// Make sure to check regarding unsaved/temporary files.
-        /// </summary>
-        /// <returns></returns>
-        public override string GetDocumentLocation() => TopSolid.Kernel.UI.Application.CurrentDocument.FilePath;
-
-        /// <summary>
-        /// Gets the current opened/focused file's view, if applicable.
-        /// </summary>
-        /// <returns></returns>
-        public override string GetActiveViewName() => TopSolid.Kernel.UI.Application.ActiveDocumentWindow.Name;
 
         public override List<StreamState> GetStreamsInFile()
         {
-            return new List<StreamState>();
+            var streams = new List<StreamState>();
+            if (Doc != null)
+                streams = SpeckleStreamManager.ReadState(Doc);
+            return streams;
+        }
+        #endregion
+
+
+        #region boilerplate
+        public override string GetHostAppNameVersion() => Utils.VersionedAppName.Replace("TopSolid", "TopSolid "); //hack for ADSK store;
+
+        public override string GetHostAppName() => Utils.Slug;
+
+        private string GetDocPath(GeometricDocument doc) => doc.FilePath; //  HostApplicationServices.Current.FindFile(doc?.Name, doc?.Database, FindFileHint.Default);
+
+        public override string GetDocumentId()
+        {
+            string path = GetDocPath(Doc);
+            var hash = Core.Models.Utilities.hashString(path + Doc?.Name, Core.Models.Utilities.HashingFuctions.MD5);
+            return hash;
         }
 
-        GeometricDocument document = TopSolid.Kernel.UI.Application.CurrentDocument as ModelingDocument;
+        public override string GetDocumentLocation() => GetDocPath(Doc);
 
+        public override string GetFileName() => (Doc != null) ? System.IO.Path.GetFileName(Doc.FileName) : string.Empty;
 
+        public override string GetActiveViewName() => "Entire Document";
 
-        public override void AddNewStream(StreamState state)
+        public override List<string> GetObjectsInView() // this returns all visible doc objects.
         {
-            //TODO change the way it's done, eventually using the SpeckleStream Class
-            //Create a text parameter to hold the Json string
-            TopSolid.Kernel.TX.Undo.UndoSequence.UndoCurrent();
-            TopSolid.Kernel.TX.Undo.UndoSequence.Start("Test", true);
-            TextParameterEntity texte = new TextParameterEntity(document, 0);
-            texte.Value = (JsonConvert.SerializeObject(state));
-            //texte.Name = "TestparamSpeckle";
+            var objs = new List<string>();
+            //using (Transaction tr = Doc.Database.TransactionManager.StartTransaction())
+            //{
+            //    BlockTableRecord modelSpace = Doc.Database.GetModelSpace();
+            //    foreach (ObjectId id in modelSpace)
+            //    {
+            //        var dbObj = tr.GetObject(id, OpenMode.ForRead);
+            //        if (dbObj.Visible())
+            //            objs.Add(dbObj.Handle.ToString());
+            //    }
+            //    tr.Commit();
+            //}
+            return objs;
+        }
 
-            try
+        public override List<string> GetSelectedObjects()
+        {
+            var objs = new List<string>();
+            if (Doc != null)
             {
-                document.ParametersFolderEntity.AddEntity(texte);
+                //PromptSelectionResult selection = Doc.Editor.SelectImplied();
+                //if (selection.Status == PromptStatus.OK)
+                //    objs = selection.Value.GetHandles();
             }
-            catch (Exception ex)
-            {
-                System.Windows.Forms.MessageBox.Show(ex.Message, "Add Stream Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-
-            TopSolid.Kernel.TX.Undo.UndoSequence.End();
-
-
-            //Doc.Strings.SetString(SpeckleKey, state.Stream.id, JsonConvert.SerializeObject(state));
+            return objs;
         }
 
-        public override void PersistAndUpdateStreamInFile(StreamState state)
+        public override List<ISelectionFilter> GetSelectionFilters()
         {
-            //Update value of the text parameter in TS
-            TopSolid.Kernel.TX.Undo.UndoSequence.UndoCurrent();
-            TopSolid.Kernel.TX.Undo.UndoSequence.Start("Test", true);
-            //var a = document.ParametersFolderEntity.SearchEntity("TestparamSpeckle") as TextParameterEntity;
-            //a.Value = (JsonConvert.SerializeObject(state));
-            TopSolid.Kernel.TX.Undo.UndoSequence.End();
+            return new List<ISelectionFilter>()
+      {
+        new ManualSelectionFilter(),
+        new ListSelectionFilter {Slug="layer",  Name = "Layers", Icon = "LayersTriple", Description = "Selects objects based on their layers.", Values = new List<string>() },
+        new AllSelectionFilter {Slug="all",  Name = "Everything", Icon = "CubeScan", Description = "Selects all document objects." }
+      };
         }
-        public List<Exception> OperationErrors { get; set; } = new List<Exception>();
-        public override async Task<StreamState> SendStream(StreamState state)
-        {
 
+        public override List<ISetting> GetSettings()
+        {
+            return new List<ISetting>();
+        }
+
+        //TODO
+        public override List<MenuItem> GetCustomStreamMenuItems()
+        {
+            return new List<MenuItem>();
+        }
+
+        public override void SelectClientObjects(string args)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region receiving 
+        public override async Task<StreamState> ReceiveStream(StreamState state, ProgressViewModel progress)
+        {
             var kit = KitManager.GetDefaultKit();
+            var converter = kit.LoadConverter(Utils.VersionedAppName);
+            if (converter == null)
+                throw new Exception("Could not find any Kit!");
+            var transport = new ServerTransport(state.Client.Account, state.StreamId);
 
+            var stream = await state.Client.StreamGet(state.StreamId);
 
-#if TOPSOLID715
-            var converter = kit.LoadConverter("TopSolid715");
-#else
-            var converter = kit.LoadConverter("TopSolid716");
-#endif
-
-
-            if (state.Filter != null)
-            {
-                state.SelectedObjectIds = GetSelectedObjects();
-            }
-
-
-            var commitObject = new Base();
-
-            var streamId = state.Stream.id;
-            var client = state.Client;
-
-            //      
-            var selectedObjects = new List<Entity>();
-
-            //if (state.Filter != null)
-            //{
-            //  selectedObjects = GetSelectionFilterObjects(state.Filter);
-            //  state.SelectedObjectIds = selectedObjects.Select(x => x.UniqueId).ToList();
-            //}
-            //else //selection was by cursor
-            //{
-            //  // TODO: update state by removing any deleted or null object ids
-
-            //selectedObjects = state.SelectedObjectIds.Select(x => CurrentDoc.Document.GetElement(x)).Where(x => x != null).ToList();
-            //selectedObjects = state.SelectedObjectIds.Select(TopSolid.Kernel.UI.Selections.CurrentSelections.GetSelectedEntities()).ToString().ToList();
-            //}
-            //       
-
-            var transports = new List<ITransport>() { new ServerTransport(client.Account, streamId) };
-            /* successful test for sending a topSolid line created by code ==> TODO same with line drawn graphically
-            TopSolid.Kernel.G.D3.Point point1 = new TopSolid.Kernel.G.D3.Point(0, 0, 0);
-            TopSolid.Kernel.G.D3.Point point2 = new TopSolid.Kernel.G.D3.Point(1, 1, 0);
-            commitObject = ConvertersSpeckleTopSolid.LineToSpeckle(new TopSolid.Kernel.G.D3.Curves.LineCurve(point1, point2));
-            */
-
-            //Getting the curve to send
-            //PositionedSketchEntity entity = (TopSolid.Kernel.UI.Application.CurrentDocument as ModelingDocument).SketchesFolderEntity.DeepPositionedSketches.First() as PositionedSketchEntity;
-            //BSplineCurve curve = new BSplineCurve();
-            //curve = entity.Geometry.Profiles.First().Segments.First().Geometry.GetBSplineCurve(false, false, TopSolid.Kernel.G.Precision.LinearPrecision);
-            // commitObject   = ConvertersSpeckleTopSolid.CurveToSpeckle(curve);
-
-            //if (conversionResult != null)
-
-            var category = "default";
-            if (commitObject[category] == null)
-            {
-                commitObject[category] = new List<Base>();
-            }
-
-            IEnumerable<TopSolid.Kernel.DB.Elements.Element> elements = TopSolid.Kernel.UI.Selections.CurrentSelections.GetSelectedElements();
-
-            foreach (TopSolid.Kernel.DB.Elements.Element element in elements)
-            {
-                Base converted = null;
-                int j = 0;
-                //TODO this is only for demo with a surf, make it more Generic
-                Shape x = new Shape(element);
-                x = (Shape)element.Geometry;
-
-                converted = converter.ConvertToSpeckle(x);
-                ((List<Base>)commitObject[category]).Add(converted);
-                //j++;
-
-
-
-            }
-
-
-
-
-            var objectId = await Operations.Send(
-          @object: commitObject,
-          cancellationToken: state.CancellationTokenSource.Token,
-          transports: transports,
-          //onProgressAction: dict => UpdateProgress(dict, state.Progress),
-          onErrorAction: (s, e) =>
-          {
-              //OperationErrors.Add(e); // TODO!
-              state.Errors.Add(e);
-              state.CancellationTokenSource.Cancel();
-          }
-          );
-
-            if (OperationErrors.Count != 0)
-            {
-                Globals.Notify("Failed to send.");
-                state.Errors.AddRange(OperationErrors);
-                return state;
-            }
-
-            if (state.CancellationTokenSource.Token.IsCancellationRequested)
-            {
+            if (progress.CancellationTokenSource.Token.IsCancellationRequested)
                 return null;
+
+            if (Doc == null)
+            {
+                progress.Report.LogOperationError(new Exception($"No Document is open."));
+                progress.CancellationTokenSource.Cancel();
             }
 
-            var actualCommit = new CommitCreateInput()
+            //if "latest", always make sure we get the latest commit when the user clicks "receive"
+            Commit commit = null;
+            if (state.CommitId == "latest")
             {
-                streamId = streamId,
-                objectId = objectId,
-                branchName = state.Branch.name,
-                message = state.CommitMessage != null ? state.CommitMessage : "Hello from TopSolid",//$"Sent {convertedCount} objects from {ConnectorRevitUtils.RevitAppName}.",
-                sourceApplication = TopSolid.Kernel.UI.Application.Name,
-            };
-
-            if (state.PreviousCommitId != null) { actualCommit.parents = new List<string>() { state.PreviousCommitId }; }
-
+                var res = await state.Client.BranchGet(progress.CancellationTokenSource.Token, state.StreamId, state.BranchName, 1);
+                commit = res.commits.items.FirstOrDefault();
+            }
+            else
+            {
+                commit = await state.Client.CommitGet(progress.CancellationTokenSource.Token, state.StreamId, state.CommitId);
+            }
+            string referencedObject = commit.referencedObject;
+            Base commitObject = null;
             try
             {
-                var commitId = await client.CommitCreate(actualCommit);
+                commitObject = await Operations.Receive(
+                  referencedObject,
+                  progress.CancellationTokenSource.Token,
+                  transport,
+                  onProgressAction: dict => progress.Update(dict),
+                  onErrorAction: (s, e) =>
+                  {
+                      progress.Report.LogOperationError(e);
+                      progress.CancellationTokenSource.Cancel();
+                  },
+                  onTotalChildrenCountKnown: count => { progress.Max = count; },
+                  disposeTransports: true
+                  );
 
-                await state.RefreshStream();
-                state.PreviousCommitId = commitId;
-
-
-
-                //TO DO : Add the Objects Count
-                //WriteStateToFile();
-                RaiseNotification($" *insert count* objects sent to Speckle 🚀");
+                await state.Client.CommitReceived(new CommitReceivedInput
+                {
+                    streamId = stream?.id,
+                    commitId = commit?.id,
+                    message = commit?.message,
+                    sourceApplication = Utils.VersionedAppName
+                });
             }
             catch (Exception e)
             {
-                state.Errors.Add(e);
-                Globals.Notify($"Failed to create commit.\n{e.Message}");
+                progress.Report.OperationErrors.Add(new Exception($"Could not receive or deserialize commit: {e.Message}"));
             }
+            if (progress.Report.OperationErrorsCount != 0 || commitObject == null)
+                return state;
+
+            // invoke conversions on the main thread via control
+            if (Control.InvokeRequired)
+                Control.Invoke(new ReceivingDelegate(ConvertReceiveCommit), new object[] { commitObject, converter, state, progress, stream, commit.id });
+            else
+                ConvertReceiveCommit(commitObject, converter, state, progress, stream, commit.id);
 
             return state;
-
         }
 
-        //Copied Method from the Autocad Connector, was needed for the Sendstream
-        private void UpdateProgress(ConcurrentDictionary<string, int> dict, Speckle.DesktopUI.Utils.ProgressReport progress)
+        delegate void ReceivingDelegate(Base commitObject, ISpeckleConverter converter, StreamState state, ProgressViewModel progress, Stream stream, string id);
+        private void ConvertReceiveCommit(Base commitObject, ISpeckleConverter converter, StreamState state, ProgressViewModel progress, Stream stream, string id)
         {
-            if (progress == null)
-            {
-                return;
-            }
-
-            Execute.PostToUIThread(() =>
-            {
-                progress.ProgressDict = dict;
-                progress.Value = dict.Values.Last();
-            });
-        }
-        //Copied Method from the Autocad Connector, was needed for the Sendstream
-        private List<Tuple<Base, string>> FlattenCommitObject(object obj, ISpeckleConverter converter, string layer, StreamState state, ref int count, bool foundConvertibleMember = false)
-        {
-            //var objects = new List<Tuple<Base, string>>();
-
-            //if (obj is Base @base)
+            //using (DocumentLock l = Doc.LockDocument())
             //{
-            //    if (converter.CanConvertToNative(@base))
+            //    using (Transaction tr = Doc.Database.TransactionManager.StartTransaction())
             //    {
-            //        objects.Add(new Tuple<Base, string>(@base, layer));
-            //        return objects;
-            //    }
-            //    else
-            //    {
-            //        int totalMembers = @base.GetDynamicMembers().Count();
-            //        foreach (var prop in @base.GetDynamicMembers())
+            //        // set the context doc for conversion - this is set inside the transaction loop because the converter retrieves this transaction for all db editing when the context doc is set!
+            //        converter.SetContextDocument(Doc);
+
+            //        // keep track of conversion progress here
+            //        var conversionProgressDict = new ConcurrentDictionary<string, int>();
+            //        conversionProgressDict["Conversion"] = 1;
+
+            //        // keep track of any layer name changes for notification here
+            //        bool changedLayerNames = false;
+
+            //        // create a commit prefix: used for layers and block definition names
+            //        var commitPrefix = Formatting.CommitInfo(stream.name, state.BranchName, id);
+
+            //        // give converter a way to access the commit info
+            //        if (Doc.UserData.ContainsKey("commit"))
+            //            Doc.UserData["commit"] = commitPrefix;
+            //        else
+            //            Doc.UserData.Add("commit", commitPrefix);
+
+            //        // delete existing commit layers
+            //        try
             //        {
-            //            count++;
+            //            DeleteBlocksWithPrefix(commitPrefix, tr);
+            //            DeleteLayersWithPrefix(commitPrefix, tr);
+            //        }
+            //        catch
+            //        {
+            //            converter.Report.LogOperationError(new Exception($"Failed to remove existing layers or blocks starting with {commitPrefix} before importing new geometry."));
+            //        }
 
-            //            // get bake layer name
-            //            //string objLayerName = prop.StartsWith("@") ? prop.Remove(0, 1) : prop;
-            //            //string acLayerName = $"{layer}${objLayerName}";
+            //        // flatten the commit object to retrieve children objs
+            //        int count = 0;
+            //        var commitObjs = FlattenCommitObject(commitObject, converter, commitPrefix, state, ref count);
 
-            //            var val = @base[prop];
+            //        // open model space block table record for write
+            //        BlockTableRecord btr = (BlockTableRecord)tr.GetObject(Doc.Database.CurrentSpaceId, OpenMode.ForWrite);
 
-            //            if (val is IEnumerable<System.Object> list)
+            //        // More efficient this way than doing this per object
+            //        var lineTypeDictionary = new Dictionary<string, ObjectId>();
+            //        var lineTypeTable = (LinetypeTable)tr.GetObject(Doc.Database.LinetypeTableId, OpenMode.ForRead);
+            //        foreach (ObjectId lineTypeId in lineTypeTable)
+            //        {
+            //            var linetype = (LinetypeTableRecord)tr.GetObject(lineTypeId, OpenMode.ForRead);
+            //            lineTypeDictionary.Add(linetype.Name, lineTypeId);
+            //        }
+
+            //        foreach (var commitObj in commitObjs)
+            //        {
+            //            // create the object's bake layer if it doesn't already exist
+            //            (Base obj, string layerName) = commitObj;
+
+            //            conversionProgressDict["Conversion"]++;
+            //            progress.Update(conversionProgressDict);
+
+            //            object converted = null;
+            //            try
             //            {
-            //                foreach (var item in list)
+            //                converted = converter.ConvertToNative(obj);
+            //            }
+            //            catch (Exception e)
+            //            {
+            //                progress.Report.LogConversionError(new Exception($"Failed to convert object {obj.id} of type {obj.speckle_type}: {e.Message}"));
+            //                continue;
+            //            }
+            //            var convertedEntity = converted as Entity;
+
+            //            if (convertedEntity != null)
+            //            {
+            //                if (GetOrMakeLayer(layerName, tr, out string cleanName))
             //                {
-            //                    var objs = FlattenCommitObject(item, converter, "", state, ref count, foundConvertibleMember);
-            //                    if (objs.Count > 0)
+            //                    // record if layer name has been modified
+            //                    if (!cleanName.Equals(layerName))
+            //                        changedLayerNames = true;
+
+            //                    var res = convertedEntity.Append(cleanName);
+            //                    if (res.IsValid)
             //                    {
-            //                        objects.AddRange(objs);
-            //                        foundConvertibleMember = true;
+            //                        // handle display - fallback to rendermaterial if no displaystyle exists
+            //                        Base display = obj[@"displayStyle"] as Base;
+            //                        if (display == null) display = obj[@"renderMaterial"] as Base;
+            //                        if (display != null) Utils.SetStyle(display, convertedEntity, lineTypeDictionary);
+
+            //                        tr.TransactionManager.QueueForGraphicsFlush();
             //                    }
+            //                    else
+            //                    {
+            //                        progress.Report.LogConversionError(new Exception($"Failed to add converted object {obj.id} of type {obj.speckle_type} to the document."));
+            //                    }
+
             //                }
+            //                else
+            //                    progress.Report.LogOperationError(new Exception($"Failed to create layer {layerName} to bake objects into."));
             //            }
-            //            else
+            //            else if (converted == null)
             //            {
-            //                string test = (val.GetType().ToString());
-            //            }
-
-
-
-            //            var nestedObjects = FlattenCommitObject(@base[prop], converter, "", state, ref count, foundConvertibleMember);
-            //            if (nestedObjects.Count > 0)
-            //            {
-            //                objects.AddRange(nestedObjects);
-            //                foundConvertibleMember = true;
+            //                progress.Report.LogConversionError(new Exception($"Failed to convert object {obj.id} of type {obj.speckle_type}."));
             //            }
             //        }
-            //        if (!foundConvertibleMember && count == totalMembers) // this was an unsupported geo
-            //            state.Errors.Add(new Exception($"Receiving {@base.speckle_type} objects is not supported. Object {@base.id} not baked."));
-            //        return objects;
+            //        progress.Report.Merge(converter.Report);
+
+            //        if (changedLayerNames)
+            //            progress.Report.Log($"Layer names were modified: one or more layers contained invalid characters {Utils.invalidChars}");
+
+            //        // remove commit info from doc userdata
+            //        Doc.UserData.Remove("commit");
+
+            //        tr.Commit();
             //    }
-
-
             //}
-
-            //else return objects;
-
+        }
+        // Recurses through the commit object and flattens it. Returns list of Base objects with their bake layers
+        private List<Tuple<Base, string>> FlattenCommitObject(object obj, ISpeckleConverter converter, string layer, StreamState state, ref int count, bool foundConvertibleMember = false)
+        {
             var objects = new List<Tuple<Base, string>>();
 
             if (obj is Base @base)
@@ -399,10 +348,12 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
                 else
                 {
                     List<string> props = @base.GetDynamicMembers().ToList();
-                    if (@base.GetMembers().ContainsKey("displayMesh")) // add display mesh to member list if it exists
-                        props.Add("displayMesh");
-                    else if (@base.GetMembers().ContainsKey("displayValue"))
+                    if (@base.GetMembers().ContainsKey("displayValue"))
                         props.Add("displayValue");
+                    else if (@base.GetMembers().ContainsKey("displayMesh")) // add display mesh to member list if it exists. this will be deprecated soon
+                        props.Add("displayMesh");
+                    if (@base.GetMembers().ContainsKey("elements")) // this is for builtelements like roofs, walls, and floors.
+                        props.Add("elements");
                     int totalMembers = props.Count;
 
                     foreach (var prop in props)
@@ -411,26 +362,22 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
                         // get bake layer name
                         string objLayerName = prop.StartsWith("@") ? prop.Remove(0, 1) : prop;
-                        //string rhLayerName = $"{layer}{Layer.PathSeparator}{objLayerName}";
-                        string rhLayerName = ""; //TODO check this
+                        string acLayerName = $"{layer}${objLayerName}";
 
-                        var nestedObjects = FlattenCommitObject(@base[prop], converter, rhLayerName, state, ref count, foundConvertibleMember);
+                        var nestedObjects = FlattenCommitObject(@base[prop], converter, acLayerName, state, ref count, foundConvertibleMember);
                         if (nestedObjects.Count > 0)
                         {
                             objects.AddRange(nestedObjects);
                             foundConvertibleMember = true;
                         }
                     }
-
                     if (!foundConvertibleMember && count == totalMembers) // this was an unsupported geo
-                    {
-                        state.Errors.Add(new Exception($"Receiving {@base.speckle_type} objects is not supported. Object {@base.id} not baked."));
-                    }
+                        converter.Report.Log($"Skipped not supported type: { @base.speckle_type }. Object {@base.id} not baked.");
                     return objects;
                 }
             }
 
-            if (obj is List<object> list)
+            if (obj is IReadOnlyList<object> list)
             {
                 count = 0;
                 foreach (var listObj in list)
@@ -448,246 +395,215 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
             return objects;
         }
-        public override async Task<StreamState> ReceiveStream(StreamState state)
+
+
+        #endregion
+
+        #region sending
+        public override async Task<string> SendStream(StreamState state, ProgressViewModel progress)
         {
-            Exceptions.Clear();
-
             var kit = KitManager.GetDefaultKit();
-#if TOPSOLID715
-            var converter = kit.LoadConverter("TopSolid715");
-#else
-            var converter = kit.LoadConverter("TopSolid716");
-#endif
+            var converter = kit.LoadConverter(Utils.VersionedAppName);
+            var streamId = state.StreamId;
+            var client = state.Client;
 
-            var transport = new ServerTransport(state.Client.Account, state.Stream.id);
+            if (state.Filter != null)
+                state.SelectedObjectIds = GetObjectsFromFilter(state.Filter, converter);
 
-            var stream = await state.Client.StreamGet(state.Stream.id);
+            // remove deleted object ids
+            var deletedElements = new List<string>();
+            foreach (var handle in state.SelectedObjectIds)
+            //    if (Doc.Database.TryGetObjectId(Utils.GetHandle(handle), out ObjectId id))
+            //        if (id.IsErased || id.IsNull)
+            //            deletedElements.Add(handle);
+            //state.SelectedObjectIds = state.SelectedObjectIds.Where(o => !deletedElements.Contains(o)).ToList();
 
-            if (state.CancellationTokenSource.Token.IsCancellationRequested)
+            if (state.SelectedObjectIds.Count == 0)
             {
+                progress.Report.LogOperationError(new Exception("Zero objects selected; send stopped. Please select some objects, or check that your filter can actually select something."));
                 return null;
             }
 
-            string referencedObject = state.Commit.referencedObject;
-            string id = state.Commit.id;
-            string commitMsg = state.Commit.message;
+            var commitObject = new Base();
+            commitObject["units"] = Utils.GetUnits(Doc); // TODO: check whether commits base needs units attached
 
-            //if "latest", always make sure we get the latest commit when the user clicks "receive"
-            if (id == "latest")
+            int convertedCount = 0;
+
+            // invoke conversions on the main thread via control
+            if (Control.InvokeRequired)
+                Control.Invoke(new Action(() => ConvertSendCommit(commitObject, converter, state, progress, ref convertedCount)), new object[] { });
+            else
+                ConvertSendCommit(commitObject, converter, state, progress, ref convertedCount);
+
+            progress.Report.Merge(converter.Report);
+
+            if (convertedCount == 0)
             {
-                var res = await state.Client.BranchGet(state.CancellationTokenSource.Token, state.Stream.id, state.Branch.name, 1);
-                referencedObject = res.commits.items.FirstOrDefault().referencedObject;
-                id = res.id;
+                progress.Report.LogOperationError(new SpeckleException("Zero objects converted successfully. Send stopped.", false));
+                return null;
             }
 
-            //var commit = state.Commit;
+            if (progress.CancellationTokenSource.Token.IsCancellationRequested)
+                return null;
 
-            var commitObject = await Operations.Receive(
-              referencedObject,
-              state.CancellationTokenSource.Token,
-              transport,
-              onProgressAction: d => UpdateProgress(d, state.Progress),
-              onTotalChildrenCountKnown: num => Execute.PostToUIThread(() => state.Progress.Maximum = num),
-              onErrorAction: (message, exception) => { Exceptions.Add(exception); }
+            var transports = new List<ITransport>() { new ServerTransport(client.Account, streamId) };
+
+            var commitObjId = await Operations.Send(
+              commitObject,
+              progress.CancellationTokenSource.Token,
+              transports,
+              onProgressAction: dict => progress.Update(dict),
+              onErrorAction: (err, exception) =>
+              {
+                  progress.Report.LogOperationError(exception);
+                  progress.CancellationTokenSource.Cancel();
+              },
+              disposeTransports: true
               );
 
-            if (Exceptions.Count != 0)
+            if (progress.Report.OperationErrorsCount != 0)
+                return null;
+
+            var actualCommit = new CommitCreateInput
             {
-                RaiseNotification($"Encountered error: {Exceptions.Last().Message}");
-            }
-
-            int count = 0;
-            string layerPrefix = " ";
-
-            var commitObjs = FlattenCommitObject(commitObject, converter, layerPrefix, state, ref count);
-
-
-            TopSolid.Kernel.TX.Undo.UndoSequence.UndoCurrent();
-            TopSolid.Kernel.TX.Undo.UndoSequence.Start("Test", true);
-
-            foreach (var commitObj in commitObjs)
-            {
-
-                // create the object's bake layer if it doesn't already exist
-                (Base obj, string layerName) = commitObj;
-
-                //TextParameterEntity texte = new TextParameterEntity(document, 0);
-                //texte.Value = (JsonConvert.SerializeObject(state));
-                //texte.Name = "TestparamSpeckle";
-                //document.ParametersFolderEntity.AddEntity(texte);
-
-
-                var converted = converter.ConvertToNative(obj);
-                ShapeEntity convertedEntity = new ShapeEntity(document, 0);
-                convertedEntity.Geometry = converted as Shape;
-                convertedEntity.Create();
-
-
-                //Polyline poly = @obj;
-
-                //var converted = ConvertersSpeckleTopSolid.PolyLinetoTS((Objects.Geometry.Polyline)obj);
-
-
-
-                //CurveEntity convertedEntity = new CurveEntity(document, 0);
-                //convertedEntity.Geometry = converted;
-                //int c = 0;
-                //string name = "SpeckleProfile";
-                //if ((TopSolid.Kernel.UI.Application.CurrentDocument as ModelingDocument).ShapesFolderEntity.SearchEntity(name) != null)
-                //{
-                //    convertedEntity.Name = name + c.ToString();
-                //    c++;
-                //}
-                //else convertedEntity.Name = name;
-
-
-
-
-
-                //if (convertedEntity != null)
-                //{
-                //    if (GetOrMakeLayer(layerName, tr, out string cleanName))
-                //    {
-                //        // record if layer name has been modified
-                //        if (!cleanName.Equals(layerName))
-                //            changedLayerNames = true;
-
-                //        if (!convertedEntity.Append(cleanName, tr, btr))
-                //            state.Errors.Add(new Exception($"Failed to bake object {obj.id} of type {obj.speckle_type}."));
-                //    }
-                //    else
-                //        state.Errors.Add(new Exception($"Could not create layer {layerName} to bake objects into."));
-                //}
-                //else if (converted == null)
-                //{
-                //    state.Errors.Add(new Exception($"Failed to convert object {obj.id} of type {obj.speckle_type}."));
-                //}
-            }
-
-
-            TopSolid.Kernel.TX.Undo.UndoSequence.End();
-
-
-
-            return state;
-        }
-
-
-
-        public override List<string> GetSelectedObjects()
-        {
-            IEnumerable<TopSolid.Kernel.DB.Elements.Element> elments = TopSolid.Kernel.UI.Selections.CurrentSelections.GetSelectedElements();
-            List<string> elementsList = new List<string>();
-
-            foreach (TopSolid.Kernel.DB.Elements.Element element in elments)
-            {
-                elementsList.Add(element.Id.ToString());
-            }
-
-            return elementsList;
-
-        }
-
-        public override List<string> GetObjectsInView()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void RemoveStreamFromFile(string streamId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void SelectClientObjects(string args)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override List<ISelectionFilter> GetSelectionFilters()
-        {
-            //Copied from Revit 
-            return new List<ISelectionFilter>()
-            {
-                new ListSelectionFilter {
-                Name = "Category", Icon = "Category", Description = "Hello world. This is a something something filter.", Values = new List<string>() { "Boats", "Rafts", "Barges" }
-            }
+                streamId = streamId,
+                objectId = commitObjId,
+                branchName = state.BranchName,
+                message = state.CommitMessage != null ? state.CommitMessage : $"Pushed {convertedCount} elements from {Utils.AppName}.",
+                sourceApplication = Utils.VersionedAppName
             };
 
-            //copied from Rhino
-            /*var layers = Doc.Layers.ToList().Select(layer => layer.Name).ToList();
+            if (state.PreviousCommitId != null) { actualCommit.parents = new List<string>() { state.PreviousCommitId }; }
 
-             return new List<ISelectionFilter>()
-             {
-                 new ListSelectionFilter { Name = "Layers", Icon = "Filter", Description = "Selects objects based on their layers.", Values = layers }
-             };
-            */
-
+            try
+            {
+                var commitId = await client.CommitCreate(actualCommit);
+                state.PreviousCommitId = commitId;
+                return commitId;
+            }
+            catch (Exception e)
+            {
+                progress.Report.LogOperationError(e);
+            }
+            return null;
         }
 
-        /// <summary>
-        /// Returns the serialised clients present in the current open host file.
-        /// </summary>
-        /// <returns></returns>
-        //public void List<StreamState> GetStreamsInFile();
+        delegate void SendingDelegate(Base commitObject, ISpeckleConverter converter, StreamState state, ProgressViewModel progress, ref int convertedCount);
+        private void ConvertSendCommit(Base commitObject, ISpeckleConverter converter, StreamState state, ProgressViewModel progress, ref int convertedCount)
+        {
+            //using (Transaction tr = Doc.Database.TransactionManager.StartTransaction())
+            //{
+            //    // set the context doc for conversion - this is set inside the transaction loop because the converter retrieves this transaction for all db editing when the context doc is set!
+            //    converter.SetContextDocument(Doc);
 
-        /// <summary>
-        /// Adds a new client and persists the info to the host file
-        /// </summary>
+            //    var conversionProgressDict = new ConcurrentDictionary<string, int>();
+            //    conversionProgressDict["Conversion"] = 0;
 
-        //public abstract void AddNewStream(StreamState state);
+            //    bool renamedlayers = false;
 
-        /// <summary>
-        /// Persists the stream info to the host file; if maintaining a local in memory copy, make sure to update it too.
-        /// </summary>
+            //    foreach (var autocadObjectHandle in state.SelectedObjectIds)
+            //    {
+            //        if (progress.CancellationTokenSource.Token.IsCancellationRequested)
+            //        {
+            //            tr.Commit();
+            //            return;
+            //        }
 
-        //public abstract void PersistAndUpdateStreamInFile(StreamState state);
+            //        conversionProgressDict["Conversion"]++;
+            //        progress.Update(conversionProgressDict);
 
-        /// <summary>
-        /// Pushes a client's stream
-        /// </summary>
-        /// <param name="state"></param>
-        /// <param name="progress"></param>
+            //        // get the db object from id
+            //        //Handle hn = Utils.GetHandle(autocadObjectHandle);
+            //        //DBObject obj = hn.GetObject(tr, out string type, out string layer);
+            //        Object obj = null; // TODO
 
-        //public abstract Task<StreamState> SendStream(StreamState state);
+            //        if (obj == null)
+            //        {
+            //            progress.Report.Log($"Skipped not found object: ${autocadObjectHandle}.");
+            //            continue;
+            //        }
 
-        /// <summary>
-        /// Receives stream data from the server
-        /// </summary>
-        /// <param name="state"></param>
-        /// <param name="progress"></param>
-        /// <returns></returns>
+            //        if (!converter.CanConvertToSpeckle(obj))
+            //        {
+            //            progress.Report.Log($"Skipped not supported type: ${type}. Object ${obj.Id} not sent.");
+            //            continue;
+            //        }
 
-        //public abstract Task<StreamState> ReceiveStream(StreamState state);
+            //        try
+            //        {
+            //            // convert obj
+            //            Base converted = null;
+            //            string containerName = string.Empty;
+            //            converted = converter.ConvertToSpeckle(obj);
+            //            if (converted == null)
+            //            {
+            //                progress.Report.LogConversionError(new Exception($"Failed to convert object {autocadObjectHandle} of type {type}."));
+            //                continue;
+            //            }
 
-        /// <summary>
-        /// Adds the current selection to the provided client.
-        /// </summary>
-        //public abstract List<string> GetSelectedObjects();
+            //            /* TODO: adding the extension dictionary / xdata per object 
+            //            foreach (var key in obj.ExtensionDictionary)
+            //              converted[key] = obj.ExtensionDictionary.GetUserString(key);
+            //            */
 
-        ///// <summary>
-        ///// Gets a list of objects in the currently active view
-        ///// </summary>
-        ///// <returns></returns>
-        //public abstract List<string> GetObjectsInView();
 
-        ///// <summary>
-        ///// Removes a client from the file and updates the host file.
-        ///// </summary>
-        ///// <param name="args"></param>
-        //public abstract void RemoveStreamFromFile(string streamId);
+            //            //if (obj is BlockReference)
+            //            //    containerName = "Blocks";
+            //            //else
+            //            //{
+            //            //    // remove invalid chars from layer name
+            //            //    string cleanLayerName = Utils.RemoveInvalidDynamicPropChars(layer);
+            //            //    containerName = cleanLayerName;
+            //            //    if (!cleanLayerName.Equals(layer))
+            //            //        renamedlayers = true;
+            //            //}
 
-        ///// <summary>
-        ///// clients should be able to select/preview/hover one way or another their associated objects
-        ///// </summary>
-        ///// <param name="args"></param>
-        //public abstract void SelectClientObjects(string args);
+            //            if (commitObject[$"@{containerName}"] == null)
+            //                commitObject[$"@{containerName}"] = new List<Base>();
+            //            ((List<Base>)commitObject[$"@{containerName}"]).Add(converted);
 
-        /// <summary>
-        /// Should return a list of filters that the application supports. 
-        /// </summary>
-        /// <returns></returns>
-        //public abstract List<ISelectionFilter> GetSelectionFilters();
+            //            conversionProgressDict["Conversion"]++;
+            //            progress.Update(conversionProgressDict);
 
-#endregion
+            //            converted.applicationId = autocadObjectHandle;
+            //        }
+            //        catch (Exception e)
+            //        {
+            //            progress.Report.LogConversionError(new Exception($"Failed to convert object {autocadObjectHandle} of type {type}: {e.Message}"));
+            //        }
+            //        convertedCount++;
+            //    }
+
+            //    if (renamedlayers)
+            //        progress.Report.Log("Replaced illegal chars ./ with - in one or more layer names.");
+
+            //    tr.Commit();
+            //}
+        }
+
+        private List<string> GetObjectsFromFilter(ISelectionFilter filter, ISpeckleConverter converter)
+        {
+            var selection = new List<string>();
+            //switch (filter.Slug)
+            //{
+            //    case "manual":
+            //        return GetSelectedObjects();
+            //    case "all":
+            //        return Doc.ConvertibleObjects(converter);
+            //    case "layer":
+            //        foreach (var layerName in filter.Selection)
+            //        {
+            //            TypedValue[] layerType = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, layerName) };
+            //            PromptSelectionResult prompt = Doc.Editor.SelectAll(new SelectionFilter(layerType));
+            //            if (prompt.Status == PromptStatus.OK)
+            //                selection.AddRange(prompt.Value.GetHandles());
+            //        }
+            //        return selection;
+            //}
+            return selection;
+        }
+        #endregion
+
+
     }
 }

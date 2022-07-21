@@ -151,6 +151,12 @@
     <Compile Include="..\..\ConnectorTopSolid\UI\Entry\App.cs">
       <Link>Entry\App.cs</Link>
     </Compile>
+    <Compile Include="..\..\ConnectorTopSolid\UI\Entry\OneClickCommand.cs">
+      <Link>Entry\OneClickCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\ConnectorTopSolid\UI\Entry\SpeckleTopSolidCommand.cs">
+      <Link>Entry\SpeckleTopSolidCommand.cs</Link>
+    </Compile>
     <Compile Include="..\..\ConnectorTopSolid\UI\LaunchCommand\LaunchSpeckleCommand.cs">
       <Link>LaunchCommand\LaunchSpeckleCommand.cs</Link>
     </Compile>
@@ -226,6 +232,17 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia">
+      <Version>0.10.13</Version>
+    </PackageReference>
+    <PackageReference Include="Avalonia.Desktop">
+      <Version>0.10.13</Version>
+    </PackageReference>
+    <PackageReference Include="Avalonia.ReactiveUI">
+      <Version>0.10.13</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

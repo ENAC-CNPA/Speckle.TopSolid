@@ -15,6 +15,12 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
 
+
+using DesktopUI2;
+using DesktopUI2.ViewModels;
+using DesktopUI2.Views;
+using Speckle.ConnectorTopSolid.UI;
+
 namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 {
     class LaunchSpeckleCommand : MenuCommand
@@ -26,57 +32,13 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
             //Show a message box to make sure the component is working
             //MessageBox.Show("BOOM");
             // SpeckleCommand();
-            SpeckleCommand();
+            Speckle.ConnectorTopSolid.Entry.OneClickCommand.SendCommand();
         }
         // copied from autocad connector
         public static Bootstrapper Bootstrapper { get; set; }
 
 
-        /// <summary>
-        /// Main command to initialize Speckle Connector
-        /// </summary>
-        public static void SpeckleCommand()
-        {
 
-        }
-
-
-        public static void CreateOrFocusSpeckle(bool showWindow = true)
-        {
-            if (MainWindow == null)
-            {
-                var viewModel = new MainWindowViewModel(Bindings);
-                MainWindow = new MainWindow
-                {
-                    DataContext = viewModel
-                };
-            }
-
-            try
-            {
-                if (showWindow)
-                {
-                    MainWindow.Show();
-                    MainWindow.Activate();
-
-                    //required to gracefully quit avalonia and the skia processes
-                    //https://github.com/AvaloniaUI/Avalonia/wiki/Application-lifetimes
-                    if (Lifetime == null)
-                    {
-                        Lifetime = new CancellationTokenSource();
-                        Task.Run(() => AvaloniaApp.Run(Lifetime.Token));
-                    }
-
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                        var parentHwnd = Application.MainWindow.Handle;
-                        var hwnd = MainWindow.PlatformImpl.Handle.Handle;
-                        SetWindowLongPtr(hwnd, GWL_HWNDPARENT, parentHwnd);
-                    }
-                }
-            }
-            catch { }
-        }
 
         /// <summary>
         /// Main command to initialize Speckle Connector
@@ -84,60 +46,33 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
         public static void SpeckleCommandOld()
 
         {
-            /* try
-             {
-                 if (Bootstrapper != null)
-                 {
-                     Bootstrapper.Application.MainWindow.Show();
-                     return;
-                 }
-
-                 Bootstrapper = new Bootstrapper()
-                 {
-                     Bindings = new ConnectorBindingsTopSolid()
-                 };
-
-                 Bootstrapper.Setup(System.Windows.Application.Current != null ? System.Windows.Application.Current : new System.Windows.Application());
-
-                 Bootstrapper.Application.Startup += (o, e) =>
-                 {
-                     var helper = new System.Windows.Interop.WindowInteropHelper(Bootstrapper.Application.MainWindow);
-                     helper.Owner = Application.Window.Handle;
-                     //helper.Owner = Application.MainWindow.Handle;
-                 };
-             }
-             catch (System.Exception e)
-             {
-
-             }
-            */
 
 
-            try
-            {
-                //copied from Matteo's Guide
-                if (Bootstrapper != null)
-                {
-                    Bootstrapper.ShowRootView();
-                    return;
-                }
+            //try
+            //{
+            //    //copied from Matteo's Guide
+            //    if (Bootstrapper != null)
+            //    {
+            //        Bootstrapper.ShowRootView();
+            //        return;
+            //    }
 
-                Bootstrapper = new Bootstrapper()
-                {
-                    Bindings = new ConnectorBindingsTopSolid()
-                };
+            //    Bootstrapper = new Bootstrapper()
+            //    {
+            //        Bindings = new ConnectorBindingsTopSolid()
+            //    };
 
-                if (System.Windows.Application.Current != null)
-                    new StyletAppLoader() { Bootstrapper = Bootstrapper };
-                else
-                    new Speckle.DesktopUI.App(Bootstrapper);
+            //    if (System.Windows.Application.Current != null)
+            //        new StyletAppLoader() { Bootstrapper = Bootstrapper };
+            //    else
+            //        new Speckle.DesktopUI.App(Bootstrapper);
 
-                Bootstrapper.Start(System.Windows.Application.Current);
-            }
-            catch (System.Exception e)
-            {
+            //    Bootstrapper.Start(System.Windows.Application.Current);
+            //}
+            //catch (System.Exception e)
+            //{
 
-            }
+            //}
         }
     }
 }

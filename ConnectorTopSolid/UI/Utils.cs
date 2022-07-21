@@ -108,7 +108,8 @@ namespace Speckle.ConnectorTopSolid
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
-        public static string GetUnits(ModelingDocument doc)
+        /// 
+        public static string GetUnits(GeometricDocument doc)
         {
 
             var insUnits = doc.LengthUnit;

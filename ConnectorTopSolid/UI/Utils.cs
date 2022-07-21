@@ -2,6 +2,7 @@
 using Speckle.Core.Models;
 
 using System.Drawing;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using TsUnits = TopSolid.Kernel.TX.Units.UnitFormat;
 using TopSolid.Kernel.DB.D3.Documents;
@@ -14,9 +15,9 @@ using TsApp = TopSolid.Kernel.UI.Application;
 
 
 
-namespace EPFL.SpeckleTopSolid.UI
+namespace EPFL.SpeckleTopSolid.UIXXXX
 {
-    public partial class Utils
+    public partial class UtilsXXXX
     {
 
         public static string AppName = "TopSolid";
@@ -78,4 +79,92 @@ namespace EPFL.SpeckleTopSolid.UI
         }
         #endregion
     }
+}
+
+
+
+namespace Speckle.ConnectorTopSolid
+{
+    public static class Utils
+    {
+
+#if TOPSOLID715
+    public static string VersionedAppName = VersionedHostApplications.TopSolid715;
+    public static string AppName = HostApplications.TopSolid.Name;
+    public static string Slug = HostApplications.TopSolid.Slug;
+#elif TOPSOLID716
+    public static string VersionedAppName = VersionedHostApplications.TopSolid716;
+    public static string AppName = HostApplications.TopSolid.Name;
+    public static string Slug = HostApplications.TopSolid.Slug;
+#endif
+        public static string invalidChars = @"<>/\:;""?*|=,‘";
+
+        #region extension methods
+
+        #endregion
+
+        /// <summary>
+        /// Retrieves the document's units.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        public static string GetUnits(ModelingDocument doc)
+        {
+
+            var insUnits = doc.LengthUnit;
+            string units = UnitToSpeckle(insUnits);
+            return units;
+
+        }
+
+        private static string UnitToSpeckle(Unit units)
+        {
+
+            switch (units.Name) // TODO: Check Name conversion
+            {
+                case "Millimeter":
+                    return Units.Millimeters;
+                case "Centimeter":
+                    return Units.Centimeters;
+                case "Meter":
+                    return Units.Meters;
+                case "Kilometer":
+                    return Units.Kilometers;
+                case "Inche":
+                    return Units.Inches;
+                case "Fee":
+                    return Units.Feet;
+                case "Yard":
+                    return Units.Yards;
+                case "Mile":
+                    return Units.Miles;
+                default:
+                    throw new System.Exception("The current Unit System is unsupported.");
+            }
+        }
+
+
+        /// <summary>
+        /// Removes invalid characters for Autocad layer and block names
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string RemoveInvalidChars(string str)
+        {
+            // using this to handle rhino nested layer syntax
+            // replace "::" layer delimiter with "$" (acad standard)
+            string cleanDelimiter = str.Replace("::", "$");
+
+            // remove all other invalid chars
+            return Regex.Replace(cleanDelimiter, $"[{invalidChars}]", string.Empty);
+        }
+
+        public static string RemoveInvalidDynamicPropChars(string str)
+        {
+            // remove ./
+            return Regex.Replace(str, @"[./]", "-");
+        }
+
+    }
+
 }

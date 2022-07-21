@@ -11,25 +11,77 @@ using TopSolid.Kernel.TX.Units;
 using TopSolid.Kernel.UI.Commands;
 using TopSolid.Kernel.WX;
 
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.ReactiveUI;
+
 namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 {
     class LaunchSpeckleCommand : MenuCommand
     {
+        public static Window MainWindow { get; private set; }
+
         protected override void Invoke()
         {
             //Show a message box to make sure the component is working
             //MessageBox.Show("BOOM");
+            // SpeckleCommand();
             SpeckleCommand();
         }
         // copied from autocad connector
         public static Bootstrapper Bootstrapper { get; set; }
 
 
-
         /// <summary>
         /// Main command to initialize Speckle Connector
         /// </summary>
         public static void SpeckleCommand()
+        {
+
+        }
+
+
+        public static void CreateOrFocusSpeckle(bool showWindow = true)
+        {
+            if (MainWindow == null)
+            {
+                var viewModel = new MainWindowViewModel(Bindings);
+                MainWindow = new MainWindow
+                {
+                    DataContext = viewModel
+                };
+            }
+
+            try
+            {
+                if (showWindow)
+                {
+                    MainWindow.Show();
+                    MainWindow.Activate();
+
+                    //required to gracefully quit avalonia and the skia processes
+                    //https://github.com/AvaloniaUI/Avalonia/wiki/Application-lifetimes
+                    if (Lifetime == null)
+                    {
+                        Lifetime = new CancellationTokenSource();
+                        Task.Run(() => AvaloniaApp.Run(Lifetime.Token));
+                    }
+
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    {
+                        var parentHwnd = Application.MainWindow.Handle;
+                        var hwnd = MainWindow.PlatformImpl.Handle.Handle;
+                        SetWindowLongPtr(hwnd, GWL_HWNDPARENT, parentHwnd);
+                    }
+                }
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// Main command to initialize Speckle Connector
+        /// </summary>
+        public static void SpeckleCommandOld()
 
         {
             /* try

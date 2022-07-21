@@ -139,18 +139,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\ConnectorTopSolid\UI\ConnectorBindingsTopSolid.cs">
-      <Link>UI\ConnectorBindingsTopSolid.cs</Link>
-    </Compile>
-    <Compile Include="..\..\ConnectorTopSolid\UI\Entry\App.cs">
-      <Link>Entry\App.cs</Link>
-    </Compile>
-    <Compile Include="..\..\ConnectorTopSolid\UI\Entry\OneClickCommand.cs">
-      <Link>Entry\OneClickCommand.cs</Link>
-    </Compile>
-    <Compile Include="..\..\ConnectorTopSolid\UI\Entry\SpeckleTopSolidCommand.cs">
-      <Link>Entry\SpeckleTopSolidCommand.cs</Link>
-    </Compile>
     <Compile Include="..\..\ConnectorTopSolid\UI\LaunchCommand\LaunchSpeckleCommand.cs">
       <Link>LaunchCommand\LaunchSpeckleCommand.cs</Link>
     </Compile>
@@ -165,9 +153,6 @@
     </Compile>
     <Compile Include="..\..\ConnectorTopSolid\UI\SpeckleStreamTS.cs">
       <Link>SpeckleStreamTS.cs</Link>
-    </Compile>
-    <Compile Include="..\..\ConnectorTopSolid\UI\Storage\SpeckleStreamManager.cs">
-      <Link>Storage\SpeckleStreamManager.cs</Link>
     </Compile>
     <Compile Include="..\..\ConnectorTopSolid\UI\Utils.cs">
       <Link>Utils.cs</Link>
@@ -225,7 +210,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Entry\" />
     <Folder Include="Resources\" />
+    <Folder Include="Storage\" />
+    <Folder Include="UI\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Speckle.Newtonsoft.Json">

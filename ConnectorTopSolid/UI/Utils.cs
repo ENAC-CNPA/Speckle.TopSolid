@@ -83,7 +83,7 @@ namespace EPFL.SpeckleTopSolid.UIXXXX
 
 
 
-namespace Speckle.ConnectorTopSolid
+namespace EPFL.SpeckleTopSolid.UI
 {
     public static class Utils
     {

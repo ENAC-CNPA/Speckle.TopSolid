@@ -3,8 +3,8 @@ using DesktopUI2.Models;
 using DesktopUI2.Models.Filters;
 using DesktopUI2.Models.Settings;
 using DesktopUI2.ViewModels;
-using Speckle.ConnectorTopSolid.Entry;
-using Speckle.ConnectorTopSolid.Storage;
+using EPFL.SpeckleTopSolid.UI.Entry;
+using EPFL.SpeckleTopSolid.UI.Storage;
 using Speckle.Core.Api;
 using Speckle.Core.Kits;
 using Speckle.Core.Logging;
@@ -23,7 +23,7 @@ using TopSolid.Kernel.DB.D3.Modeling.Documents;
 
 using Application = TopSolid.Kernel.UI.Application;
 
-namespace Speckle.ConnectorTopSolid.UI
+namespace EPFL.SpeckleTopSolid.UI
 {
     public partial class ConnectorBindingsTopSolid : ConnectorBindings
     {
@@ -82,7 +82,7 @@ namespace Speckle.ConnectorTopSolid.UI
         public override string GetDocumentId()
         {
             string path = GetDocPath(Doc);
-            var hash = Core.Models.Utilities.hashString(path + Doc?.Name, Core.Models.Utilities.HashingFuctions.MD5);
+            var hash = Speckle.Core.Models.Utilities.hashString(path + Doc?.Name, Speckle.Core.Models.Utilities.HashingFuctions.MD5);
             return hash;
         }
 

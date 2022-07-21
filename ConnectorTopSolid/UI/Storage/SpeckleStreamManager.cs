@@ -7,7 +7,7 @@ using Speckle.Newtonsoft.Json;
 using TopSolid.Kernel.DB.D3.Documents;
 using TopSolid.Kernel.DB.D3.Modeling.Documents;
 
-namespace Speckle.ConnectorTopSolid.Storage
+namespace EPFL.SpeckleTopSolid.UI.Storage
 {
   /// <summary>
   /// Manages the serialisation of speckle stream state

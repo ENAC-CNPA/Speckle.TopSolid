@@ -4,7 +4,7 @@ using DesktopUI2.Models.Filters;
 using DesktopUI2.Models.Settings;
 using DesktopUI2.ViewModels;
 using Speckle.ConnectorTopSolid.Entry;
-//using Speckle.ConnectorTopSolid.Storage;
+using Speckle.ConnectorTopSolid.Storage;
 using Speckle.Core.Api;
 using Speckle.Core.Kits;
 using Speckle.Core.Logging;
@@ -21,6 +21,8 @@ using System.Threading.Tasks;
 using TopSolid.Kernel.DB.D3.Documents;
 using TopSolid.Kernel.DB.D3.Modeling.Documents;
 
+using Application = TopSolid.Kernel.UI.Application;
+
 namespace Speckle.ConnectorTopSolid.UI
 {
     public partial class ConnectorBindingsTopSolid : ConnectorBindings
@@ -36,6 +38,23 @@ namespace Speckle.ConnectorTopSolid.UI
         {
             Control = new System.Windows.Forms.Control();
             Control.CreateControl();
+        }
+
+        public override List<string> GetObjectsInView() // this returns all visible doc objects.
+        {
+            var objs = new List<string>();
+            //using (Transaction tr = Doc.Database.TransactionManager.StartTransaction())
+            //{
+            //    BlockTableRecord modelSpace = Doc.Database.GetModelSpace();
+            //    foreach (ObjectId id in modelSpace)
+            //    {
+            //        var dbObj = tr.GetObject(id, OpenMode.ForRead);
+            //        if (dbObj.Visible())
+            //            objs.Add(dbObj.Handle.ToString());
+            //    }
+            //    tr.Commit();
+            //}
+            return objs;
         }
 
         #region local streams 
@@ -58,7 +77,7 @@ namespace Speckle.ConnectorTopSolid.UI
 
         public override string GetHostAppName() => Utils.Slug;
 
-        private string GetDocPath(ModelingDocument doc) => HostApplicationServices.Current.FindFile(doc?.Name, doc?.Database, FindFileHint.Default);
+        private string GetDocPath(ModelingDocument doc) => Doc.FilePath; // .Current.FindFile(doc?.Name, doc?.Database, FindFileHint.Default);
 
         public override string GetDocumentId()
         {
@@ -69,26 +88,26 @@ namespace Speckle.ConnectorTopSolid.UI
 
         public override string GetDocumentLocation() => GetDocPath(Doc);
 
-        public override string GetFileName() => (Doc != null) ? System.IO.Path.GetFileName(Doc.Name) : string.Empty;
+        public override string GetFileName() => (Doc != null) ? System.IO.Path.GetFileName(Doc.FileName) : string.Empty;
 
         public override string GetActiveViewName() => "Entire Document";
 
-        public override List<string> GetObjectsInView() // this returns all visible doc objects.
-        {
-            //var objs = new List<string>();
-            //using (Transaction tr = Doc.Database.TransactionManager.StartTransaction())
-            //{
-            //    BlockTableRecord modelSpace = Doc.Database.GetModelSpace();
-            //    foreach (ObjectId id in modelSpace)
-            //    {
-            //        var dbObj = tr.GetObject(id, OpenMode.ForRead);
-            //        if (dbObj.Visible())
-            //            objs.Add(dbObj.Handle.ToString());
-            //    }
-            //    tr.Commit();
-            //}
-            //return objs;
-        }
+        //public override List<string> GetObjectsInView() // this returns all visible doc objects.
+        //{
+        //    //var objs = new List<string>();
+        //    //using (Transaction tr = Doc.Database.TransactionManager.StartTransaction())
+        //    //{
+        //    //    BlockTableRecord modelSpace = Doc.Database.GetModelSpace();
+        //    //    foreach (ObjectId id in modelSpace)
+        //    //    {
+        //    //        var dbObj = tr.GetObject(id, OpenMode.ForRead);
+        //    //        if (dbObj.Visible())
+        //    //            objs.Add(dbObj.Handle.ToString());
+        //    //    }
+        //    //    tr.Commit();
+        //    //}
+        //    //return objs;
+        //}
 
         public override List<string> GetSelectedObjects()
         {
@@ -109,7 +128,7 @@ namespace Speckle.ConnectorTopSolid.UI
             return new List<ISelectionFilter>()
       {
         new ManualSelectionFilter(),
-        new ListSelectionFilter {Slug="layer",  Name = "Layers", Icon = "LayersTriple", Description = "Selects objects based on their layers.", Values = GetLayers() },
+        new ListSelectionFilter {Slug="layer",  Name = "Layers", Icon = "LayersTriple", Description = "Selects objects based on their layers.", Values = new List<string>()},
         new AllSelectionFilter {Slug="all",  Name = "Everything", Icon = "CubeScan", Description = "Selects all document objects." }
       };
         }
@@ -208,119 +227,119 @@ namespace Speckle.ConnectorTopSolid.UI
         delegate void ReceivingDelegate(Base commitObject, ISpeckleConverter converter, StreamState state, ProgressViewModel progress, Stream stream, string id);
         private void ConvertReceiveCommit(Base commitObject, ISpeckleConverter converter, StreamState state, ProgressViewModel progress, Stream stream, string id)
         {
-            using (DocumentLock l = Doc.LockDocument())
-            {
-                using (Transaction tr = Doc.Database.TransactionManager.StartTransaction())
-                {
-                    // set the context doc for conversion - this is set inside the transaction loop because the converter retrieves this transaction for all db editing when the context doc is set!
-                    converter.SetContextDocument(Doc);
+            //using (DocumentLock l = Doc.LockDocument())
+            //{
+            //    using (Transaction tr = Doc.Database.TransactionManager.StartTransaction())
+            //    {
+            //        // set the context doc for conversion - this is set inside the transaction loop because the converter retrieves this transaction for all db editing when the context doc is set!
+            //        converter.SetContextDocument(Doc);
 
-                    // keep track of conversion progress here
-                    var conversionProgressDict = new ConcurrentDictionary<string, int>();
-                    conversionProgressDict["Conversion"] = 1;
+            //        // keep track of conversion progress here
+            //        var conversionProgressDict = new ConcurrentDictionary<string, int>();
+            //        conversionProgressDict["Conversion"] = 1;
 
-                    // keep track of any layer name changes for notification here
-                    bool changedLayerNames = false;
+            //        // keep track of any layer name changes for notification here
+            //        bool changedLayerNames = false;
 
-                    // create a commit prefix: used for layers and block definition names
-                    var commitPrefix = Formatting.CommitInfo(stream.name, state.BranchName, id);
+            //        // create a commit prefix: used for layers and block definition names
+            //        var commitPrefix = Formatting.CommitInfo(stream.name, state.BranchName, id);
 
-                    // give converter a way to access the commit info
-                    if (Doc.UserData.ContainsKey("commit"))
-                        Doc.UserData["commit"] = commitPrefix;
-                    else
-                        Doc.UserData.Add("commit", commitPrefix);
+            //        // give converter a way to access the commit info
+            //        if (Doc.UserData.ContainsKey("commit"))
+            //            Doc.UserData["commit"] = commitPrefix;
+            //        else
+            //            Doc.UserData.Add("commit", commitPrefix);
 
-                    // delete existing commit layers
-                    try
-                    {
-                        DeleteBlocksWithPrefix(commitPrefix, tr);
-                        DeleteLayersWithPrefix(commitPrefix, tr);
-                    }
-                    catch
-                    {
-                        converter.Report.LogOperationError(new Exception($"Failed to remove existing layers or blocks starting with {commitPrefix} before importing new geometry."));
-                    }
+            //        // delete existing commit layers
+            //        try
+            //        {
+            //            DeleteBlocksWithPrefix(commitPrefix, tr);
+            //            DeleteLayersWithPrefix(commitPrefix, tr);
+            //        }
+            //        catch
+            //        {
+            //            converter.Report.LogOperationError(new Exception($"Failed to remove existing layers or blocks starting with {commitPrefix} before importing new geometry."));
+            //        }
 
-                    // flatten the commit object to retrieve children objs
-                    int count = 0;
-                    var commitObjs = FlattenCommitObject(commitObject, converter, commitPrefix, state, ref count);
+            //        // flatten the commit object to retrieve children objs
+            //        int count = 0;
+            //        var commitObjs = FlattenCommitObject(commitObject, converter, commitPrefix, state, ref count);
 
-                    // open model space block table record for write
-                    BlockTableRecord btr = (BlockTableRecord)tr.GetObject(Doc.Database.CurrentSpaceId, OpenMode.ForWrite);
+            //        // open model space block table record for write
+            //        BlockTableRecord btr = (BlockTableRecord)tr.GetObject(Doc.Database.CurrentSpaceId, OpenMode.ForWrite);
 
-                    // More efficient this way than doing this per object
-                    var lineTypeDictionary = new Dictionary<string, ObjectId>();
-                    var lineTypeTable = (LinetypeTable)tr.GetObject(Doc.Database.LinetypeTableId, OpenMode.ForRead);
-                    foreach (ObjectId lineTypeId in lineTypeTable)
-                    {
-                        var linetype = (LinetypeTableRecord)tr.GetObject(lineTypeId, OpenMode.ForRead);
-                        lineTypeDictionary.Add(linetype.Name, lineTypeId);
-                    }
+            //        // More efficient this way than doing this per object
+            //        var lineTypeDictionary = new Dictionary<string, ObjectId>();
+            //        var lineTypeTable = (LinetypeTable)tr.GetObject(Doc.Database.LinetypeTableId, OpenMode.ForRead);
+            //        foreach (ObjectId lineTypeId in lineTypeTable)
+            //        {
+            //            var linetype = (LinetypeTableRecord)tr.GetObject(lineTypeId, OpenMode.ForRead);
+            //            lineTypeDictionary.Add(linetype.Name, lineTypeId);
+            //        }
 
-                    foreach (var commitObj in commitObjs)
-                    {
-                        // create the object's bake layer if it doesn't already exist
-                        (Base obj, string layerName) = commitObj;
+            //        foreach (var commitObj in commitObjs)
+            //        {
+            //            // create the object's bake layer if it doesn't already exist
+            //            (Base obj, string layerName) = commitObj;
 
-                        conversionProgressDict["Conversion"]++;
-                        progress.Update(conversionProgressDict);
+            //            conversionProgressDict["Conversion"]++;
+            //            progress.Update(conversionProgressDict);
 
-                        object converted = null;
-                        try
-                        {
-                            converted = converter.ConvertToNative(obj);
-                        }
-                        catch (Exception e)
-                        {
-                            progress.Report.LogConversionError(new Exception($"Failed to convert object {obj.id} of type {obj.speckle_type}: {e.Message}"));
-                            continue;
-                        }
-                        var convertedEntity = converted as Entity;
+            //            object converted = null;
+            //            try
+            //            {
+            //                converted = converter.ConvertToNative(obj);
+            //            }
+            //            catch (Exception e)
+            //            {
+            //                progress.Report.LogConversionError(new Exception($"Failed to convert object {obj.id} of type {obj.speckle_type}: {e.Message}"));
+            //                continue;
+            //            }
+            //            var convertedEntity = converted as Entity;
 
-                        if (convertedEntity != null)
-                        {
-                            if (GetOrMakeLayer(layerName, tr, out string cleanName))
-                            {
-                                // record if layer name has been modified
-                                if (!cleanName.Equals(layerName))
-                                    changedLayerNames = true;
+            //            if (convertedEntity != null)
+            //            {
+            //                if (GetOrMakeLayer(layerName, tr, out string cleanName))
+            //                {
+            //                    // record if layer name has been modified
+            //                    if (!cleanName.Equals(layerName))
+            //                        changedLayerNames = true;
 
-                                var res = convertedEntity.Append(cleanName);
-                                if (res.IsValid)
-                                {
-                                    // handle display - fallback to rendermaterial if no displaystyle exists
-                                    Base display = obj[@"displayStyle"] as Base;
-                                    if (display == null) display = obj[@"renderMaterial"] as Base;
-                                    if (display != null) Utils.SetStyle(display, convertedEntity, lineTypeDictionary);
+            //                    var res = convertedEntity.Append(cleanName);
+            //                    if (res.IsValid)
+            //                    {
+            //                        // handle display - fallback to rendermaterial if no displaystyle exists
+            //                        Base display = obj[@"displayStyle"] as Base;
+            //                        if (display == null) display = obj[@"renderMaterial"] as Base;
+            //                        if (display != null) Utils.SetStyle(display, convertedEntity, lineTypeDictionary);
 
-                                    tr.TransactionManager.QueueForGraphicsFlush();
-                                }
-                                else
-                                {
-                                    progress.Report.LogConversionError(new Exception($"Failed to add converted object {obj.id} of type {obj.speckle_type} to the document."));
-                                }
+            //                        tr.TransactionManager.QueueForGraphicsFlush();
+            //                    }
+            //                    else
+            //                    {
+            //                        progress.Report.LogConversionError(new Exception($"Failed to add converted object {obj.id} of type {obj.speckle_type} to the document."));
+            //                    }
 
-                            }
-                            else
-                                progress.Report.LogOperationError(new Exception($"Failed to create layer {layerName} to bake objects into."));
-                        }
-                        else if (converted == null)
-                        {
-                            progress.Report.LogConversionError(new Exception($"Failed to convert object {obj.id} of type {obj.speckle_type}."));
-                        }
-                    }
-                    progress.Report.Merge(converter.Report);
+            //                }
+            //                else
+            //                    progress.Report.LogOperationError(new Exception($"Failed to create layer {layerName} to bake objects into."));
+            //            }
+            //            else if (converted == null)
+            //            {
+            //                progress.Report.LogConversionError(new Exception($"Failed to convert object {obj.id} of type {obj.speckle_type}."));
+            //            }
+            //        }
+            //        progress.Report.Merge(converter.Report);
 
-                    if (changedLayerNames)
-                        progress.Report.Log($"Layer names were modified: one or more layers contained invalid characters {Utils.invalidChars}");
+            //        if (changedLayerNames)
+            //            progress.Report.Log($"Layer names were modified: one or more layers contained invalid characters {Utils.invalidChars}");
 
-                    // remove commit info from doc userdata
-                    Doc.UserData.Remove("commit");
+            //        // remove commit info from doc userdata
+            //        Doc.UserData.Remove("commit");
 
-                    tr.Commit();
-                }
-            }
+            //        tr.Commit();
+            //    }
+            //}
         }
         // Recurses through the commit object and flattens it. Returns list of Base objects with their bake layers
         private List<Tuple<Base, string>> FlattenCommitObject(object obj, ISpeckleConverter converter, string layer, StreamState state, ref int count, bool foundConvertibleMember = false)
@@ -403,10 +422,10 @@ namespace Speckle.ConnectorTopSolid.UI
             // remove deleted object ids
             var deletedElements = new List<string>();
             foreach (var handle in state.SelectedObjectIds)
-                if (Doc.Database.TryGetObjectId(Utils.GetHandle(handle), out ObjectId id))
-                    if (id.IsErased || id.IsNull)
-                        deletedElements.Add(handle);
-            state.SelectedObjectIds = state.SelectedObjectIds.Where(o => !deletedElements.Contains(o)).ToList();
+            //    if (Doc.Database.TryGetObjectId(Utils.GetHandle(handle), out ObjectId id))
+            //        if (id.IsErased || id.IsNull)
+            //            deletedElements.Add(handle);
+            //state.SelectedObjectIds = state.SelectedObjectIds.Where(o => !deletedElements.Contains(o)).ToList();
 
             if (state.SelectedObjectIds.Count == 0)
             {
@@ -481,99 +500,99 @@ namespace Speckle.ConnectorTopSolid.UI
         delegate void SendingDelegate(Base commitObject, ISpeckleConverter converter, StreamState state, ProgressViewModel progress, ref int convertedCount);
         private void ConvertSendCommit(Base commitObject, ISpeckleConverter converter, StreamState state, ProgressViewModel progress, ref int convertedCount)
         {
-            using (Transaction tr = Doc.Database.TransactionManager.StartTransaction())
-            {
-                // set the context doc for conversion - this is set inside the transaction loop because the converter retrieves this transaction for all db editing when the context doc is set!
-                converter.SetContextDocument(Doc);
+            //using (Transaction tr = Doc.Database.TransactionManager.StartTransaction())
+//            {
+//                // set the context doc for conversion - this is set inside the transaction loop because the converter retrieves this transaction for all db editing when the context doc is set!
+//                converter.SetContextDocument(Doc);
 
-                var conversionProgressDict = new ConcurrentDictionary<string, int>();
-                conversionProgressDict["Conversion"] = 0;
+//                var conversionProgressDict = new ConcurrentDictionary<string, int>();
+//                conversionProgressDict["Conversion"] = 0;
 
-                bool renamedlayers = false;
+//                bool renamedlayers = false;
 
-                foreach (var autocadObjectHandle in state.SelectedObjectIds)
-                {
-                    if (progress.CancellationTokenSource.Token.IsCancellationRequested)
-                    {
-                        tr.Commit();
-                        return;
-                    }
+//                foreach (var autocadObjectHandle in state.SelectedObjectIds)
+//                {
+//                    if (progress.CancellationTokenSource.Token.IsCancellationRequested)
+//                    {
+//                        tr.Commit();
+//                        return;
+//                    }
 
-                    conversionProgressDict["Conversion"]++;
-                    progress.Update(conversionProgressDict);
+//                    conversionProgressDict["Conversion"]++;
+//                    progress.Update(conversionProgressDict);
 
-                    // get the db object from id
-                    Handle hn = Utils.GetHandle(autocadObjectHandle);
-                    DBObject obj = hn.GetObject(tr, out string type, out string layer);
+//                    // get the db object from id
+//                    //Handle hn = Utils.GetHandle(autocadObjectHandle);
+//                    //DBObject obj = hn.GetObject(tr, out string type, out string layer);
 
-                    if (obj == null)
-                    {
-                        progress.Report.Log($"Skipped not found object: ${autocadObjectHandle}.");
-                        continue;
-                    }
+//                    if (obj == null)
+//                    {
+//                        progress.Report.Log($"Skipped not found object: ${autocadObjectHandle}.");
+//                        continue;
+//                    }
 
-                    if (!converter.CanConvertToSpeckle(obj))
-                    {
-                        progress.Report.Log($"Skipped not supported type: ${type}. Object ${obj.Id} not sent.");
-                        continue;
-                    }
+//                    if (!converter.CanConvertToSpeckle(obj))
+//                    {
+//                        progress.Report.Log($"Skipped not supported type: ${type}. Object ${obj.Id} not sent.");
+//                        continue;
+//                    }
 
-                    try
-                    {
-                        // convert obj
-                        Base converted = null;
-                        string containerName = string.Empty;
-                        converted = converter.ConvertToSpeckle(obj);
-                        if (converted == null)
-                        {
-                            progress.Report.LogConversionError(new Exception($"Failed to convert object {autocadObjectHandle} of type {type}."));
-                            continue;
-                        }
+//                    try
+//                    {
+//                        // convert obj
+//                        Base converted = null;
+//                        string containerName = string.Empty;
+//                        converted = converter.ConvertToSpeckle(obj);
+//                        if (converted == null)
+//                        {
+//                            progress.Report.LogConversionError(new Exception($"Failed to convert object {autocadObjectHandle} of type {type}."));
+//                            continue;
+//                        }
 
-                        /* TODO: adding the extension dictionary / xdata per object 
-                        foreach (var key in obj.ExtensionDictionary)
-                          converted[key] = obj.ExtensionDictionary.GetUserString(key);
-                        */
+//                        /* TODO: adding the extension dictionary / xdata per object 
+//                        foreach (var key in obj.ExtensionDictionary)
+//                          converted[key] = obj.ExtensionDictionary.GetUserString(key);
+//                        */
 
-#if CIVIL2021 || CIVIL2022
-          // add property sets if this is Civil3D
-          var propertySets = obj.GetPropertySets(tr);
-          if (propertySets.Count > 0)
-            converted["propertySets"] = propertySets;
-#endif
+//#if CIVIL2021 || CIVIL2022
+//          // add property sets if this is Civil3D
+//          var propertySets = obj.GetPropertySets(tr);
+//          if (propertySets.Count > 0)
+//            converted["propertySets"] = propertySets;
+//#endif
 
-                        if (obj is BlockReference)
-                            containerName = "Blocks";
-                        else
-                        {
-                            // remove invalid chars from layer name
-                            string cleanLayerName = Utils.RemoveInvalidDynamicPropChars(layer);
-                            containerName = cleanLayerName;
-                            if (!cleanLayerName.Equals(layer))
-                                renamedlayers = true;
-                        }
+//                        if (obj is BlockReference)
+//                            containerName = "Blocks";
+//                        else
+//                        {
+//                            // remove invalid chars from layer name
+//                            string cleanLayerName = Utils.RemoveInvalidDynamicPropChars(layer);
+//                            containerName = cleanLayerName;
+//                            if (!cleanLayerName.Equals(layer))
+//                                renamedlayers = true;
+//                        }
 
-                        if (commitObject[$"@{containerName}"] == null)
-                            commitObject[$"@{containerName}"] = new List<Base>();
-                        ((List<Base>)commitObject[$"@{containerName}"]).Add(converted);
+//                        if (commitObject[$"@{containerName}"] == null)
+//                            commitObject[$"@{containerName}"] = new List<Base>();
+//                        ((List<Base>)commitObject[$"@{containerName}"]).Add(converted);
 
-                        conversionProgressDict["Conversion"]++;
-                        progress.Update(conversionProgressDict);
+//                        conversionProgressDict["Conversion"]++;
+//                        progress.Update(conversionProgressDict);
 
-                        converted.applicationId = autocadObjectHandle;
-                    }
-                    catch (Exception e)
-                    {
-                        progress.Report.LogConversionError(new Exception($"Failed to convert object {autocadObjectHandle} of type {type}: {e.Message}"));
-                    }
-                    convertedCount++;
-                }
+//                        converted.applicationId = autocadObjectHandle;
+//                    }
+//                    catch (Exception e)
+//                    {
+//                        progress.Report.LogConversionError(new Exception($"Failed to convert object {autocadObjectHandle} of type {type}: {e.Message}"));
+//                    }
+//                    convertedCount++;
+//                }
 
-                if (renamedlayers)
-                    progress.Report.Log("Replaced illegal chars ./ with - in one or more layer names.");
+//                if (renamedlayers)
+//                    progress.Report.Log("Replaced illegal chars ./ with - in one or more layer names.");
 
-                tr.Commit();
-            }
+//                tr.Commit();
+//            }
         }
 
         private List<string> GetObjectsFromFilter(ISelectionFilter filter, ISpeckleConverter converter)
@@ -584,14 +603,14 @@ namespace Speckle.ConnectorTopSolid.UI
                 case "manual":
                     return GetSelectedObjects();
                 case "all":
-                    return Doc.ConvertibleObjects(converter);
+                    //return Doc.ConvertibleObjects(converter);
                 case "layer":
                     foreach (var layerName in filter.Selection)
                     {
-                        TypedValue[] layerType = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, layerName) };
-                        PromptSelectionResult prompt = Doc.Editor.SelectAll(new SelectionFilter(layerType));
-                        if (prompt.Status == PromptStatus.OK)
-                            selection.AddRange(prompt.Value.GetHandles());
+                        //TypedValue[] layerType = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, layerName) };
+                        //PromptSelectionResult prompt = Doc.Editor.SelectAll(new SelectionFilter(layerType));
+                        //if (prompt.Status == PromptStatus.OK)
+                        //    selection.AddRange(prompt.Value.GetHandles());
                     }
                     return selection;
             }
@@ -603,9 +622,9 @@ namespace Speckle.ConnectorTopSolid.UI
         public void RegisterAppEvents()
         {
             //// GLOBAL EVENT HANDLERS
-            Application.DocumentWindowCollection.DocumentWindowActivated += Application_WindowActivated;
-            Application.DocumentManager.DocumentActivated += Application_DocumentActivated;
-            Doc.BeginDocumentClose += Application_DocumentClosed;
+            //Application.DocumentWindowCollection.DocumentWindowActivated += Application_WindowActivated;
+            //Application.DocumentManager.DocumentActivated += Application_DocumentActivated;
+            //Doc.BeginDocumentClose += Application_DocumentClosed;
 
         }
 
@@ -616,12 +635,13 @@ namespace Speckle.ConnectorTopSolid.UI
         }
 
         //checks whether to refresh the stream list in case the user changes active view and selects a different document
-        private void Application_WindowActivated(object sender, DocumentWindowActivatedEventArgs e)
+        private void Application_WindowActivated(object sender)
+                    //private void Application_WindowActivated(object sender, DocumentWindowActivatedEventArgs e)
         {
             try
             {
-                if (e.DocumentWindow.Document == null || UpdateSavedStreams == null)
-                    return;
+                //if (e.DocumentWindow.Document == null || UpdateSavedStreams == null)
+                //    return;
 
                 var streams = GetStreamsInFile();
                 UpdateSavedStreams(streams);
@@ -631,7 +651,9 @@ namespace Speckle.ConnectorTopSolid.UI
             catch { }
         }
 
-        private void Application_DocumentClosed(object sender, DocumentBeginCloseEventArgs e)
+
+        //private void Application_DocumentClosed(object sender, DocumentBeginCloseEventArgs e)
+        private void Application_DocumentClosed(object sender)
         {
             try
             {
@@ -639,25 +661,26 @@ namespace Speckle.ConnectorTopSolid.UI
                 if (Doc != null)
                     return;
 
-                if (SpeckleAutocadCommand.MainWindow != null)
-                    SpeckleAutocadCommand.MainWindow.Hide();
+                //if (SpeckleAutocadCommand.MainWindow != null)
+                //    SpeckleAutocadCommand.MainWindow.Hide();
 
                 MainWindowViewModel.GoHome();
             }
             catch { }
         }
 
-        private void Application_DocumentActivated(object sender, DocumentCollectionEventArgs e)
+        private void Application_DocumentActivated(object sender)
+        //private void Application_DocumentActivated(object sender, DocumentCollectionEventArgs e)
         {
             try
             {
                 // Triggered when a document window is activated. This will happen automatically if a document is newly created or opened.
-                if (e.Document == null)
-                    return;
+                //if (e.Document == null)
+                //    return;
 
                 var streams = GetStreamsInFile();
                 if (streams.Count > 0)
-                    SpeckleAutocadCommand.CreateOrFocusSpeckle();
+                    //SpeckleAutocadCommand.CreateOrFocusSpeckle();
 
                 if (UpdateSavedStreams != null)
                     UpdateSavedStreams(streams);

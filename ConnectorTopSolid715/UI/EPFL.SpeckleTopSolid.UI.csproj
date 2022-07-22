@@ -163,12 +163,14 @@
     <Compile Include="..\..\ConnectorTopSolid\UI\SpeckleStreamTS.cs">
       <Link>SpeckleStreamTS.cs</Link>
     </Compile>
+    <Compile Include="..\..\ConnectorTopSolid\UI\UI\ConnectorBindingsTopSolid.cs">
+      <Link>UI\ConnectorBindingsTopSolid.cs</Link>
+    </Compile>
     <Compile Include="..\..\ConnectorTopSolid\UI\Utils.cs">
       <Link>Utils.cs</Link>
     </Compile>
     <Compile Include="ContextMenu.cs" />
     <Compile Include="Resolver.cs" />
-    <Compile Include="UI\ConnectorBindingsTopSolid.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\ConnectorTopSolid\UI\LaunchCommand\LaunchSpeckleCommand.fr.resx">

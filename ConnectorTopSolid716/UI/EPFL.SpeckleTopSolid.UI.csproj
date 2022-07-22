@@ -154,6 +154,9 @@
     <Compile Include="..\..\ConnectorTopSolid\UI\Properties\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\ConnectorTopSolid\UI\Resolver.cs">
+      <Link>Resolver.cs</Link>
+    </Compile>
     <Compile Include="..\..\ConnectorTopSolid\UI\Resources.cs">
       <Link>Resources.cs</Link>
     </Compile>
@@ -170,7 +173,6 @@
       <Link>Utils.cs</Link>
     </Compile>
     <Compile Include="ContextMenu.cs" />
-    <Compile Include="Resolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\ConnectorTopSolid\UI\LaunchCommand\LaunchSpeckleCommand.fr.resx">

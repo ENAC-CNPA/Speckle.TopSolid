@@ -15,7 +15,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 {
     class LaunchSpeckleCommand : MenuCommand
     {
-
+ 
         protected override void Invoke()
         {
             //Show a message box to make sure the component is working

@@ -154,6 +154,9 @@
     <Compile Include="..\..\ConnectorTopSolid\UI\Properties\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\ConnectorTopSolid\UI\Resolver.cs">
+      <Link>Resolver.cs</Link>
+    </Compile>
     <Compile Include="..\..\ConnectorTopSolid\UI\Resources.cs">
       <Link>Resources.cs</Link>
     </Compile>
@@ -163,6 +166,9 @@
     <Compile Include="..\..\ConnectorTopSolid\UI\SpeckleStreamTS.cs">
       <Link>SpeckleStreamTS.cs</Link>
     </Compile>
+    <Compile Include="..\..\ConnectorTopSolid\UI\Storage\SpeckleStreamManager.cs">
+      <Link>Storage\SpeckleStreamManager.cs</Link>
+    </Compile>
     <Compile Include="..\..\ConnectorTopSolid\UI\UI\ConnectorBindingsTopSolid.cs">
       <Link>UI\ConnectorBindingsTopSolid.cs</Link>
     </Compile>
@@ -170,7 +176,6 @@
       <Link>Utils.cs</Link>
     </Compile>
     <Compile Include="ContextMenu.cs" />
-    <Compile Include="Resolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\ConnectorTopSolid\UI\LaunchCommand\LaunchSpeckleCommand.fr.resx">
@@ -220,7 +225,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
-    <Folder Include="Storage\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Speckle.Newtonsoft.Json">

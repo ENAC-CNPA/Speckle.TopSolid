@@ -641,13 +641,36 @@ namespace EPFL.SpeckleTopSolid.UI
         public void RegisterAppEvents()
         {
             //// GLOBAL EVENT HANDLERS
-            //Application.DocumentWindowCollection.DocumentWindowActivated += Application_WindowActivated;
+            //TopSolid.Kernel.TX.Documents.DocumentModificationEventArgs += Application_LayerChanged;
+            TopSolid.Kernel.WX.Application.CurrentDocumentChanged += Application_CurrentDocumentChanged;
+            // TopSolid.Kernel.WX.Application.CurrentDocumentChanged += Application_WindowActivated;
+            //Application.ActivateDocument.DocumentWindowActivated += Application_WindowActivated;
             //Application.DocumentManager.DocumentActivated += Application_DocumentActivated;
             //Doc.BeginDocumentClose += Application_DocumentClosed;
 
         }
 
-        private void Application_LayerChanged(object sender, EventArgs e)
+        private void Application_CurrentDocumentChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                // Triggered when a document window is activated.This will happen automatically if a document is newly created or opened.
+                if (e == null)
+                    return;
+
+                var streams = GetStreamsInFile();
+                if (streams.Count > 0)
+                    //SpeckleAutocadCommand.CreateOrFocusSpeckle();
+
+                    if (UpdateSavedStreams != null)
+                        UpdateSavedStreams(streams);
+
+                MainViewModel.GoHome();
+            }
+            catch { }
+        }
+
+        private void Application_LayerChanged(object sender, TopSolid.Kernel.TX.Documents.DocumentClosingEventArgs e)
         {
             if (UpdateSelectedStream != null)
                 UpdateSelectedStream();

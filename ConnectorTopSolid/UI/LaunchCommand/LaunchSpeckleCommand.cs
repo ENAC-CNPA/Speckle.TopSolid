@@ -18,60 +18,18 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
  
         protected override void Invoke()
         {
-            //Show a message box to make sure the component is working
-            //MessageBox.Show("BOOM");
-            // SpeckleCommand();
+          
             SpeckleCommand();
         }
-        // copied from autocad connector
-        //public static Bootstrapper Bootstrapper { get; set; }
-
-
+       
         /// <summary>
         /// Main command to initialize Speckle Connector
         /// </summary>
         public static void SpeckleCommand()
 
         {
-
-            Entry.SpeckleTopSolidCommand.SpeckleCommand(); //.SendCommand();
-
+            Speckle.ConnectorTopSolid.UI.Entry.SpeckleTopSolidCommand.SpeckleCommand(); //.SendCommand();
         }
 
-
-            /// <summary>
-            /// Main command to initialize Speckle Connector
-            /// </summary>
-            public static void SpeckleCommandOld()
-
-        {
-
-
-            //try
-            //{
-            //    //copied from Matteo's Guide
-            //    if (Bootstrapper != null)
-            //    {
-            //        Bootstrapper.ShowRootView();
-            //        return;
-            //    }
-
-            //    Bootstrapper = new Bootstrapper()
-            //    {
-            //        Bindings = new ConnectorBindingsTopSolid()
-            //    };
-
-            //    if (System.Windows.Application.Current != null)
-            //        new StyletAppLoader() { Bootstrapper = Bootstrapper };
-            //    else
-            //        new Speckle.DesktopUI.App(Bootstrapper);
-
-            //    Bootstrapper.Start(System.Windows.Application.Current);
-            //}
-            //catch (System.Exception e)
-            //{
-
-            //}
-        }
     }
 }

@@ -1,10 +1,10 @@
 ﻿
 using DesktopUI2.ViewModels;
 using DesktopUI2.Models;
-using EPFL.SpeckleTopSolid.UI;
+using Speckle.ConnectorTopSolid.UI;
 
 
-namespace EPFL.SpeckleTopSolid.UI.Entry
+namespace Speckle.ConnectorTopSolid.UI.Entry
 {
     public class OneClickCommand
     {

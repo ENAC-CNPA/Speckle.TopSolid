@@ -13,11 +13,11 @@ using Avalonia.ReactiveUI;
 using DesktopUI2;
 using DesktopUI2.ViewModels;
 using DesktopUI2.Views;
-using EPFL.SpeckleTopSolid.UI;
+using Speckle.ConnectorTopSolid.UI;
 using Application = TopSolid.Kernel.UI.Application;
 
 
-namespace EPFL.SpeckleTopSolid.UI.Entry
+namespace Speckle.ConnectorTopSolid.UI.Entry
 {
     class SpeckleTopSolidCommand
     {

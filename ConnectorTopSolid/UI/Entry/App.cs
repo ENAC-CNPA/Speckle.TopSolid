@@ -10,10 +10,10 @@ using System.IO;
 using System.Windows.Media.Imaging;
 using System.Linq;
 using Forms = System.Windows.Forms;
-using EPFL.SpeckleTopSolid.UI;
+using Speckle.ConnectorTopSolid.UI;
 
 
-namespace EPFL.SpeckleTopSolid.UI.Entry
+namespace Speckle.ConnectorTopSolid.UI.Entry
 {
     public class App
     {

@@ -23,7 +23,7 @@ using TopSolid.Kernel.DB.D3.Modeling.Documents;
 
 using Application = TopSolid.Kernel.UI.Application;
 
-namespace EPFL.SpeckleTopSolid.UI
+namespace Speckle.ConnectorTopSolid.UI
 {
     public partial class ConnectorBindingsTopSolid : ConnectorBindings
     {

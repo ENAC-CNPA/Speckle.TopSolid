@@ -27,7 +27,7 @@ namespace Speckle.ConnectorTopSolid.UI
 {
     public partial class ConnectorBindingsTopSolid : ConnectorBindings
     {
-        public static ModelingDocument Doc = TopSolid.Kernel.UI.Application.CurrentDocument as ModelingDocument;
+        public static ModelingDocument Doc => TopSolid.Kernel.UI.Application.CurrentDocument as ModelingDocument;
 
 
 
@@ -545,8 +545,6 @@ namespace Speckle.ConnectorTopSolid.UI
             var conversionProgressDict = new ConcurrentDictionary<string, int>();
             conversionProgressDict["Conversion"] = 0;
 
-            bool renamedlayers = false;
-
             foreach (var elementId in state.SelectedObjectIds)
             {
                 if (progress.CancellationTokenSource.Token.IsCancellationRequested)
@@ -613,7 +611,7 @@ namespace Speckle.ConnectorTopSolid.UI
                 case "manual":
                     return GetSelectedObjects();
                 case "all":
-                    //return Doc.ConvertibleObjects(converter);
+                    return Doc.ConvertibleObjects(converter);
                 case "layer":
                     foreach (var layerName in filter.Selection)
                     {

@@ -27,7 +27,8 @@ namespace Speckle.ConnectorTopSolid.UI
 {
     public partial class ConnectorBindingsTopSolid : ConnectorBindings
     {
-        //public static ModelingDocument Doc = null; // TopSolid.Kernel.UI.Application.CurrentDocument as ModelingDocument;
+        public static ModelingDocument Doc = null; // TopSolid.Kernel.UI.Application.CurrentDocument as ModelingDocument;
+
 
 
         // TopSolid API should only be called on the main thread.
@@ -428,7 +429,7 @@ namespace Speckle.ConnectorTopSolid.UI
         #endregion
 
         #region sending
-        public override Task<string> SendStream(StreamState state, ProgressViewModel progress)
+        public override async Task<string> SendStream(StreamState state, ProgressViewModel progress)
         {
             var kit = KitManager.GetDefaultKit();
             var converter = kit.LoadConverter(Utils.VersionedAppName);
@@ -439,81 +440,86 @@ namespace Speckle.ConnectorTopSolid.UI
                 state.SelectedObjectIds = GetObjectsFromFilter(state.Filter, converter);
 
             // remove deleted object ids
-            //var deletedElements = new List<string>();
-            //foreach (var handle in state.SelectedObjectIds)
-            //    if (Doc.Database.TryGetObjectId(Utils.GetHandle(handle), out ObjectId id))
-            //        if (id.IsErased || id.IsNull)
-            //            deletedElements.Add(handle);
-            //state.SelectedObjectIds = state.SelectedObjectIds.Where(o => !deletedElements.Contains(o)).ToList();
+            var deletedElements = new List<string>();
 
-            //if (state.SelectedObjectIds.Count == 0)
-            //{
-            //    progress.Report.LogOperationError(new Exception("Zero objects selected; send stopped. Please select some objects, or check that your filter can actually select something."));
-            //    return null;
-            //}
+            IEnumerable<TopSolid.Kernel.DB.Elements.Element> elments = null; //; Doc.Elements.GetAll();
 
-            //var commitObject = new Base();
-            ////commitObject["units"] = Utils.GetUnits(Doc); // TODO: check whether commits base needs units attached
+            foreach (var id in state.SelectedObjectIds)
+            {
+                //if (!Doc.Elements.Contains(id)) deletedElements.Add(id);
+            }
+            state.SelectedObjectIds = state.SelectedObjectIds.Where(o => !deletedElements.Contains(o)).ToList();
 
-            //int convertedCount = 0;
+            if (state.SelectedObjectIds.Count == 0)
+            {
+                progress.Report.LogOperationError(new Exception("Zero objects selected; send stopped. Please select some objects, or check that your filter can actually select something."));
+                return null;
+            }
 
-            //// invoke conversions on the main thread via control
-            //if (Control.InvokeRequired)
-            //    Control.Invoke(new Action(() => ConvertSendCommit(commitObject, converter, state, progress, ref convertedCount)), new object[] { });
-            //else
-            //    ConvertSendCommit(commitObject, converter, state, progress, ref convertedCount);
+            var commitObject = new Base();
+            //commitObject["units"] = Utils.GetUnits(Doc); // TODO: check whether commits base needs units attached
 
-            //progress.Report.Merge(converter.Report);
+            int convertedCount = 0;
 
-            //if (convertedCount == 0)
-            //{
-            //    progress.Report.LogOperationError(new SpeckleException("Zero objects converted successfully. Send stopped.", false));
-            //    return null;
-            //}
+            // invoke conversions on the main thread via control
+            if (Control.InvokeRequired)
+                Control.Invoke(new Action(() => ConvertSendCommit(commitObject, converter, state, progress, ref convertedCount)), new object[] { });
+            else
+                ConvertSendCommit(commitObject, converter, state, progress, ref convertedCount);
 
-            //if (progress.CancellationTokenSource.Token.IsCancellationRequested)
-            //    return null;
+            progress.Report.Merge(converter.Report);
 
-            //var transports = new List<ITransport>() { new ServerTransport(client.Account, streamId) };
+            if (convertedCount == 0)
+            {
+                progress.Report.LogOperationError(new SpeckleException("Zero objects converted successfully. Send stopped.", false));
+                return null;
+            }
 
-            //var commitObjId = await Operations.Send(
-            //  commitObject,
-            //  progress.CancellationTokenSource.Token,
-            //  transports,
-            //  onProgressAction: dict => progress.Update(dict),
-            //  onErrorAction: (err, exception) =>
-            //  {
-            //      progress.Report.LogOperationError(exception);
-            //      progress.CancellationTokenSource.Cancel();
-            //  },
-            //  disposeTransports: true
-            //  );
+            if (progress.CancellationTokenSource.Token.IsCancellationRequested)
+                return null;
 
-            //if (progress.Report.OperationErrorsCount != 0)
-            //    return null;
+            var transports = new List<ITransport>() { new ServerTransport(client.Account, streamId) };
 
-            //var actualCommit = new CommitCreateInput
-            //{
-            //    streamId = streamId,
-            //    objectId = commitObjId,
-            //    branchName = state.BranchName,
-            //    message = state.CommitMessage != null ? state.CommitMessage : $"Pushed {convertedCount} elements from {Utils.AppName}.",
-            //    sourceApplication = Utils.VersionedAppName
-            //};
+            var commitObjId = await Operations.Send(
+                commitObject,
+                progress.CancellationTokenSource.Token,
+                transports,
+                onProgressAction: dict => progress.Update(dict),
+                onErrorAction: (err, exception) =>
+                {
+                    progress.Report.LogOperationError(exception);
+                    progress.CancellationTokenSource.Cancel();
+                },
+                disposeTransports: true
+                );
 
-            //if (state.PreviousCommitId != null) { actualCommit.parents = new List<string>() { state.PreviousCommitId }; }
+            if (progress.Report.OperationErrorsCount != 0)
+                return null;
 
-            //try
-            //{
-            //    var commitId = await client.CommitCreate(actualCommit);
-            //    state.PreviousCommitId = commitId;
-            //    return commitId;
-            //}
-            //catch (Exception e)
-            //{
-            //    progress.Report.LogOperationError(e);
-            //}
+
+            var actualCommit = new CommitCreateInput
+            {
+                streamId = streamId,
+                objectId = commitObjId,
+                branchName = state.BranchName,
+                message = state.CommitMessage != null ? state.CommitMessage : $"Pushed {convertedCount} elements from {Utils.AppName}.",
+                sourceApplication = Utils.VersionedAppName
+            };
+
+            if (state.PreviousCommitId != null) { actualCommit.parents = new List<string>() { state.PreviousCommitId }; }
+
+            try
+            {
+                var commitId = await client.CommitCreate(actualCommit);
+                state.PreviousCommitId = commitId;
+                return commitId;
+            }
+            catch (Exception e)
+            {
+                progress.Report.LogOperationError(e);
+            }
             return null;
+
         }
 
         delegate void SendingDelegate(Base commitObject, ISpeckleConverter converter, StreamState state, ProgressViewModel progress, ref int convertedCount);

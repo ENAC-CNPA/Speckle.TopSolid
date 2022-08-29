@@ -5,7 +5,9 @@ using System.Linq;
 using DesktopUI2.Models;
 using Speckle.Newtonsoft.Json;
 using TopSolid.Kernel.DB.D3.Documents;
+using TopSolid.Kernel.DB.Parameters;
 using TopSolid.Kernel.DB.D3.Modeling.Documents;
+using TopSolid.Kernel.DB.Elements;
 
 namespace Speckle.ConnectorTopSolid.UI.Storage
 {
@@ -29,38 +31,23 @@ namespace Speckle.ConnectorTopSolid.UI.Storage
     /// </summary>
     /// <param name="doc"></param>
     /// <returns></returns>
-    public static List<StreamState> ReadState(GeometricDocument doc)
+    public static List<StreamState> ReadState(ModelingDocument doc)
     {
       var streams = new List<StreamState>();
 
       if (doc == null)
         return streams;
 
-      //using (Transaction tr = doc.Database.TransactionManager.StartTransaction())
-      //{
-      //  var NOD = (DBDictionary)tr.GetObject(doc.Database.NamedObjectsDictionaryId, OpenMode.ForRead);
-      //  if (NOD.Contains(SpeckleExtensionDictionary))
-      //  {
-      //    var speckleDict = tr.GetObject(NOD.GetAt(SpeckleExtensionDictionary), OpenMode.ForRead) as DBDictionary;
-      //    if (speckleDict != null && speckleDict.Count > 0)
-      //    {
-      //      var id = speckleDict.GetAt(SpeckleStreamStates);
-      //      if (id != ObjectId.Null)
-      //      {
-      //        try // careful here: entries are length-capped and a serialized streamstate string could've been cut off, resulting in crash on deserialize
-      //        {
-      //          var record = tr.GetObject(id, OpenMode.ForRead) as Xrecord;
-      //          streams = JsonConvert.DeserializeObject<List<StreamState>>(record.Data.AsArray()[0].Value as string);
-      //        }
-      //        catch (Exception e)
-      //        { }
-      //      }
-      //    }
-      //  }
-      //  tr.Commit();
-      //}
+            string parameterValue = "";
+            Element element = doc.Elements[SpeckleStreamStates];
+            if (element != null && element is TextParameterEntity parameter)
+            {
+                parameterValue = parameter.Value;
+            }
 
-      return streams;
+            streams = JsonConvert.DeserializeObject<List<StreamState>>(parameterValue);
+
+            return streams;
     }
 
     /// <summary>
@@ -73,31 +60,21 @@ namespace Speckle.ConnectorTopSolid.UI.Storage
       if (doc == null)
         return;
 
-      //using (DocumentLock l = doc.LockDocument())
-      //{
-      //  using (Transaction tr = doc.Database.TransactionManager.StartTransaction())
-      //  {
-      //    var NOD = (DBDictionary)tr.GetObject(doc.Database.NamedObjectsDictionaryId, OpenMode.ForRead);
-      //    DBDictionary speckleDict;
-      //    if (NOD.Contains(SpeckleExtensionDictionary))
-      //    {
-      //      speckleDict = (DBDictionary)tr.GetObject(NOD.GetAt(SpeckleExtensionDictionary), OpenMode.ForWrite);
-      //    }
-      //    else
-      //    {
-      //      speckleDict = new DBDictionary();
-      //      NOD.UpgradeOpen();
-      //      NOD.SetAt(SpeckleExtensionDictionary, speckleDict);
-      //      tr.AddNewlyCreatedDBObject(speckleDict, true);
-      //    }
-      //    var xRec = new Xrecord();
-      //    var value = JsonConvert.SerializeObject(streamStates) as string;
-      //    xRec.Data = new ResultBuffer(new TypedValue(Convert.ToInt32(DxfCode.Text), value));
-      //    speckleDict.SetAt(SpeckleStreamStates, xRec);
-      //    tr.AddNewlyCreatedDBObject(xRec, true);
-      //    tr.Commit();
-      //  }
-      //}
+            string value = JsonConvert.SerializeObject(streamStates) as string;
+
+            Element element = doc.Elements[SpeckleStreamStates];
+            if (element != null && element is TextParameterEntity parameter)
+            {
+                parameter.Value = value;
+            }
+            else
+            {
+                TextParameterEntity stateParameter = new TextParameterEntity(doc, 0);
+                stateParameter.Name = SpeckleStreamStates;
+                stateParameter.Create();
+                stateParameter.Value = value;
+            }
+
+        }
     }
-  }
 }

@@ -185,11 +185,11 @@ namespace Speckle.ConnectorTopSolid.UI
             if (progress.CancellationTokenSource.Token.IsCancellationRequested)
                 return null;
 
-            //if (Doc == null)
-            //{
-            //    progress.Report.LogOperationError(new Exception($"No Document is open."));
-            //    progress.CancellationTokenSource.Cancel();
-            //}
+            if (Doc == null)
+            {
+                progress.Report.LogOperationError(new Exception($"No Document is open."));
+                progress.CancellationTokenSource.Cancel();
+            }
 
             //if "latest", always make sure we get the latest commit when the user clicks "receive"
             Commit commit = null;

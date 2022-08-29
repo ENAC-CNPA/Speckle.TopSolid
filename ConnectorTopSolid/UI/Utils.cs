@@ -105,6 +105,10 @@ namespace Speckle.ConnectorTopSolid.UI
 
             foreach (Element element in elements)
                 {
+                    if (element is TopSolid.Kernel.G.IGeometry)
+                {
+                   System.Console.WriteLine(element.Id.ToString());
+                }
                     if (converter.CanConvertToSpeckle(element))
                         objs.Add(element.Id.ToString());
                 }

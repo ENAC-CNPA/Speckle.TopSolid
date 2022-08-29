@@ -20,14 +20,14 @@ using System.Threading.Tasks;
 
 using TopSolid.Kernel.DB.D3.Documents;
 using TopSolid.Kernel.DB.D3.Modeling.Documents;
-
+using TopSolid.Kernel.DB.Elements;
 using Application = TopSolid.Kernel.UI.Application;
 
 namespace Speckle.ConnectorTopSolid.UI
 {
     public partial class ConnectorBindingsTopSolid : ConnectorBindings
     {
-        public static ModelingDocument Doc = null; // TopSolid.Kernel.UI.Application.CurrentDocument as ModelingDocument;
+        public static ModelingDocument Doc = TopSolid.Kernel.UI.Application.CurrentDocument as ModelingDocument;
 
 
 
@@ -436,28 +436,39 @@ namespace Speckle.ConnectorTopSolid.UI
             var streamId = state.StreamId;
             var client = state.Client;
 
+
+            if (state == null)
+            {
+                Console.WriteLine(state);
+            }
+
+
             if (state.Filter != null)
                 state.SelectedObjectIds = GetObjectsFromFilter(state.Filter, converter);
+
 
             // remove deleted object ids
             var deletedElements = new List<string>();
 
-            IEnumerable<TopSolid.Kernel.DB.Elements.Element> elments = null; //; Doc.Elements.GetAll();
-
             foreach (var id in state.SelectedObjectIds)
             {
-                //if (!Doc.Elements.Contains(id)) deletedElements.Add(id);
+                if (!Doc.Elements.Contains(Convert.ToInt32(id)))
+                {
+                    deletedElements.Add(id);
+                }
+
             }
             state.SelectedObjectIds = state.SelectedObjectIds.Where(o => !deletedElements.Contains(o)).ToList();
 
             if (state.SelectedObjectIds.Count == 0)
             {
+                
                 progress.Report.LogOperationError(new Exception("Zero objects selected; send stopped. Please select some objects, or check that your filter can actually select something."));
                 return null;
             }
 
             var commitObject = new Base();
-            //commitObject["units"] = Utils.GetUnits(Doc); // TODO: check whether commits base needs units attached
+            commitObject["units"] = Utils.GetUnits(Doc); // TODO: check whether commits base needs units attached
 
             int convertedCount = 0;
 
@@ -471,7 +482,8 @@ namespace Speckle.ConnectorTopSolid.UI
 
             if (convertedCount == 0)
             {
-                progress.Report.LogOperationError(new SpeckleException("Zero objects converted successfully. Send stopped.", false));
+                // TODO Fix crash TopSolid
+                //progress.Report.LogOperationError(new SpeckleException("Zero objects converted successfully. Send stopped.", false));
                 return null;
             }
 
@@ -519,105 +531,78 @@ namespace Speckle.ConnectorTopSolid.UI
                 progress.Report.LogOperationError(e);
             }
             return null;
-
         }
+
 
         delegate void SendingDelegate(Base commitObject, ISpeckleConverter converter, StreamState state, ProgressViewModel progress, ref int convertedCount);
         private void ConvertSendCommit(Base commitObject, ISpeckleConverter converter, StreamState state, ProgressViewModel progress, ref int convertedCount)
         {
-            //using (Transaction tr = Doc.Database.TransactionManager.StartTransaction())
-//            {
-//                // set the context doc for conversion - this is set inside the transaction loop because the converter retrieves this transaction for all db editing when the context doc is set!
-//                converter.SetContextDocument(Doc);
 
-//                var conversionProgressDict = new ConcurrentDictionary<string, int>();
-//                conversionProgressDict["Conversion"] = 0;
 
-//                bool renamedlayers = false;
+            // set the context doc for conversion - this is set inside the transaction loop because the converter retrieves this transaction for all db editing when the context doc is set!
+            converter.SetContextDocument(Doc);
 
-//                foreach (var autocadObjectHandle in state.SelectedObjectIds)
-//                {
-//                    if (progress.CancellationTokenSource.Token.IsCancellationRequested)
-//                    {
-//                        tr.Commit();
-//                        return;
-//                    }
+            var conversionProgressDict = new ConcurrentDictionary<string, int>();
+            conversionProgressDict["Conversion"] = 0;
 
-//                    conversionProgressDict["Conversion"]++;
-//                    progress.Update(conversionProgressDict);
+            bool renamedlayers = false;
 
-//                    // get the db object from id
-//                    //Handle hn = Utils.GetHandle(autocadObjectHandle);
-//                    //DBObject obj = hn.GetObject(tr, out string type, out string layer);
+            foreach (var elementId in state.SelectedObjectIds)
+            {
+                if (progress.CancellationTokenSource.Token.IsCancellationRequested)
+                {
+                    return;
+                }
 
-//                    if (obj == null)
-//                    {
-//                        progress.Report.Log($"Skipped not found object: ${autocadObjectHandle}.");
-//                        continue;
-//                    }
+                conversionProgressDict["Conversion"]++;
+                progress.Update(conversionProgressDict);
 
-//                    if (!converter.CanConvertToSpeckle(obj))
-//                    {
-//                        progress.Report.Log($"Skipped not supported type: ${type}. Object ${obj.Id} not sent.");
-//                        continue;
-//                    }
+                Element obj = Doc.Elements[elementId];
+                string type = null;
 
-//                    try
-//                    {
-//                        // convert obj
-//                        Base converted = null;
-//                        string containerName = string.Empty;
-//                        converted = converter.ConvertToSpeckle(obj);
-//                        if (converted == null)
-//                        {
-//                            progress.Report.LogConversionError(new Exception($"Failed to convert object {autocadObjectHandle} of type {type}."));
-//                            continue;
-//                        }
+                if (obj == null)
+                {
+                    progress.Report.Log($"Skipped not found object: ${elementId}.");
+                    continue;
+                } else
+                {
+                    type = obj.GetType().ToString();
+                }
 
-//                        /* TODO: adding the extension dictionary / xdata per object 
-//                        foreach (var key in obj.ExtensionDictionary)
-//                          converted[key] = obj.ExtensionDictionary.GetUserString(key);
-//                        */
+                if (!converter.CanConvertToSpeckle(obj))
+                {
+                    progress.Report.Log($"Skipped not supported type: ${type}. Object ${obj.Id} not sent.");
+                    continue;
+                }
 
-//#if CIVIL2021 || CIVIL2022
-//          // add property sets if this is Civil3D
-//          var propertySets = obj.GetPropertySets(tr);
-//          if (propertySets.Count > 0)
-//            converted["propertySets"] = propertySets;
-//#endif
+                try
+                {
+                    // convert obj
+                    Base converted = null;
+                    string containerName = string.Empty;
+                    converted = converter.ConvertToSpeckle(obj);
+                    if (converted == null)
+                    {
+                        progress.Report.LogConversionError(new Exception($"Failed to convert object {elementId} of type {type}."));
+                        continue;
+                    }
 
-//                        if (obj is BlockReference)
-//                            containerName = "Blocks";
-//                        else
-//                        {
-//                            // remove invalid chars from layer name
-//                            string cleanLayerName = Utils.RemoveInvalidDynamicPropChars(layer);
-//                            containerName = cleanLayerName;
-//                            if (!cleanLayerName.Equals(layer))
-//                                renamedlayers = true;
-//                        }
+                    if (commitObject[$"@{containerName}"] == null)
+                        commitObject[$"@{containerName}"] = new List<Base>();
+                    ((List<Base>)commitObject[$"@{containerName}"]).Add(converted);
 
-//                        if (commitObject[$"@{containerName}"] == null)
-//                            commitObject[$"@{containerName}"] = new List<Base>();
-//                        ((List<Base>)commitObject[$"@{containerName}"]).Add(converted);
+                    conversionProgressDict["Conversion"]++;
+                    progress.Update(conversionProgressDict);
 
-//                        conversionProgressDict["Conversion"]++;
-//                        progress.Update(conversionProgressDict);
+                    converted.applicationId = elementId;
+                }
+                catch (Exception e)
+                {
+                    progress.Report.LogConversionError(new Exception($"Failed to convert object {elementId} of type {type}: {e.Message}"));
+                }
+                convertedCount++;
+            }
 
-//                        converted.applicationId = autocadObjectHandle;
-//                    }
-//                    catch (Exception e)
-//                    {
-//                        progress.Report.LogConversionError(new Exception($"Failed to convert object {autocadObjectHandle} of type {type}: {e.Message}"));
-//                    }
-//                    convertedCount++;
-//                }
-
-//                if (renamedlayers)
-//                    progress.Report.Log("Replaced illegal chars ./ with - in one or more layer names.");
-
-//                tr.Commit();
-//            }
         }
 
         private List<string> GetObjectsFromFilter(ISelectionFilter filter, ISpeckleConverter converter)

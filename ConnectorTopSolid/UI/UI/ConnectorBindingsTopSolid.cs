@@ -478,7 +478,7 @@ namespace Speckle.ConnectorTopSolid.UI
             else
                 ConvertSendCommit(commitObject, converter, state, progress, ref convertedCount);
 
-            progress.Report.Merge(converter.Report);
+            //progress.Report.Merge(converter.Report); // TODO Fixe Merge Empty
 
             if (convertedCount == 0)
             {

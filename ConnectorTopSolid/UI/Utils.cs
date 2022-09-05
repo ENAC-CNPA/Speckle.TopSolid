@@ -38,32 +38,32 @@ namespace Speckle.ConnectorTopSolid.UI
         public static string GetUnits(GeometricDocument doc)
         {
 
-            var insUnits = doc.LengthUnit;
-            string units = UnitToSpeckle(insUnits);
+            SimpleUnit insUnits = doc.LengthUnit.BaseUnit;
+            string units = UnitToSpeckle(insUnits.Symbol);
             return units;
 
         }
 
-        private static string UnitToSpeckle(Unit units)
+        private static string UnitToSpeckle(string unit)
         {
-
-            switch (units.Name) // TODO: Check Name conversion
+            
+            switch (unit) // TODO: Check Name conversion
             {
-                case "Millimeter":
+                case "mm": // "Millimeter":
                     return Units.Millimeters;
-                case "Centimeter":
+                case "cm":
                     return Units.Centimeters;
-                case "Meter":
+                case "m":
                     return Units.Meters;
-                case "Kilometer":
+                case "km":
                     return Units.Kilometers;
-                case "Inche":
+                case "in":
                     return Units.Inches;
-                case "Fee":
+                case "ft":
                     return Units.Feet;
-                case "Yard":
+                case "yd":
                     return Units.Yards;
-                case "Mile":
+                case "mi":
                     return Units.Miles;
                 default:
                     throw new System.Exception("The current Unit System is unsupported.");

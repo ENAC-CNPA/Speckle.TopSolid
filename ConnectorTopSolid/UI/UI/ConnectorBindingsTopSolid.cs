@@ -586,6 +586,8 @@ namespace Speckle.ConnectorTopSolid.UI
                         continue;
                     }
 
+                    containerName = "TopSolidDocId" + Doc.Id.ToString();
+
                     if (commitObject[$"@{containerName}"] == null)
                         commitObject[$"@{containerName}"] = new List<Base>();
                     ((List<Base>)commitObject[$"@{containerName}"]).Add(converted);

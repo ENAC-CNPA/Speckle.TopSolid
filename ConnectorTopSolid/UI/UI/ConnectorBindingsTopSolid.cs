@@ -21,6 +21,8 @@ using System.Threading.Tasks;
 using TopSolid.Kernel.DB.D3.Documents;
 using TopSolid.Kernel.DB.D3.Modeling.Documents;
 using TopSolid.Kernel.DB.Elements;
+using TopSolid.Kernel.DB.Layers;
+
 using Application = TopSolid.Kernel.UI.Application;
 
 namespace Speckle.ConnectorTopSolid.UI
@@ -586,7 +588,26 @@ namespace Speckle.ConnectorTopSolid.UI
                         continue;
                     }
 
-                    containerName = "TopSolidDocId" + Doc.Id.ToString();
+
+                    // Search layer
+                    string layerName = null; 
+                    if (Doc.LayersFolderEntity != null && Doc.LayersFolderEntity.Entities != null) {
+                        foreach (LayerEntity layerEntity in Doc.LayersFolderEntity.Entities)
+                        {
+                            if (layerEntity.Layer.Id == obj.Layer.Id)
+                            {
+                                layerName = layerEntity.Name;
+                                break;
+                            }
+                            else if (layerEntity.Layer.Id == Doc.DefaultLayer.Id)
+                            {
+                                if (layerName == null) layerName = layerEntity.Name;
+                            }
+                        }
+                    }
+            
+                    if (layerName == null) layerName = "DefaultLayerName";
+                    containerName = layerName;
 
                     if (commitObject[$"@{containerName}"] == null)
                         commitObject[$"@{containerName}"] = new List<Base>();

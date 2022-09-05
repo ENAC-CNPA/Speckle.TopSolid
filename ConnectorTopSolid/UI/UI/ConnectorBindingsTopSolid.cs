@@ -545,7 +545,7 @@ namespace Speckle.ConnectorTopSolid.UI
             var conversionProgressDict = new ConcurrentDictionary<string, int>();
             conversionProgressDict["Conversion"] = 0;
 
-            foreach (var elementId in state.SelectedObjectIds)
+            foreach (string elementId in state.SelectedObjectIds)
             {
                 if (progress.CancellationTokenSource.Token.IsCancellationRequested)
                 {
@@ -555,7 +555,8 @@ namespace Speckle.ConnectorTopSolid.UI
                 conversionProgressDict["Conversion"]++;
                 progress.Update(conversionProgressDict);
 
-                Element obj = Doc.Elements[elementId];
+                int id = Convert.ToInt32(elementId);
+                Element obj = Doc.Elements[id];
                 string type = null;
 
                 if (obj == null)
@@ -578,7 +579,7 @@ namespace Speckle.ConnectorTopSolid.UI
                     // convert obj
                     Base converted = null;
                     string containerName = string.Empty;
-                    converted = converter.ConvertToSpeckle(obj);
+                    converted = converter.ConvertToSpeckle(obj.Geometry); // TODO Test with geometry  !!??
                     if (converted == null)
                     {
                         progress.Report.LogConversionError(new Exception($"Failed to convert object {elementId} of type {type}."));

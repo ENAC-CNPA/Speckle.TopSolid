@@ -7,7 +7,10 @@ using TopSolid.Kernel.DB.D3.Documents;
 using TopSolid.Kernel.DB.D3.Modeling.Documents;
 using TopSolid.Kernel.TX.Units;
 using TopSolid.Kernel.DB.Elements;
-
+using TopSolid.Kernel.DB.Parameters;
+using TopSolid.Cad.Design.DB;
+using System.Linq;
+using System;
 
 namespace Speckle.ConnectorTopSolid.UI
 {
@@ -114,6 +117,76 @@ namespace Speckle.ConnectorTopSolid.UI
                 }
      
             return objs;
+        }
+
+        public static List<KeyValuePair<string, string>> getParameters(ModelingDocument doc)
+        {
+            List<KeyValuePair<string,string>> speckleParameters = new List<KeyValuePair<string,string>>();
+            List<string> checkTypes = new List<string>();
+
+            IEnumerable<ParameterEntity> paramElements = doc.ParametersFolderEntity.DeepParameters;
+            foreach (ParameterEntity param in paramElements)
+            {
+                //TextParameterEntity name = doc.ParametersFolderEntity.SearchDeepEntity("") as TextParameterEntity;
+               
+                if (param is TextParameterEntity textParam)
+                {
+                    KeyValuePair<string, string> sp = new KeyValuePair<string, string>(textParam.GetFriendlyName(), textParam.Value);
+                    speckleParameters.Add(sp);
+                } else if (param is DateTimeParameterEntity dateParam)
+                {
+                    KeyValuePair<string, string> sp = new KeyValuePair<string, string>(dateParam.GetFriendlyName(), dateParam.Value.ToString());
+                    speckleParameters.Add(sp);
+                } else
+                {
+
+                    checkTypes.Add(param.GetType().ToString());
+                    KeyValuePair<string, string> sp = new KeyValuePair<string, string>(param.GetFriendlyName(), "");
+                    speckleParameters.Add(sp);
+                } 
+            }
+
+            return speckleParameters;
+
+        }
+
+
+        public static List<KeyValuePair<string, string>> getParameters(Element element)
+        {
+            List<KeyValuePair<string, string>> speckleParameters = new List<KeyValuePair<string, string>>();
+            List<string> checkTypes = new List<string>();
+
+            PartEntity part = element.Owner as PartEntity;
+            
+            if (part.DefinitionDocument.ParametersFolderEntity != null)
+            {
+                IEnumerable<ParameterEntity> paramElements = part.DefinitionDocument.ParametersFolderEntity.DeepParameters;
+                foreach (ParameterEntity param in paramElements)
+                {
+                    //TextParameterEntity name = doc.ParametersFolderEntity.SearchDeepEntity("") as TextParameterEntity;
+
+                    if (param is TextParameterEntity textParam)
+                    {
+                        KeyValuePair<string, string> sp = new KeyValuePair<string, string>(textParam.GetFriendlyName(), textParam.Value);
+                        speckleParameters.Add(sp);
+                    }
+                    else if (param is DateTimeParameterEntity dateParam)
+                    {
+                        KeyValuePair<string, string> sp = new KeyValuePair<string, string>(dateParam.GetFriendlyName(), dateParam.Value.ToString());
+                        speckleParameters.Add(sp);
+                    }
+                    else
+                    {
+
+                        checkTypes.Add(param.GetType().ToString());
+                        KeyValuePair<string, string> sp = new KeyValuePair<string, string>(param.GetFriendlyName(), "");
+                        speckleParameters.Add(sp);
+                    }
+                }
+            }
+ 
+            return speckleParameters;
+
         }
 
     }

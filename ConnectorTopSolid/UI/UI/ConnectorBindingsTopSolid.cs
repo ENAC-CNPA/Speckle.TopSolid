@@ -437,7 +437,7 @@ namespace Speckle.ConnectorTopSolid.UI
             var streamId = state.StreamId;
             var client = state.Client;
 
-            List<KeyValuePair<string, string>> speckleParameters = Utils.getParameters(Doc);
+            //List<KeyValuePair<string, string>> speckleParameters = Utils.getParameters(Doc);
 
             if (state == null)
             {
@@ -460,7 +460,7 @@ namespace Speckle.ConnectorTopSolid.UI
                 }
 
                 Element e = Doc.Elements[Convert.ToInt32(id)];
-                List<KeyValuePair<string, string>> speckleParametersElements = Utils.getParameters(e);
+                //List<KeyValuePair<string, string>> speckleParametersElements = Utils.getParameters(e);
 
             }
             state.SelectedObjectIds = state.SelectedObjectIds.Where(o => !deletedElements.Contains(o)).ToList();

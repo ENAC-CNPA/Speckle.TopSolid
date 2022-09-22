@@ -8,6 +8,7 @@ using TopSolid.Kernel.DB.D3.Modeling.Documents;
 using TopSolid.Kernel.TX.Units;
 using TopSolid.Kernel.DB.Elements;
 using TopSolid.Kernel.DB.Parameters;
+using TopSolid.Kernel.DB.Entities;
 using TopSolid.Cad.Design.DB;
 using System.Linq;
 using System;
@@ -155,12 +156,19 @@ namespace Speckle.ConnectorTopSolid.UI
         {
             List<KeyValuePair<string, string>> speckleParameters = new List<KeyValuePair<string, string>>();
             List<string> checkTypes = new List<string>();
-
-            PartEntity part = element.Owner as PartEntity;
-            
-            if (part.DefinitionDocument.ParametersFolderEntity != null)
+            IEnumerable<ParameterEntity> paramElements = null;
+            PartEntity ownerDoc = element.Owner as PartEntity;
+            if (ownerDoc is null)
             {
-                IEnumerable<ParameterEntity> paramElements = part.DefinitionDocument.ParametersFolderEntity.DeepParameters;
+                AssemblyEntity ownerAss = element.Owner as AssemblyEntity;
+                paramElements = ownerAss.DefinitionDocument.ParametersFolderEntity.DeepParameters;
+            } else
+            {
+                paramElements = ownerDoc.DefinitionDocument.ParametersFolderEntity.DeepParameters;
+            }
+            
+            if (paramElements != null)
+            {
                 foreach (ParameterEntity param in paramElements)
                 {
                     //TextParameterEntity name = doc.ParametersFolderEntity.SearchDeepEntity("") as TextParameterEntity;

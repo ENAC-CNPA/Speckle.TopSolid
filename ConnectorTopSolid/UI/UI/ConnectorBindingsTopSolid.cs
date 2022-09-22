@@ -22,14 +22,13 @@ using TopSolid.Kernel.DB.D3.Documents;
 using TopSolid.Kernel.DB.D3.Modeling.Documents;
 using TopSolid.Kernel.DB.Elements;
 using TopSolid.Kernel.DB.Layers;
-
 using Application = TopSolid.Kernel.UI.Application;
 
 namespace Speckle.ConnectorTopSolid.UI
 {
     public partial class ConnectorBindingsTopSolid : ConnectorBindings
     {
-        public static ModelingDocument Doc => TopSolid.Kernel.UI.Application.CurrentDocument as ModelingDocument;
+        public static ModelingDocument Doc => Application.CurrentDocument as ModelingDocument;
 
 
 
@@ -585,7 +584,7 @@ namespace Speckle.ConnectorTopSolid.UI
                     // convert obj
                     Base converted = null;
                     string containerName = string.Empty;
-                    converted = converter.ConvertToSpeckle(obj.Geometry); // TODO Test with geometry  !!??
+                    converted = converter.ConvertToSpeckle(obj); // TODO Test with geometry  !!??
                     if (converted == null)
                     {
                         progress.Report.LogConversionError(new Exception($"Failed to convert object {elementId} of type {type}."));

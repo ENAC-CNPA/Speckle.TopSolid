@@ -79,5 +79,15 @@ namespace EPFL.SpeckleTopSolid.AddIn
 		public override void EndSession()
 		{
 		}
+
+
+		/// <summary>
+		/// Overrides <see cref="TK.TX.AddIns.AddIn.GetRegistrationCertificate"/>.
+		/// </summary>
+		public override string GetRegistrationCertificate()
+		{
+			return TK.SX.String.ReadResourceTextFile(typeof(AddIn), "EPFL.SpeckleTopSolid.AddIn.xml");
+
+		}
 	}
 }

@@ -1,0 +1,117 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32602.215
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPFL.SpeckleTopSolid.AddIn", "AddIn\EPFL.SpeckleTopSolid.AddIn.csproj", "{197B998A-2851-48B0-99C1-F584156F74C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPFL.SpeckleTopSolid.UI", "UI\EPFL.SpeckleTopSolid.UI.csproj", "{155758C6-E385-4284-8700-3C3F5A52090C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{630988DA-83DF-42E5-A6F6-50025919ACD7} = {630988DA-83DF-42E5-A6F6-50025919ACD7}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Objects", "..\..\speckle-sharp\Objects\Objects\Objects.csproj", "{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ConverterTopSolidShared", "..\..\speckle-sharp\Objects\Converters\ConverterTopSolid\ConverterTopSolidShared\ConverterTopSolidShared.shproj", "{4D0F9F8A-2E89-4780-978A-CD92D6D7B844}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "..\..\speckle-sharp\Core\Core\Core.csproj", "{630988DA-83DF-42E5-A6F6-50025919ACD7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopUI2", "..\..\speckle-sharp\DesktopUI2\DesktopUI2\DesktopUI2.csproj", "{8F879D45-E34B-472E-A597-46CA51052258}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopUI2.Launcher", "..\..\speckle-sharp\DesktopUI2\DesktopUI2.Launcher\DesktopUI2.Launcher.csproj", "{06452B38-044D-4B41-8A31-42A7A2CBFC7E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TopSolidVersionProjects", "TopSolidVersionProjects", "{4FA9EED0-0F66-48B4-B239-8ADFE05245DA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Local Dependencies", "Local Dependencies", "{93AA2207-CE10-4811-BC65-8373546A462C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ConverterTopSolid", "ConverterTopSolid", "{436077B1-3F35-42D7-AD29-EFAD3216018A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConverterTopSolid716", "..\..\speckle-sharp\Objects\Converters\ConverterTopSolid\ConverterTopSolid716\ConverterTopSolid716.csproj", "{46533260-180E-4EBD-977B-44D1EDF4D18A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{197B998A-2851-48B0-99C1-F584156F74C9}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{197B998A-2851-48B0-99C1-F584156F74C9}.Debug|Any CPU.Build.0 = Debug|x64
+		{197B998A-2851-48B0-99C1-F584156F74C9}.Debug|x64.ActiveCfg = Debug|x64
+		{197B998A-2851-48B0-99C1-F584156F74C9}.Debug|x64.Build.0 = Debug|x64
+		{197B998A-2851-48B0-99C1-F584156F74C9}.Release|Any CPU.ActiveCfg = Release|x64
+		{197B998A-2851-48B0-99C1-F584156F74C9}.Release|Any CPU.Build.0 = Release|x64
+		{197B998A-2851-48B0-99C1-F584156F74C9}.Release|x64.ActiveCfg = Release|x64
+		{197B998A-2851-48B0-99C1-F584156F74C9}.Release|x64.Build.0 = Release|x64
+		{155758C6-E385-4284-8700-3C3F5A52090C}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{155758C6-E385-4284-8700-3C3F5A52090C}.Debug|Any CPU.Build.0 = Debug|x64
+		{155758C6-E385-4284-8700-3C3F5A52090C}.Debug|x64.ActiveCfg = Debug|x64
+		{155758C6-E385-4284-8700-3C3F5A52090C}.Debug|x64.Build.0 = Debug|x64
+		{155758C6-E385-4284-8700-3C3F5A52090C}.Release|Any CPU.ActiveCfg = Release|x64
+		{155758C6-E385-4284-8700-3C3F5A52090C}.Release|Any CPU.Build.0 = Release|x64
+		{155758C6-E385-4284-8700-3C3F5A52090C}.Release|x64.ActiveCfg = Release|x64
+		{155758C6-E385-4284-8700-3C3F5A52090C}.Release|x64.Build.0 = Release|x64
+		{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}.Debug|x64.Build.0 = Debug|Any CPU
+		{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}.Release|x64.ActiveCfg = Release|Any CPU
+		{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5}.Release|x64.Build.0 = Release|Any CPU
+		{630988DA-83DF-42E5-A6F6-50025919ACD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{630988DA-83DF-42E5-A6F6-50025919ACD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{630988DA-83DF-42E5-A6F6-50025919ACD7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{630988DA-83DF-42E5-A6F6-50025919ACD7}.Debug|x64.Build.0 = Debug|Any CPU
+		{630988DA-83DF-42E5-A6F6-50025919ACD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{630988DA-83DF-42E5-A6F6-50025919ACD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{630988DA-83DF-42E5-A6F6-50025919ACD7}.Release|x64.ActiveCfg = Release|Any CPU
+		{630988DA-83DF-42E5-A6F6-50025919ACD7}.Release|x64.Build.0 = Release|Any CPU
+		{8F879D45-E34B-472E-A597-46CA51052258}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F879D45-E34B-472E-A597-46CA51052258}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F879D45-E34B-472E-A597-46CA51052258}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8F879D45-E34B-472E-A597-46CA51052258}.Debug|x64.Build.0 = Debug|Any CPU
+		{8F879D45-E34B-472E-A597-46CA51052258}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F879D45-E34B-472E-A597-46CA51052258}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F879D45-E34B-472E-A597-46CA51052258}.Release|x64.ActiveCfg = Release|Any CPU
+		{8F879D45-E34B-472E-A597-46CA51052258}.Release|x64.Build.0 = Release|Any CPU
+		{06452B38-044D-4B41-8A31-42A7A2CBFC7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06452B38-044D-4B41-8A31-42A7A2CBFC7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06452B38-044D-4B41-8A31-42A7A2CBFC7E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{06452B38-044D-4B41-8A31-42A7A2CBFC7E}.Debug|x64.Build.0 = Debug|Any CPU
+		{06452B38-044D-4B41-8A31-42A7A2CBFC7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06452B38-044D-4B41-8A31-42A7A2CBFC7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06452B38-044D-4B41-8A31-42A7A2CBFC7E}.Release|x64.ActiveCfg = Release|Any CPU
+		{06452B38-044D-4B41-8A31-42A7A2CBFC7E}.Release|x64.Build.0 = Release|Any CPU
+		{46533260-180E-4EBD-977B-44D1EDF4D18A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46533260-180E-4EBD-977B-44D1EDF4D18A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46533260-180E-4EBD-977B-44D1EDF4D18A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{46533260-180E-4EBD-977B-44D1EDF4D18A}.Debug|x64.Build.0 = Debug|Any CPU
+		{46533260-180E-4EBD-977B-44D1EDF4D18A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46533260-180E-4EBD-977B-44D1EDF4D18A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46533260-180E-4EBD-977B-44D1EDF4D18A}.Release|x64.ActiveCfg = Release|Any CPU
+		{46533260-180E-4EBD-977B-44D1EDF4D18A}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{197B998A-2851-48B0-99C1-F584156F74C9} = {4FA9EED0-0F66-48B4-B239-8ADFE05245DA}
+		{155758C6-E385-4284-8700-3C3F5A52090C} = {4FA9EED0-0F66-48B4-B239-8ADFE05245DA}
+		{260FBE34-1FC0-4A59-874D-3DBB7F3A36C5} = {93AA2207-CE10-4811-BC65-8373546A462C}
+		{4D0F9F8A-2E89-4780-978A-CD92D6D7B844} = {436077B1-3F35-42D7-AD29-EFAD3216018A}
+		{630988DA-83DF-42E5-A6F6-50025919ACD7} = {93AA2207-CE10-4811-BC65-8373546A462C}
+		{8F879D45-E34B-472E-A597-46CA51052258} = {93AA2207-CE10-4811-BC65-8373546A462C}
+		{06452B38-044D-4B41-8A31-42A7A2CBFC7E} = {93AA2207-CE10-4811-BC65-8373546A462C}
+		{436077B1-3F35-42D7-AD29-EFAD3216018A} = {93AA2207-CE10-4811-BC65-8373546A462C}
+		{46533260-180E-4EBD-977B-44D1EDF4D18A} = {436077B1-3F35-42D7-AD29-EFAD3216018A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E297DE31-DBCD-4314-909D-BD2C7499071D}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\..\speckle-sharp\Objects\Converters\ConverterTopSolid\ConverterTopSolidShared\ConverterTopSolidShared.projitems*{46533260-180e-4ebd-977b-44d1edf4d18a}*SharedItemsImports = 5
+		..\..\speckle-sharp\Objects\Converters\ConverterTopSolid\ConverterTopSolidShared\ConverterTopSolidShared.projitems*{4d0f9f8a-2e89-4780-978a-cd92d6d7b844}*SharedItemsImports = 13
+	EndGlobalSection
+EndGlobal

@@ -11,7 +11,12 @@ namespace EPFL.SpeckleTopSolid.UI
 	/// </summary>
 	public static class Session
 	{
-		// Methods:
+		static Session()
+		{
+			//Important to be in static constructor, I don't know why...
+			Resolver.Initialize();
+
+		}
 
 		/// <summary>
 		/// Starts the session.

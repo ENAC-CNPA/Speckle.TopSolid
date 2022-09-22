@@ -584,7 +584,7 @@ namespace Speckle.ConnectorTopSolid.UI
                     // convert obj
                     Base converted = null;
                     string containerName = string.Empty;
-                    converted = converter.ConvertToSpeckle(obj); // TODO Test with geometry  !!??
+                    converted = converter.ConvertToSpeckle(obj);
                     if (converted == null)
                     {
                         progress.Report.LogConversionError(new Exception($"Failed to convert object {elementId} of type {type}."));

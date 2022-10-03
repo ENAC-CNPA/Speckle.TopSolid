@@ -282,7 +282,17 @@ namespace Speckle.ConnectorTopSolid.UI
             int count = 0;
             var commitObjs = FlattenCommitObject(commitObject, converter, commitPrefix, state, ref count);
 
-            
+
+            // TODO TopSolid Add LineType 
+            // More efficient this way than doing this per object
+            var lineTypeDictionary = new Dictionary<string, int>();
+            //var lineTypeTable = (LinetypeTable)tr.GetObject(Doc.Database.LinetypeTableId, OpenMode.ForRead);
+            //foreach (ObjectId lineTypeId in lineTypeTable)
+            //{
+            //    var linetype = (LinetypeTableRecord)tr.GetObject(lineTypeId, OpenMode.ForRead);
+            //    lineTypeDictionary.Add(linetype.Name, lineTypeId);
+            //}
+
             foreach (var commitObj in commitObjs)
             {
                 // create the object's bake layer if it doesn't already exist

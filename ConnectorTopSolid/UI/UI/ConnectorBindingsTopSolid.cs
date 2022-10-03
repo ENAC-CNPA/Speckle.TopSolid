@@ -344,7 +344,7 @@ namespace Speckle.ConnectorTopSolid.UI
                     progress.Report.LogConversionError(new Exception($"Failed to convert object {obj.id} of type {obj.speckle_type}."));
                 }
             }
-            progress.Report.Merge(converter.Report);
+            //progress.Report.Merge(converter.Report); // TODO : write Merge info
 
             if (changedLayerNames)
                 progress.Report.Log($"Layer names were modified: one or more layers contained invalid characters {Utils.invalidChars}");

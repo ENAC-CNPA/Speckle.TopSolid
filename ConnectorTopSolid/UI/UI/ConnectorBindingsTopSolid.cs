@@ -260,7 +260,8 @@ namespace Speckle.ConnectorTopSolid.UI
             bool changedLayerNames = false;
 
             // create a commit prefix: used for layers and block definition names
-            var commitPrefix = Formatting.CommitInfo(stream.name, state.BranchName, id);
+            string commitPrefix = Formatting.CommitInfo(stream.name, state.BranchName, id);
+            if (commitPrefix == null)
 
             // give converter a way to access the commit info
             Storage.SpeckleStreamManager.WriteCommit(Doc, commitPrefix);
@@ -300,32 +301,31 @@ namespace Speckle.ConnectorTopSolid.UI
                     progress.Report.LogConversionError(new Exception($"Failed to convert object {obj.id} of type {obj.speckle_type}: {e.Message}"));
                     continue;
                 }
-                var convertedEntity = converted as Entity;
+                var convertedElement = converted as Element;
 
-                if (convertedEntity != null)
+                if (convertedElement != null)
                 {
-                    if (GetOrMakeLayer(layerName, tr, out string cleanName))
+                    if (Utils.GetOrMakeLayer(layerName, Doc, out string cleanName))
                     {
                         // record if layer name has been modified
                         if (!cleanName.Equals(layerName))
                             changedLayerNames = true;
 
-                        var res = convertedEntity.Append(cleanName);
-                        if (res.IsValid)
+                        var res = true; // convertedElement.Append(cleanName); TODO : Link to layer
+                        if (res)
                         {
                             // handle display - fallback to rendermaterial if no displaystyle exists
                             Base display = obj[@"displayStyle"] as Base;
                             if (display == null) display = obj[@"renderMaterial"] as Base;
-                            if (display != null) Utils.SetStyle(display, convertedEntity, lineTypeDictionary);
+                            if (display != null) Utils.SetStyle(display, convertedElement, lineTypeDictionary);
 
-                            tr.TransactionManager.QueueForGraphicsFlush();
                         }
                         else
                         {
                             progress.Report.LogConversionError(new Exception($"Failed to add converted object {obj.id} of type {obj.speckle_type} to the document."));
                         }
 
-                    }
+                }
                     else
                         progress.Report.LogOperationError(new Exception($"Failed to create layer {layerName} to bake objects into."));
                 }

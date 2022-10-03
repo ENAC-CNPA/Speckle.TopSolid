@@ -166,6 +166,9 @@
     <Compile Include="..\..\ConnectorTopSolid\UI\SpeckleStreamTS.cs">
       <Link>SpeckleStreamTS.cs</Link>
     </Compile>
+    <Compile Include="..\..\ConnectorTopSolid\UI\Storage\SpeckleStreamManager.cs">
+      <Link>Storage\SpeckleStreamManager.cs</Link>
+    </Compile>
     <Compile Include="..\..\ConnectorTopSolid\UI\UI\ConnectorBindingsTopSolid.cs">
       <Link>UI\ConnectorBindingsTopSolid.cs</Link>
     </Compile>
@@ -222,7 +225,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
-    <Folder Include="Storage\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Speckle.Newtonsoft.Json">

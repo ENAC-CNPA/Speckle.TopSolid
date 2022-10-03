@@ -197,6 +197,64 @@ namespace Speckle.ConnectorTopSolid.UI
 
         }
 
+
+        public static bool GetOrMakeLayer(string layerName, ModelingDocument doc, out string cleanName)
+        {
+            cleanName = RemoveInvalidChars(layerName);
+            try
+            {
+
+                // TODO Create Layer TopSolid
+               
+                //LayerTable layerTable = tr.GetObject(Doc.Database.LayerTableId, OpenMode.ForRead) as LayerTable;
+                //if (layerTable.Has(cleanName))
+                //{
+                //    return true;
+                //}
+                //else
+                //{
+                //    layerTable.UpgradeOpen();
+                //    var _layer = new LayerTableRecord();
+
+                //    // Assign the layer properties
+                //    _layer.Color = Autodesk.AutoCAD.Colors.Color.FromColorIndex(ColorMethod.ByColor, 7); // white
+                //    _layer.Name = cleanName;
+
+                //    // Append the new layer to the layer table and the transaction
+                //    layerTable.Add(_layer);
+                //    tr.AddNewlyCreatedDBObject(_layer, true);
+                //}
+            }
+            catch { return false; }
+            return true;
+        }
+
+
+        public static void SetStyle(Base styleBase, Element element, Dictionary<string, int> lineTypeDictionary)
+        {
+            var units = styleBase["units"] as string;
+            var color = styleBase["color"] as int?;
+            if (color == null) color = styleBase["diffuse"] as int?; // in case this is from a rendermaterial base
+            var lineType = styleBase["linetype"] as string;
+            var lineWidth = styleBase["lineweight"] as double?;
+
+            // TODO Create Line Type TopSolid => LineType
+
+            if (color != null)
+            {
+                var systemColor = System.Drawing.Color.FromArgb((int)color);
+                //element.Color = Color.FromRgb(systemColor.R, systemColor.G, systemColor.B);
+                //element.Transparency = new Transparency(systemColor.A);
+            }
+
+            double conversionFactor = (units != null) ? Units.GetConversionFactor(Units.GetUnitsFromString(units), Units.Millimeters) : 1;
+            //if (lineWidth != null)
+            //    element.LineWeight = GetLineWeight((double)lineWidth * conversionFactor);
+
+            //if (lineType != null)
+            //    if (lineTypeDictionary.ContainsKey(lineType))
+            //        element.LinetypeId = lineTypeDictionary[lineType];
+        }
     }
 
 }

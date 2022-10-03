@@ -11,32 +11,33 @@ using TopSolid.Kernel.DB.Elements;
 
 namespace Speckle.ConnectorTopSolid.UI.Storage
 {
-  /// <summary>
-  /// Manages the serialisation of speckle stream state
-  /// </summary>
-  /// <remarks>
-  /// Uses a child dictionary for custom data in the Named Object Dictionary (NOD) which is the root level dictionary.
-  /// This is because NOD persists after a document is closed (unlike file User Data).
-  /// Custom data is stored as XRecord key value entries of type (string, ResultBuffer).
-  /// ResultBuffers are TypedValue arrays, with the DxfCode of the input type as an integer.
-  /// Used for DesktopUI2
-  /// </remarks>
-  public static class SpeckleStreamManager
-  {
-    readonly static string SpeckleExtensionDictionary = "Speckle";
-    readonly static string SpeckleStreamStates = "StreamStates";
-
     /// <summary>
-    /// Returns all the speckle stream states present in the current document.
+    /// Manages the serialisation of speckle stream state
     /// </summary>
-    /// <param name="doc"></param>
-    /// <returns></returns>
-    public static List<StreamState> ReadState(ModelingDocument doc)
+    /// <remarks>
+    /// Uses a child dictionary for custom data in the Named Object Dictionary (NOD) which is the root level dictionary.
+    /// This is because NOD persists after a document is closed (unlike file User Data).
+    /// Custom data is stored as XRecord key value entries of type (string, ResultBuffer).
+    /// ResultBuffers are TypedValue arrays, with the DxfCode of the input type as an integer.
+    /// Used for DesktopUI2
+    /// </remarks>
+    public static class SpeckleStreamManager
     {
-      var streams = new List<StreamState>();
+        readonly static string SpeckleExtensionDictionary = "Speckle";
+        readonly static string SpeckleStreamStates = "StreamStates";
+        readonly static string SpeckleCommit = "Commit";
 
-      if (doc == null)
-        return streams;
+        /// <summary>
+        /// Returns all the speckle stream states present in the current document.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        public static List<StreamState> ReadState(ModelingDocument doc)
+        {
+            var streams = new List<StreamState>();
+
+            if (doc == null)
+                return streams;
 
             string parameterValue = "";
             Element element = doc.Elements[SpeckleStreamStates];
@@ -48,17 +49,17 @@ namespace Speckle.ConnectorTopSolid.UI.Storage
             streams = JsonConvert.DeserializeObject<List<StreamState>>(parameterValue);
 
             return streams;
-    }
+        }
 
-    /// <summary>
-    /// Writes the stream states to the current document.
-    /// </summary>
-    /// <param name="doc"></param>
-    /// <param name="wrap"></param>
-    public static void WriteStreamStateList(GeometricDocument doc, List<StreamState> streamStates)
-    {
-      if (doc == null)
-        return;
+        /// <summary>
+        /// Writes the stream states to the current document.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="wrap"></param>
+        public static void WriteStreamStateList(GeometricDocument doc, List<StreamState> streamStates)
+        {
+            if (doc == null)
+                return;
 
             string value = JsonConvert.SerializeObject(streamStates) as string;
 
@@ -76,5 +77,63 @@ namespace Speckle.ConnectorTopSolid.UI.Storage
             }
 
         }
+
+
+        /// <summary>
+        /// Returns commit info present in the current document.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        public static string ReadCommit(ModelingDocument doc)
+        {
+            string commit = null;
+
+            if (doc == null)
+                return null;
+
+            string parameterValue = "";
+            Element element = doc.Elements[SpeckleCommit];
+            if (element != null && element is TextParameterEntity parameter)
+            {
+                parameterValue = parameter.Value;
+            }
+
+            // TODO : Structure commit like Object
+            commit = JsonConvert.DeserializeObject<string>(parameterValue);
+
+            return commit;
+        }
+
+        /// <summary>
+        /// Writes commit info to the current document.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="wrap"></param>
+        public static void WriteCommit(GeometricDocument doc, string commit)
+        {
+            if (doc == null)
+                return;
+
+            string value = "";
+            if (commit != null && commit != "") value = JsonConvert.SerializeObject(commit) as string;
+
+            Element element = doc.Elements[SpeckleCommit];
+            if (element != null && element is TextParameterEntity parameter)
+            {
+                parameter.Value = value;
+            }
+            else
+            {
+                TextParameterEntity commitParameter = new TextParameterEntity(doc, 0);
+                commitParameter.Name = SpeckleCommit;
+                commitParameter.Create();
+                commitParameter.Value = value;
+            }
+
+        }
+
+
+
+
     }
 }

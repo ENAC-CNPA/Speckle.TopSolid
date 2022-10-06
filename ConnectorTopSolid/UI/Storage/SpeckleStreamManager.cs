@@ -8,6 +8,7 @@ using TopSolid.Kernel.DB.D3.Documents;
 using TopSolid.Kernel.DB.Parameters;
 using TopSolid.Kernel.DB.D3.Modeling.Documents;
 using TopSolid.Kernel.DB.Elements;
+using TopSolid.Kernel.TX.Undo;
 
 namespace Speckle.ConnectorTopSolid.UI.Storage
 {
@@ -61,6 +62,9 @@ namespace Speckle.ConnectorTopSolid.UI.Storage
             if (doc == null)
                 return;
 
+            UndoSequence.UndoCurrent();
+            UndoSequence.Start("write state", true);
+
             string value = JsonConvert.SerializeObject(streamStates) as string;
 
             Element element = doc.Elements[SpeckleStreamStates];
@@ -76,6 +80,7 @@ namespace Speckle.ConnectorTopSolid.UI.Storage
                 stateParameter.Value = value;
             }
 
+            UndoSequence.End();
         }
 
 
@@ -90,6 +95,7 @@ namespace Speckle.ConnectorTopSolid.UI.Storage
 
             if (doc == null)
                 return null;
+
 
             string parameterValue = "";
             Element element = doc.Elements[SpeckleCommit];
@@ -111,8 +117,12 @@ namespace Speckle.ConnectorTopSolid.UI.Storage
         /// <param name="wrap"></param>
         public static void WriteCommit(GeometricDocument doc, string commit)
         {
+
             if (doc == null)
                 return;
+
+            UndoSequence.UndoCurrent();
+            UndoSequence.Start("write param", true);
 
             string value = "";
             if (commit != null && commit != "") value = JsonConvert.SerializeObject(commit) as string;
@@ -129,6 +139,7 @@ namespace Speckle.ConnectorTopSolid.UI.Storage
                 commitParameter.Create();
                 commitParameter.Value = value;
             }
+            UndoSequence.End();
 
         }
 

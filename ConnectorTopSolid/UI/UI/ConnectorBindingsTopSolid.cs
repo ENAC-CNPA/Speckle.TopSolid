@@ -22,6 +22,8 @@ using TopSolid.Kernel.DB.D3.Documents;
 using TopSolid.Kernel.DB.D3.Modeling.Documents;
 using TopSolid.Kernel.DB.Elements;
 using TopSolid.Kernel.DB.Layers;
+using TopSolid.Kernel.DB.Operations;
+using TopSolid.Kernel.TX.Undo;
 using Application = TopSolid.Kernel.UI.Application;
 
 namespace Speckle.ConnectorTopSolid.UI
@@ -94,8 +96,9 @@ namespace Speckle.ConnectorTopSolid.UI
         #region boilerplate
         public override string GetHostAppNameVersion() => Utils.VersionedAppName.Replace("TopSolid", "TopSolid "); //hack for ADSK store;
 
-        public override string GetHostAppName() {
-         return Utils.Slug;
+        public override string GetHostAppName()
+        {
+            return Utils.Slug;
         }
 
         private string GetDocPath(ModelingDocument doc) => ""; // Doc.FilePath; // .Current.FindFile(doc?.Name, doc?.Database, FindFileHint.Default);
@@ -263,8 +266,8 @@ namespace Speckle.ConnectorTopSolid.UI
             string commitPrefix = Formatting.CommitInfo(stream.name, state.BranchName, id);
             if (commitPrefix == null)
 
-            // give converter a way to access the commit info
-            Storage.SpeckleStreamManager.WriteCommit(Doc, commitPrefix);
+                // give converter a way to access the commit info
+                Storage.SpeckleStreamManager.WriteCommit(Doc, commitPrefix);
 
             // delete existing commit layers
             try
@@ -292,7 +295,11 @@ namespace Speckle.ConnectorTopSolid.UI
             //    var linetype = (LinetypeTableRecord)tr.GetObject(lineTypeId, OpenMode.ForRead);
             //    lineTypeDictionary.Add(linetype.Name, lineTypeId);
             //}
-
+            UndoSequence.UndoCurrent();
+            UndoSequence.Start("SpeckleCreation", true);
+            //FolderOperation folderOp = new FolderOperation(Doc, 0);
+            //folderOp.Name = "SpeckleCreation";
+            //folderOp.Create();
             foreach (var commitObj in commitObjs)
             {
                 // create the object's bake layer if it doesn't already exist
@@ -305,6 +312,7 @@ namespace Speckle.ConnectorTopSolid.UI
                 try
                 {
                     converted = converter.ConvertToNative(obj);
+                    UndoSequence.End();
                 }
                 catch (Exception e)
                 {
@@ -335,7 +343,7 @@ namespace Speckle.ConnectorTopSolid.UI
                             progress.Report.LogConversionError(new Exception($"Failed to add converted object {obj.id} of type {obj.speckle_type} to the document."));
                         }
 
-                }
+                    }
                     else
                         progress.Report.LogOperationError(new Exception($"Failed to create layer {layerName} to bake objects into."));
                 }
@@ -463,7 +471,7 @@ namespace Speckle.ConnectorTopSolid.UI
 
             if (state.SelectedObjectIds.Count == 0)
             {
-                
+
                 progress.Report.LogOperationError(new Exception("Zero objects selected; send stopped. Please select some objects, or check that your filter can actually select something."));
                 return null;
             }
@@ -564,7 +572,8 @@ namespace Speckle.ConnectorTopSolid.UI
                 {
                     progress.Report.Log($"Skipped not found object: ${elementId}.");
                     continue;
-                } else
+                }
+                else
                 {
                     type = obj.GetType().ToString();
                 }
@@ -589,8 +598,9 @@ namespace Speckle.ConnectorTopSolid.UI
 
 
                     // Search layer
-                    string layerName = null; 
-                    if (Doc.LayersFolderEntity != null && Doc.LayersFolderEntity.Entities != null) {
+                    string layerName = null;
+                    if (Doc.LayersFolderEntity != null && Doc.LayersFolderEntity.Entities != null)
+                    {
                         foreach (LayerEntity layerEntity in Doc.LayersFolderEntity.Entities)
                         {
                             if (layerEntity.Layer.Id == obj.Layer.Id)
@@ -604,7 +614,7 @@ namespace Speckle.ConnectorTopSolid.UI
                             }
                         }
                     }
-            
+
                     if (layerName == null) layerName = "DefaultLayerName";
                     containerName = layerName;
 
@@ -690,7 +700,7 @@ namespace Speckle.ConnectorTopSolid.UI
 
         //checks whether to refresh the stream list in case the user changes active view and selects a different document
         private void Application_WindowActivated(object sender)
-                    //private void Application_WindowActivated(object sender, DocumentWindowActivatedEventArgs e)
+        //private void Application_WindowActivated(object sender, DocumentWindowActivatedEventArgs e)
         {
             try
             {
@@ -736,8 +746,8 @@ namespace Speckle.ConnectorTopSolid.UI
                 if (streams.Count > 0)
                     //SpeckleAutocadCommand.CreateOrFocusSpeckle();
 
-                if (UpdateSavedStreams != null)
-                    UpdateSavedStreams(streams);
+                    if (UpdateSavedStreams != null)
+                        UpdateSavedStreams(streams);
 
                 MainViewModel.GoHome();
             }

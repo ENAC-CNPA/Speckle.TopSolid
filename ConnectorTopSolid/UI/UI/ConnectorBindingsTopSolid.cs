@@ -295,8 +295,6 @@ namespace Speckle.ConnectorTopSolid.UI
             //    var linetype = (LinetypeTableRecord)tr.GetObject(lineTypeId, OpenMode.ForRead);
             //    lineTypeDictionary.Add(linetype.Name, lineTypeId);
             //}
-            UndoSequence.UndoCurrent();
-            UndoSequence.Start("SpeckleCreation", true);
             //FolderOperation folderOp = new FolderOperation(Doc, 0);
             //folderOp.Name = "SpeckleCreation";
             //folderOp.Create();
@@ -311,7 +309,10 @@ namespace Speckle.ConnectorTopSolid.UI
                 object converted = null;
                 try
                 {
+                    UndoSequence.UndoCurrent();
+                    UndoSequence.Start("SpeckleCreation", true);
                     converted = converter.ConvertToNative(obj);
+
                     UndoSequence.End();
                 }
                 catch (Exception e)
@@ -320,7 +321,6 @@ namespace Speckle.ConnectorTopSolid.UI
                     continue;
                 }
                 var convertedElement = converted as Element;
-
                 if (convertedElement != null)
                 {
                     if (Utils.GetOrMakeLayer(layerName, Doc, out string cleanName))

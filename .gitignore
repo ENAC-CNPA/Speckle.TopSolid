@@ -338,3 +338,9 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+# Build
+ConnectorTopSolid716/setup/Binaries/
+ConnectorTopSolid715/setup/Binaries/
+
+

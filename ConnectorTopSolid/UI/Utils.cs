@@ -12,6 +12,7 @@ using TopSolid.Kernel.DB.Entities;
 using TopSolid.Cad.Design.DB;
 using System.Linq;
 using System;
+using TopSolid.Cad.Design.DB.Documents;
 
 namespace Speckle.ConnectorTopSolid.UI
 {
@@ -104,15 +105,16 @@ namespace Speckle.ConnectorTopSolid.UI
         /// <returns></returns>
         public static List<string> ConvertibleObjects(this ModelingDocument doc, ISpeckleConverter converter)
         {
+            
+            DesignDocument designDoc = doc as DesignDocument;
+        
             var objs = new List<string>();
-            IEnumerable<Element> elements = doc.Elements.GetAll();
+            IEnumerable<Element> elements = designDoc.Elements.GetAll();
 
-            foreach (Element element in elements)
+            foreach (Element element in elements) // multithread
             {
-                if (element is TopSolid.Kernel.G.IGeometry)
-                {
-                    System.Console.WriteLine(element.Id.ToString());
-                }
+                 // partEntity shapeEntity assemblyEntity SketchEntity
+
                 if (converter.CanConvertToSpeckle(element))
                     objs.Add(element.Id.ToString());
             }

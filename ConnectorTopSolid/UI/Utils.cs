@@ -23,9 +23,9 @@ namespace Speckle.ConnectorTopSolid.UI
     public static string AppName = HostApplications.TopSolid.Name;
     public static string Slug = HostApplications.TopSolid.Slug;
 #elif TOPSOLID716
-    public static string VersionedAppName = VersionedHostApplications.TopSolid716;
-    public static string AppName = HostApplications.TopSolid.Name;
-    public static string Slug = HostApplications.TopSolid.Slug;
+        public static string VersionedAppName = VersionedHostApplications.TopSolid716;
+        public static string AppName = HostApplications.TopSolid.Name;
+        public static string Slug = HostApplications.TopSolid.Slug;
 #endif
         public static string invalidChars = @"<>/\:;""?*|=,‘";
 
@@ -42,15 +42,15 @@ namespace Speckle.ConnectorTopSolid.UI
         public static string GetUnits(GeometricDocument doc)
         {
 
-            SimpleUnit insUnits = doc.LengthUnit.BaseUnit;
-            string units = UnitToSpeckle(insUnits.Symbol);
-            return units;
+            //SimpleUnit insUnits = doc.LengthUnit.BaseUnit;
+            //string units = UnitToSpeckle(insUnits.Symbol);
+            return "m";
 
         }
 
         private static string UnitToSpeckle(string unit)
         {
-            
+
             switch (unit) // TODO: Check Name conversion
             {
                 case "mm": // "Millimeter":
@@ -108,43 +108,45 @@ namespace Speckle.ConnectorTopSolid.UI
             IEnumerable<Element> elements = doc.Elements.GetAll();
 
             foreach (Element element in elements)
+            {
+                if (element is TopSolid.Kernel.G.IGeometry)
                 {
-                    if (element is TopSolid.Kernel.G.IGeometry)
-                {
-                   System.Console.WriteLine(element.Id.ToString());
+                    System.Console.WriteLine(element.Id.ToString());
                 }
-                    if (converter.CanConvertToSpeckle(element))
-                        objs.Add(element.Id.ToString());
-                }
-     
+                if (converter.CanConvertToSpeckle(element))
+                    objs.Add(element.Id.ToString());
+            }
+
             return objs;
         }
 
         public static List<KeyValuePair<string, string>> getParameters(ModelingDocument doc)
         {
-            List<KeyValuePair<string,string>> speckleParameters = new List<KeyValuePair<string,string>>();
+            List<KeyValuePair<string, string>> speckleParameters = new List<KeyValuePair<string, string>>();
             List<string> checkTypes = new List<string>();
 
             IEnumerable<ParameterEntity> paramElements = doc.ParametersFolderEntity.DeepParameters;
             foreach (ParameterEntity param in paramElements)
             {
                 //TextParameterEntity name = doc.ParametersFolderEntity.SearchDeepEntity("") as TextParameterEntity;
-               
+
                 if (param is TextParameterEntity textParam)
                 {
                     KeyValuePair<string, string> sp = new KeyValuePair<string, string>(textParam.GetFriendlyName(), textParam.Value);
                     speckleParameters.Add(sp);
-                } else if (param is DateTimeParameterEntity dateParam)
+                }
+                else if (param is DateTimeParameterEntity dateParam)
                 {
                     KeyValuePair<string, string> sp = new KeyValuePair<string, string>(dateParam.GetFriendlyName(), dateParam.Value.ToString());
                     speckleParameters.Add(sp);
-                } else
+                }
+                else
                 {
 
                     checkTypes.Add(param.GetType().ToString());
                     KeyValuePair<string, string> sp = new KeyValuePair<string, string>(param.GetFriendlyName(), "");
                     speckleParameters.Add(sp);
-                } 
+                }
             }
 
             return speckleParameters;
@@ -162,11 +164,12 @@ namespace Speckle.ConnectorTopSolid.UI
             {
                 AssemblyEntity ownerAss = element.Owner as AssemblyEntity;
                 paramElements = ownerAss.DefinitionDocument.ParametersFolderEntity.DeepParameters;
-            } else
+            }
+            else
             {
                 paramElements = ownerDoc.DefinitionDocument.ParametersFolderEntity.DeepParameters;
             }
-            
+
             if (paramElements != null)
             {
                 foreach (ParameterEntity param in paramElements)
@@ -192,7 +195,7 @@ namespace Speckle.ConnectorTopSolid.UI
                     }
                 }
             }
- 
+
             return speckleParameters;
 
         }
@@ -205,7 +208,7 @@ namespace Speckle.ConnectorTopSolid.UI
             {
 
                 // TODO Create Layer TopSolid
-               
+
                 //LayerTable layerTable = tr.GetObject(Doc.Database.LayerTableId, OpenMode.ForRead) as LayerTable;
                 //if (layerTable.Has(cleanName))
                 //{

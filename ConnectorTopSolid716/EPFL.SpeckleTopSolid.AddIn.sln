@@ -28,6 +28,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ConverterTopSolid", "Conver
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConverterTopSolid716", "..\..\speckle-sharp\Objects\Converters\ConverterTopSolid\ConverterTopSolid716\ConverterTopSolid716.csproj", "{46533260-180E-4EBD-977B-44D1EDF4D18A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BD55FFDD-5CC1-4BE7-A199-DBB8E00CBE6C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

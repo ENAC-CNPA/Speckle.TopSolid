@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# CS0414: Le champ 'SpeckleStreamManager.SpeckleExtensionDictionary' est assigné, mais sa valeur n'est jamais utilisée
+dotnet_diagnostic.CS0414.severity = warning

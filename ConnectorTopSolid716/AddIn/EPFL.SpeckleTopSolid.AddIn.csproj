@@ -31,11 +31,12 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>..\..\..\..\..\bin\Release x64\</OutputPath>
-    <DocumentationFile>..\..\..\..\..\bin\Release x64\EPFL.SpeckleTopSolid.AddIn.xml</DocumentationFile>
+    <OutputPath>..\..\setup\bin\</OutputPath>
+    <DocumentationFile>
+    </DocumentationFile>
     <PlatformTarget>x64</PlatformTarget>
     <NoWarn>1607</NoWarn>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;TOPSOLID716</DefineConstants>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType>pdbonly</DebugType>
     <ErrorReport>prompt</ErrorReport>
@@ -86,13 +87,14 @@
       <Link>Resources.resx</Link>
       <DependentUpon>Resources.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EPFL.SpeckleTopSolid.AddIn.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="EPFL.SpeckleTopSolid.AddIn.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\ConnectorTopSolid\AddIn\app.config">
       <Link>app.config</Link>
+    </None>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

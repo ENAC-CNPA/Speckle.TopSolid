@@ -22,5 +22,6 @@ using System.Runtime.CompilerServices;
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyVersion(TopSolid.Kernel.SX.Version.CurrentAssemblyVersionString)]
+[assembly: AssemblyVersion(EPFL.SpeckleTopSolid.UI.Version.CurrentAssemblyVersionString)]
 
+[assembly: AssemblyInformationalVersion(EPFL.SpeckleTopSolid.UI.Version.CurrentAssemblyVersionString)]

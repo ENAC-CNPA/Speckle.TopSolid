@@ -11,7 +11,7 @@ using TopSolid.Kernel.SX;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Missler Software")]
 [assembly: AssemblyProduct("TopSolid")]
-[assembly: AssemblyCopyright("Copyright © EPFL CNPA 2021")]
+[assembly: AssemblyCopyright("Copyright © EPFL CNPA 2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -27,5 +27,7 @@ using TopSolid.Kernel.SX;
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyVersion(TopSolid.Kernel.SX.Version.CurrentAssemblyVersionString)]
+[assembly: AssemblyVersion(EPFL.SpeckleTopSolid.UI.Version.CurrentAssemblyVersionString)]
+
+[assembly: AssemblyInformationalVersion(EPFL.SpeckleTopSolid.UI.Version.CurrentAssemblyVersionString)]
 

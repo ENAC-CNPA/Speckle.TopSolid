@@ -24,7 +24,7 @@ namespace Speckle.ConnectorTopSolid.UI.Storage
     /// </remarks>
     public static class SpeckleStreamManager
     {
-        readonly static string SpeckleExtensionDictionary = "Speckle";
+      //  readonly static string SpeckleExtensionDictionary = "Speckle";
         readonly static string SpeckleStreamStates = "StreamStates";
         readonly static string SpeckleCommit = "Commit";
 

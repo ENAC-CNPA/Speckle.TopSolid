@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TK = TopSolid.Kernel;
 
-namespace TopSolid.AdsSamples.Cad.Lego.DB
+namespace Speckle.ConnectorTopSolid.DB
 {
 
 	/// <summary>
@@ -20,7 +20,7 @@ namespace TopSolid.AdsSamples.Cad.Lego.DB
 		/// <summary>
 		/// Current revision version in string format.
 		/// </summary>
-		public const string CurrentRevisionString = "20";
+		public const string CurrentRevisionString = "01";
 
 
 		/// <summary>

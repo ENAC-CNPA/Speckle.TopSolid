@@ -2,7 +2,7 @@
 using System.Resources;
 using TopSolid.Kernel.SX.Resources;
 
-namespace TopSolid.AdsSamples.Cad.Lego.DB
+namespace Speckle.ConnectorTopSolid.DB
 {
     /// <summary>
     /// Manages the resources.

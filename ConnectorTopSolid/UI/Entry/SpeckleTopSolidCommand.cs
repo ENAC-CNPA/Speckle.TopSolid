@@ -53,6 +53,8 @@ namespace Speckle.ConnectorTopSolid.UI.Entry
         public static void CreateOrFocusSpeckle(bool showWindow = true)
         {
 
+            TopSolid.Kernel.SX.UI.Application.IsMouseWheelInterceptedByGraphics = false; // TODO : Charger true lors de la fermeture
+
             if (Bindings == null) {
                 App newApp = new App();
                 newApp.Initialize();

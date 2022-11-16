@@ -63,8 +63,12 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.XML" />
-    <Reference Include="TopSolid.Kernel.DB.D3.Modeling" />
-    <Reference Include="TopSolid.Cad.Design.DB" />
+    <Reference Include="TopSolid.Kernel.DB.D3.Modeling">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TopSolid.Cad.Design.DB">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="TopSolid.Kernel.DB">
       <Private>False</Private>
     </Reference>
@@ -216,6 +220,10 @@
     <ProjectReference Include="..\..\..\speckle-sharp\DesktopUI2\DesktopUI2\DesktopUI2.csproj">
       <Project>{8f879d45-e34b-472e-a597-46ca51052258}</Project>
       <Name>DesktopUI2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DB\EPFL.SpeckleTopSolid.DB.csproj">
+      <Project>{0c8a3568-4b4b-4bf9-ac9d-40ef72732940}</Project>
+      <Name>EPFL.SpeckleTopSolid.DB</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

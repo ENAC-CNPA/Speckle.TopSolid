@@ -72,6 +72,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DB\EPFL.SpeckleTopSolid.DB.csproj">
+      <Project>{0c8a3568-4b4b-4bf9-ac9d-40ef72732940}</Project>
+      <Name>EPFL.SpeckleTopSolid.DB</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UI\EPFL.SpeckleTopSolid.UI.csproj">
       <Project>{155758c6-e385-4284-8700-3c3f5a52090c}</Project>
       <Name>EPFL.SpeckleTopSolid.UI</Name>
@@ -86,9 +90,7 @@
       <Link>Resources.resx</Link>
       <DependentUpon>Resources.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EPFL.SpeckleTopSolid.AddIn.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="EPFL.SpeckleTopSolid.AddIn.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\ConnectorTopSolid\AddIn\app.config">

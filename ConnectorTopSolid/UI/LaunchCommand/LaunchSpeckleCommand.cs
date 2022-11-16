@@ -29,6 +29,7 @@ namespace EPFL.SpeckleTopSolid.UI.LaunchCommand
 
         {
             Speckle.ConnectorTopSolid.UI.Entry.SpeckleTopSolidCommand.SpeckleCommand(); //.SendCommand();
+            
         }
 
     }

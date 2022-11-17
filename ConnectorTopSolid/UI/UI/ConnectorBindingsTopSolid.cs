@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-
+using System.Windows;
 using TopSolid.Kernel.DB.D3.Documents;
 using TopSolid.Kernel.DB.D3.Modeling.Documents;
 using TopSolid.Kernel.DB.Elements;
@@ -252,116 +252,131 @@ namespace Speckle.ConnectorTopSolid.UI
         private void ConvertReceiveCommit(Base commitObject, ISpeckleConverter converter, StreamState state, ProgressViewModel progress, Stream stream, string id)
         {
 
-            // set the context doc for conversion - this is set inside the transaction loop because the converter retrieves this transaction for all db editing when the context doc is set!
-            converter.SetContextDocument(Doc);
-
-            // keep track of conversion progress here
-            var conversionProgressDict = new ConcurrentDictionary<string, int>();
-            conversionProgressDict["Conversion"] = 1;
-
-            // keep track of any layer name changes for notification here
-            bool changedLayerNames = false;
-
-            // create a commit prefix: used for layers and block definition names
-            string commitPrefix = Formatting.CommitInfo(stream.name, state.BranchName, id);
-            if (commitPrefix == null)
-
-                // give converter a way to access the commit info
-                Storage.SpeckleStreamManager.WriteCommit(Doc, commitPrefix);
-
-            // delete existing commit layers
             try
             {
-                // TODO : Delete existing object
-                //DeleteBlocksWithPrefix(commitPrefix, tr);
-                //DeleteLayersWithPrefix(commitPrefix, tr);
-            }
-            catch
-            {
-                converter.Report.LogOperationError(new Exception($"Failed to remove existing layers or blocks starting with {commitPrefix} before importing new geometry."));
-            }
-
-            // flatten the commit object to retrieve children objs
-            int count = 0;
-            var commitObjs = FlattenCommitObject(commitObject, converter, commitPrefix, state, ref count);
+                // Start undo Sequence
+                UndoSequence.Start("SpeckleCreation", false); // no Ghost
 
 
-            // TODO TopSolid Add LineType 
-            // More efficient this way than doing this per object
-            var lineTypeDictionary = new Dictionary<string, int>();
-            //var lineTypeTable = (LinetypeTable)tr.GetObject(Doc.Database.LinetypeTableId, OpenMode.ForRead);
-            //foreach (ObjectId lineTypeId in lineTypeTable)
-            //{
-            //    var linetype = (LinetypeTableRecord)tr.GetObject(lineTypeId, OpenMode.ForRead);
-            //    lineTypeDictionary.Add(linetype.Name, lineTypeId);
-            //}
-            //FolderOperation folderOp = new FolderOperation(Doc, 0);
-            //folderOp.Name = "SpeckleCreation";
-            //folderOp.Create();
-            foreach (var commitObj in commitObjs)
-            {
-                // create the object's bake layer if it doesn't already exist
-                (Base obj, string layerName) = commitObj;
+                // set the context doc for conversion - this is set inside the transaction loop because the converter retrieves this transaction for all db editing when the context doc is set!
+                converter.SetContextDocument(Doc);
 
-                conversionProgressDict["Conversion"]++;
-                progress.Update(conversionProgressDict);
+                // keep track of conversion progress here
+                var conversionProgressDict = new ConcurrentDictionary<string, int>();
+                conversionProgressDict["Conversion"] = 1;
 
-                object converted = null;
+                // keep track of any layer name changes for notification here
+                bool changedLayerNames = false;
+
+                // create a commit prefix: used for layers and block definition names
+                string commitPrefix = Formatting.CommitInfo(stream.name, state.BranchName, id);
+                if (commitPrefix == null)
+
+                    // give converter a way to access the commit info
+                    Storage.SpeckleStreamManager.WriteCommit(Doc, commitPrefix);
+
+                // delete existing commit layers
                 try
                 {
-                    UndoSequence.UndoCurrent();
-                    UndoSequence.Start("SpeckleCreation", true);
-                    converted = converter.ConvertToNative(obj);
+                    // TODO : Delete existing object
+                    //DeleteBlocksWithPrefix(commitPrefix, tr);
+                    //DeleteLayersWithPrefix(commitPrefix, tr);
+                }
+                catch
+                {
+                    converter.Report.LogOperationError(new Exception($"Failed to remove existing layers or blocks starting with {commitPrefix} before importing new geometry."));
+                }
 
-                    UndoSequence.End();
-                }
-                catch (Exception e)
+                // flatten the commit object to retrieve children objs
+                int count = 0;
+                var commitObjs = FlattenCommitObject(commitObject, converter, commitPrefix, state, ref count);
+
+
+                // TODO TopSolid Add LineType 
+                // More efficient this way than doing this per object
+                var lineTypeDictionary = new Dictionary<string, int>();
+                //var lineTypeTable = (LinetypeTable)tr.GetObject(Doc.Database.LinetypeTableId, OpenMode.ForRead);
+                //foreach (ObjectId lineTypeId in lineTypeTable)
+                //{
+                //    var linetype = (LinetypeTableRecord)tr.GetObject(lineTypeId, OpenMode.ForRead);
+                //    lineTypeDictionary.Add(linetype.Name, lineTypeId);
+                //}
+                //FolderOperation folderOp = new FolderOperation(Doc, 0);
+                //folderOp.Name = "SpeckleCreation";
+                //folderOp.Create();
+
+             
+                foreach (var commitObj in commitObjs)
                 {
-                    progress.Report.LogConversionError(new Exception($"Failed to convert object {obj.id} of type {obj.speckle_type}: {e.Message}"));
-                    continue;
-                }
-                var convertedElement = converted as Element;
-                if (convertedElement != null)
-                {
-                    if (Utils.GetOrMakeLayer(layerName, Doc, out string cleanName))
+                    // create the object's bake layer if it doesn't already exist
+                    (Base obj, string layerName) = commitObj;
+
+                    conversionProgressDict["Conversion"]++;
+                    progress.Update(conversionProgressDict);
+
+                    object converted = null;
+                    try
                     {
-                        // record if layer name has been modified
-                        if (!cleanName.Equals(layerName))
-                            changedLayerNames = true;
 
-                        var res = true; // convertedElement.Append(cleanName); TODO : Link to layer
-                        if (res)
+                        converted = converter.ConvertToNative(obj);
+
+                    }
+                    catch (Exception e)
+                    {
+                        progress.Report.LogConversionError(new Exception($"Failed to convert object {obj.id} of type {obj.speckle_type}: {e.Message}"));
+                        continue;
+                    }
+                    var convertedElement = converted as Element;
+                    if (convertedElement != null)
+                    {
+                        if (Utils.GetOrMakeLayer(layerName, Doc, out string cleanName))
                         {
-                            // handle display - fallback to rendermaterial if no displaystyle exists
-                            Base display = obj[@"displayStyle"] as Base;
-                            if (display == null) display = obj[@"renderMaterial"] as Base;
-                            if (display != null) Utils.SetStyle(display, convertedElement, lineTypeDictionary);
+                            // record if layer name has been modified
+                            if (!cleanName.Equals(layerName))
+                                changedLayerNames = true;
+
+                            var res = true; // convertedElement.Append(cleanName); TODO : Link to layer
+                            if (res)
+                            {
+                                // handle display - fallback to rendermaterial if no displaystyle exists
+                                Base display = obj[@"displayStyle"] as Base;
+                                if (display == null) display = obj[@"renderMaterial"] as Base;
+                                if (display != null) Utils.SetStyle(display, convertedElement, lineTypeDictionary);
+
+                            }
+                            else
+                            {
+                                progress.Report.LogConversionError(new Exception($"Failed to add converted object {obj.id} of type {obj.speckle_type} to the document."));
+                            }
 
                         }
                         else
-                        {
-                            progress.Report.LogConversionError(new Exception($"Failed to add converted object {obj.id} of type {obj.speckle_type} to the document."));
-                        }
-
+                            progress.Report.LogOperationError(new Exception($"Failed to create layer {layerName} to bake objects into."));
                     }
-                    else
-                        progress.Report.LogOperationError(new Exception($"Failed to create layer {layerName} to bake objects into."));
+                    else if (converted == null)
+                    {
+                        progress.Report.LogConversionError(new Exception($"Failed to convert object {obj.id} of type {obj.speckle_type}."));
+                    }
                 }
-                else if (converted == null)
-                {
-                    progress.Report.LogConversionError(new Exception($"Failed to convert object {obj.id} of type {obj.speckle_type}."));
-                }
+                //progress.Report.Merge(converter.Report); // TODO : write Merge info
+
+                  
+              
+
+                if (changedLayerNames)
+                    progress.Report.Log($"Layer names were modified: one or more layers contained invalid characters {Utils.invalidChars}");
+
+                // remove commit info from doc userdata
+                Storage.SpeckleStreamManager.WriteCommit(Doc, null);
+
+                UndoSequence.End();
             }
-            //progress.Report.Merge(converter.Report); // TODO : write Merge info
-
-            if (changedLayerNames)
-                progress.Report.Log($"Layer names were modified: one or more layers contained invalid characters {Utils.invalidChars}");
-
-            // remove commit info from doc userdata
-            Storage.SpeckleStreamManager.WriteCommit(Doc, null);
-
-
-
+            catch (Exception)
+            {
+                // TODO : Message box
+                UndoSequence.UndoCurrent(); // Cancel
+                throw;
+            }
 
         }
 

@@ -62,8 +62,6 @@ namespace Speckle.ConnectorTopSolid.UI.Storage
             if (doc == null)
                 return;
 
-            UndoSequence.UndoCurrent();
-            UndoSequence.Start("write state", true);
 
             string value = JsonConvert.SerializeObject(streamStates) as string;
 
@@ -80,7 +78,6 @@ namespace Speckle.ConnectorTopSolid.UI.Storage
                 stateParameter.Value = value;
             }
 
-            UndoSequence.End();
         }
 
 
@@ -121,9 +118,7 @@ namespace Speckle.ConnectorTopSolid.UI.Storage
             if (doc == null)
                 return;
 
-            UndoSequence.UndoCurrent();
-            UndoSequence.Start("write param", true);
-
+         
             string value = "";
             if (commit != null && commit != "") value = JsonConvert.SerializeObject(commit) as string;
 
@@ -139,7 +134,7 @@ namespace Speckle.ConnectorTopSolid.UI.Storage
                 commitParameter.Create();
                 commitParameter.Value = value;
             }
-            UndoSequence.End();
+
 
         }
 

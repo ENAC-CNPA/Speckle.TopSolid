@@ -20,7 +20,7 @@ namespace Speckle.ConnectorTopSolid.DB
 		/// <summary>
 		/// Current revision version in string format.
 		/// </summary>
-		public const string CurrentRevisionString = "01";
+		public const string CurrentRevisionString = "001";
 
 
 		/// <summary>

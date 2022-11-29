@@ -342,5 +342,6 @@ healthchecksdb
 # Build
 ConnectorTopSolid716/setup/Binaries/
 ConnectorTopSolid715/setup/Binaries/
-
+ConnectorTopSolid715/setup/Sources/
+ConnectorTopSolid716/setup/Sources/
 

@@ -34,11 +34,12 @@
     <WarningLevel>2</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>..\..\..\..\..\bin\Release x64\</OutputPath>
-    <DocumentationFile>..\..\..\..\..\bin\Release x64\EPFL.SpeckleTopSolid.UI.xml</DocumentationFile>
+    <OutputPath>..\..\..\Topsolid 7.16\Release x64\</OutputPath>
+    <DocumentationFile>
+    </DocumentationFile>
     <PlatformTarget>x64</PlatformTarget>
     <NoWarn>1607</NoWarn>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;TOPSOLID716</DefineConstants>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType>pdbonly</DebugType>
     <ErrorReport>prompt</ErrorReport>
@@ -53,7 +54,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework">
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
@@ -84,9 +85,7 @@
     <Reference Include="TopSolid.Kernel.DB.D3.Shapes">
       <Private>False</Private>
     </Reference>
-    <Reference Include="TopSolid.Kernel.G.D3.Surfaces, Version=7.13.300.120, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\ServicePack8\bin\Debug x64\TopSolid.Kernel.G.D3.Surfaces.dll</HintPath>
+    <Reference Include="TopSolid.Kernel.G.D3.Surfaces">
       <Private>False</Private>
     </Reference>
     <Reference Include="TopSolid.Kernel.UI.D3.Shapes">
@@ -243,6 +242,10 @@
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(ProjectDir)obj\$(platform)\$(ConfigurationName)\EPFL.SpeckleTopSolid.UI.dll" "$(ProjectDir)..\setup\Sources\EPFL.SpeckleTopSolid.UI.dll"
+</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

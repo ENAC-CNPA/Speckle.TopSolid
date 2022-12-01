@@ -4,7 +4,7 @@
   Speckle connector for TopSolid
 </h1>
 <h3 align="center">
-    The Speckle Connector for TopSolid
+   Speckle is an open source data platform for interoperability in AEC.
 </h3>
 <br>
 <p align="center">
@@ -18,10 +18,10 @@
 
 # About the connector for TopSolid
 
-What is TopSolid Connector ? 
+What is TopSolid Connector ? :popcorn:  
 [Check our videos on YouTube](https://www.youtube.com/@hackingbim4954)
 
-Speckle is an open source data platform for interoperability in AEC [Speckle](https://speckle.systems/).
+
 
 ![Untitled](https://user-images.githubusercontent.com/2679513/132021739-15140299-624d-4410-98dc-b6ae6d9027ab.png)
 

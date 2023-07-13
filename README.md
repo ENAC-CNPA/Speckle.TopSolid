@@ -71,9 +71,9 @@ Note : Work is still under progress
    C:\Sources\speckle-sharp
 ```
 
-2. Open the solution in Visual Studio 2022+ (for TopSolid 7.16) : `C:\Sources\speckle-sharp\ConnectorTopSolid\ConnectorTopSolid716\ConnectorTopSolid.sln`
+2. Open the solution in Visual Studio 2022+ (for 7.1(X) : your TopSolid version) : `C:\Sources\speckle-sharp\ConnectorTopSolid\ConnectorTopSolid71X\ConnectorTopSolid.sln`
 
-3. Check the TopSolid Dev folder is in : `C:\Sources\Topsolid 7.15\Debug x64` **
+3. Check the TopSolid Dev folder is in : `C:\Sources\Topsolid 7.1X\Debug x64` **
 
     ** The debug files are provided by the TopSolid ads team : [ads.topsolid.com](https://ads.topsolid.com)
 

@@ -49,7 +49,10 @@ Note : Work is still under progress
 
 ## User Setup
 
-1. Download the setup file : [Binaries/Speckle_ConnectorTopSolid_###_Setup.exe](https://github.com/ENAC-CNPA/Speckle.TopSolid/raw/main/Binaries/Speckle_ConnectorTopSolid_v7.16.zip)
+1. Download the setup file : 
+  - 7.16 : [Binaries/Speckle_ConnectorTopSolid_v7.16.zip](https://github.com/ENAC-CNPA/Speckle.TopSolid/raw/main/Binaries/Speckle_ConnectorTopSolid_v7.16.zip)
+  - 7.17 : [Binaries/Speckle_ConnectorTopSolid_v7.17.zip](https://github.com/ENAC-CNPA/Speckle.TopSolid/raw/main/Binaries/Speckle_ConnectorTopSolid_v7.17.zip)
+  
 2. Open the zip file and launch the installation (administrator rights are required)
 
 
